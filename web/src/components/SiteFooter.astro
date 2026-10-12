@@ -20,7 +20,10 @@ import { url } from '../lib/paths';
         <span>{site.address.city}</span>
       </address>
       <DirectionsMap compact />
-      <span class="footer__h footer__h--hours">Hours</span>
+    </div>
+
+    <div class="footer__col footer__hours">
+      <span class="footer__h">Hours</span>
       <dl class="hours">
         {site.hours.map((h) => (
           <div class:list={['hours__row', { 'hours__row--single': !h.time }]}>
@@ -63,25 +66,24 @@ import { url } from '../lib/paths';
 <style>
   .footer { background: var(--surface-moody); color: var(--rh-ivory); }
   .footer__grid { max-width: 1280px; margin: 0 auto; padding: 80px var(--gutter) 48px; display: grid;
-    grid-template-columns: 0.9fr 1.5fr 0.9fr 1.2fr; gap: 56px; align-items: start; }
+    grid-template-columns: 0.95fr 1.35fr 1fr 0.8fr 1.1fr; gap: 40px; align-items: start; }
   .footer__brand { display: flex; flex-direction: column; gap: 18px; }
   .footer__mark { font-family: var(--font-display); font-size: 64px; line-height: 1; color: var(--rh-sand); }
-  .footer__script { font-family: var(--font-script); font-size: 34px; color: var(--rh-caramel-soft); }
+  .footer__script { font-family: var(--font-script); font-size: 30px; line-height: 1.1; white-space: nowrap; color: var(--rh-caramel-soft); }
   .footer__col { display: flex; flex-direction: column; gap: 10px; font-size: 14px; color: var(--text-on-dark-muted); }
   .footer__col a { color: var(--text-on-dark-muted); text-decoration: none; }
   .footer__col a:hover { color: var(--rh-ivory); text-decoration: underline; }
   .footer__h { font-size: 11px; font-weight: 500; letter-spacing: .28em; text-transform: uppercase; color: var(--rh-sand); margin-bottom: 6px; }
-  .footer__h--hours { margin-top: 22px; }
 
   .footer__address { display: flex; flex-direction: column; gap: 2px; font-style: normal; font-size: 15px; color: var(--rh-ivory); margin-bottom: 8px; }
-  .footer__visit { max-width: 360px; }
 
+  /* Hours is its own narrow column, so each row stacks the day over the time. */
   .hours { margin: 0; display: flex; flex-direction: column; }
-  .hours__row { display: flex; justify-content: space-between; gap: 20px; padding: 9px 0; border-bottom: 1px solid var(--border-on-dark); }
+  .hours__row { display: flex; flex-direction: column; gap: 2px; padding: 11px 0; border-bottom: 1px solid var(--border-on-dark); }
   .hours__row:first-child { border-top: 1px solid var(--border-on-dark); }
-  .hours dt { color: var(--text-on-dark-muted); }
-  .hours dd { margin: 0; color: var(--rh-ivory); text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
-  .hours__row--single dt { color: var(--rh-ivory); }
+  .hours dt { font-size: 13px; color: var(--text-on-dark-muted); }
+  .hours dd { margin: 0; font-size: 15px; color: var(--rh-ivory); font-variant-numeric: tabular-nums; }
+  .hours__row--single dt { font-size: 15px; color: var(--rh-ivory); }
 
   .footer__social { display: flex; gap: 10px; margin-top: 8px; }
   .footer__social a { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%;
@@ -91,13 +93,14 @@ import { url } from '../lib/paths';
     justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--border-on-dark);
     font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--text-on-dark-muted); }
 
-  @media (max-width: 1000px) {
+  /* Tablet: brand across the top, then two columns (Visit | Hours, Explore | Stay rooted). */
+  @media (max-width: 1179px) {
     .footer__grid { grid-template-columns: 1fr 1fr; gap: 48px 40px; }
-    .footer__visit { grid-column: 1 / -1; max-width: 460px; }
+    .footer__brand { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 28px; }
   }
   @media (max-width: 560px) {
     .footer__grid { grid-template-columns: 1fr; padding-top: 56px; }
-    .footer__visit { grid-column: auto; max-width: none; }
+    .footer__brand { flex-direction: column; align-items: flex-start; gap: 18px; }
     .footer__explore { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
     .footer__explore .footer__h { grid-column: 1 / -1; }
   }
