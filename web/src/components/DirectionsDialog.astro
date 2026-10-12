@@ -1,0 +1,54 @@
+---
+import { X } from '@lucide/astro';
+import Button from './core/Button.astro';
+import { maps, site } from '../lib/site';
+---
+
+<!-- One chooser for the whole site (included in BaseLayout). Any element with data-directions-open opens it. -->
+<dialog class="dd" id="directions-dialog" aria-labelledby="dd-title">
+  <button class="dd__close" type="button" aria-label="Close" data-directions-close><X size={20} stroke-width={1.5} /></button>
+  <h2 class="dd__title" id="dd-title">Get directions</h2>
+  <p class="dd__addr">{site.name}<br />{site.address.line1}<br />{site.address.city}</p>
+  <div class="dd__choices">
+    <Button href={maps.apple} target="_blank" rel="noopener" data-map="apple" fullWidth>Apple Maps</Button>
+    <Button href={maps.google} target="_blank" rel="noopener" data-map="google" fullWidth>Google Maps</Button>
+  </div>
+  <p class="dd__note">Your maps app opens with the route to us already filled in.</p>
+</dialog>
+
+<script>
+  // Delegated on document so it survives page transitions.
+  const dialog = () => document.getElementById('directions-dialog') as HTMLDialogElement | null;
+  const onApple = () => /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent);
+
+  document.addEventListener('click', (e) => {
+    const target = e.target as Element;
+    if (target.closest('[data-directions-open]')) {
+      const d = dialog();
+      if (!d || typeof d.showModal !== 'function') return; // no dialog support: the link goes straight to Google Maps
+      e.preventDefault();
+      d.dataset.pref = onApple() ? 'apple' : 'google';
+      d.showModal();
+    } else if (target.closest('[data-directions-close]')) {
+      dialog()?.close();
+    } else if (target === dialog()) {
+      dialog()?.close(); // click on the backdrop
+    }
+  });
+</script>
+
+<style>
+  .dd { border: 0; padding: 36px 32px 28px; border-radius: var(--radius-lg); background: var(--surface-raised); color: var(--text-body);
+    width: min(440px, calc(100vw - 40px)); box-shadow: var(--shadow-lift); }
+  .dd::backdrop { background: rgba(59, 40, 25, .45); backdrop-filter: blur(6px); }
+  .dd__close { position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; display: grid; place-items: center;
+    border: 0; border-radius: 50%; background: transparent; color: var(--rh-chocolate); cursor: pointer; }
+  .dd__close:hover { background: var(--rh-sand); }
+  .dd__title { margin: 0 0 12px; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-display-s); color: var(--text-strong); }
+  .dd__addr { margin: 0 0 24px; }
+  .dd__choices { display: flex; flex-direction: column; gap: 12px; }
+  /* the viewer's likely maps app goes first */
+  .dd[data-pref='apple'] [data-map='apple'] { order: -1; }
+  .dd[data-pref='google'] [data-map='google'] { order: -1; }
+  .dd__note { margin: 16px 0 0; font-size: 14px; color: var(--text-muted); }
+</style>

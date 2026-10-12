@@ -1,29 +1,45 @@
 ---
 import Button from './core/Button.astro';
-import { nav, site, hoursLine } from '../lib/site';
+import DirectionsMap from './DirectionsMap.astro';
+import { nav, site } from '../lib/site';
 import { url } from '../lib/paths';
 ---
 
-<footer class="footer">
+<!-- transition:persist keeps the footer (and its map) in place between pages, so the map is not reloaded on every click. -->
+<footer class="footer" transition:persist>
   <div class="footer__grid">
     <div class="footer__brand">
       <span class="footer__mark">rh</span>
       <span class="footer__script">come as you are</span>
     </div>
-    <div class="footer__col">
+
+    <div class="footer__col footer__visit">
       <span class="footer__h">Visit</span>
-      <span>{site.address.line1}</span>
-      <span>{site.address.city}</span>
-      {site.hours.map((h) => <span>{hoursLine(h)}</span>)}
-      <a href={url('directions/')}>Directions</a>
+      <address class="footer__address">
+        <span>{site.address.line1}</span>
+        <span>{site.address.city}</span>
+      </address>
+      <DirectionsMap compact />
+      <span class="footer__h footer__h--hours">Hours</span>
+      <dl class="hours">
+        {site.hours.map((h) => (
+          <div class:list={['hours__row', { 'hours__row--single': !h.time }]}>
+            <dt>{h.days}</dt>
+            {h.time && <dd>{h.time}</dd>}
+          </div>
+        ))}
+      </dl>
     </div>
-    <div class="footer__col">
+
+    <div class="footer__col footer__explore">
       <span class="footer__h">Explore</span>
       {nav.map((item) => <a href={url(item.href)}>{item.label}</a>)}
       <a href={url('reviews/')}>Reviews</a>
       <a href={url('faq/')}>FAQ</a>
+      <a href={url('directions/')}>Directions</a>
       {site.giftCardsUrl && <a href={site.giftCardsUrl} target="_blank" rel="noopener">Gift cards</a>}
     </div>
+
     <div class="footer__col">
       <span class="footer__h">Stay rooted</span>
       <span>News, openings and product drops.</span>
@@ -46,16 +62,27 @@ import { url } from '../lib/paths';
 
 <style>
   .footer { background: var(--surface-moody); color: var(--rh-ivory); }
-  .footer__grid { max-width: 1280px; margin: 0 auto; padding: 80px var(--gutter) 40px; display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr 1.3fr; gap: 48px; }
+  .footer__grid { max-width: 1280px; margin: 0 auto; padding: 80px var(--gutter) 48px; display: grid;
+    grid-template-columns: 0.9fr 1.5fr 0.9fr 1.2fr; gap: 56px; align-items: start; }
   .footer__brand { display: flex; flex-direction: column; gap: 18px; }
   .footer__mark { font-family: var(--font-display); font-size: 64px; line-height: 1; color: var(--rh-sand); }
   .footer__script { font-family: var(--font-script); font-size: 34px; color: var(--rh-caramel-soft); }
   .footer__col { display: flex; flex-direction: column; gap: 10px; font-size: 14px; color: var(--text-on-dark-muted); }
   .footer__col a { color: var(--text-on-dark-muted); text-decoration: none; }
   .footer__col a:hover { color: var(--rh-ivory); text-decoration: underline; }
-  .footer__h { font-size: 11px; font-weight: 500; letter-spacing: .28em; text-transform: uppercase;
-    color: var(--rh-sand); margin-bottom: 6px; }
+  .footer__h { font-size: 11px; font-weight: 500; letter-spacing: .28em; text-transform: uppercase; color: var(--rh-sand); margin-bottom: 6px; }
+  .footer__h--hours { margin-top: 22px; }
+
+  .footer__address { display: flex; flex-direction: column; gap: 2px; font-style: normal; font-size: 15px; color: var(--rh-ivory); margin-bottom: 8px; }
+  .footer__visit { max-width: 360px; }
+
+  .hours { margin: 0; display: flex; flex-direction: column; }
+  .hours__row { display: flex; justify-content: space-between; gap: 20px; padding: 9px 0; border-bottom: 1px solid var(--border-on-dark); }
+  .hours__row:first-child { border-top: 1px solid var(--border-on-dark); }
+  .hours dt { color: var(--text-on-dark-muted); }
+  .hours dd { margin: 0; color: var(--rh-ivory); text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .hours__row--single dt { color: var(--rh-ivory); }
+
   .footer__social { display: flex; gap: 10px; margin-top: 8px; }
   .footer__social a { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%;
     border: 1px solid var(--border-on-dark); color: var(--rh-ivory); }
@@ -63,6 +90,15 @@ import { url } from '../lib/paths';
   .footer__legal { max-width: 1280px; margin: 0 auto; padding: 20px var(--gutter) 32px; display: flex;
     justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--border-on-dark);
     font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--text-on-dark-muted); }
-  @media (max-width: 900px) { .footer__grid { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 560px) { .footer__grid { grid-template-columns: 1fr; padding-top: 56px; } }
+
+  @media (max-width: 1000px) {
+    .footer__grid { grid-template-columns: 1fr 1fr; gap: 48px 40px; }
+    .footer__visit { grid-column: 1 / -1; max-width: 460px; }
+  }
+  @media (max-width: 560px) {
+    .footer__grid { grid-template-columns: 1fr; padding-top: 56px; }
+    .footer__visit { grid-column: auto; max-width: none; }
+    .footer__explore { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+    .footer__explore .footer__h { grid-column: 1 / -1; }
+  }
 </style>

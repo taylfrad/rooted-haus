@@ -5,6 +5,7 @@ import { isStaging, url } from '../lib/paths';
 import { site } from '../lib/site';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import DirectionsDialog from '../components/DirectionsDialog.astro';
 
 interface Props {
   title?: string;
@@ -93,6 +94,7 @@ const jsonLd = {
     <SiteHeader />
     <main id="main" tabindex="-1" transition:animate={fade({ duration: '320ms' })}><slot /></main>
     <SiteFooter />
+    <DirectionsDialog />
     <!-- TODO: add the Boulevard self-booking overlay <script> here once the snippet is copied from
          the owner's Boulevard dashboard (Settings > Online booking > Self-booking overlay). -->
     <script>
