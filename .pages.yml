@@ -25,6 +25,8 @@ content:
       - { name: facebook, label: Facebook link, type: string }
       - { name: giftCardsUrl, label: Gift cards link, type: string }
       - { name: formEndpoint, label: Contact form address (set up by your web person), type: string }
+      - { name: careersFormEndpoint, label: Job application form address (must accept resume uploads; leave empty to use the contact form address), type: string }
+      - { name: formAccessKey, label: Form service access key (only if your form service gives you one), type: string }
 
   - name: services
     label: Services & prices

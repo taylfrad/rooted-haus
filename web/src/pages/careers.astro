@@ -4,6 +4,8 @@ import Section from '../layouts/Section.astro';
 import PageHeader from '../components/PageHeader.astro';
 import ContactForm from '../components/forms/ContactForm.astro';
 import Field from '../components/forms/Field.astro';
+import FileField from '../components/forms/FileField.astro';
+import { site } from '../lib/site';
 import Badge from '../components/content/Badge.astro';
 ---
 
@@ -18,12 +20,19 @@ import Badge from '../components/content/Badge.astro';
         <p class="note">Placeholder copy: the owner will supply details on commission and chair rental terms.</p>
       </div>
       <div>
-        <ContactForm subject="Careers application" submitLabel="Send application">
+        <ContactForm
+          subject="Careers application"
+          submitLabel="Send application"
+          endpoint={site.careersFormEndpoint}
+          multipart
+          success="Thank you for applying. We have your application and resume, and we will be in touch soon."
+        >
           <Field label="Name" name="name" required />
           <Field label="Email" name="email" type="email" required />
           <Field label="Phone" name="phone" type="tel" />
           <Field label="I'm interested in" name="interest" type="select" options={['Commission', 'Chair rental', 'Assistant role', 'Not sure yet']} required />
           <Field label="Tell us about yourself" name="message" type="textarea" required />
+          <FileField label="Resume" name="resume" hint="Optional. PDF, DOC or DOCX, up to 5 MB. We use it only to consider your application." />
         </ContactForm>
       </div>
     </div>

@@ -15,6 +15,10 @@ export const site = {
   instagram: settings.instagram,
   facebook: settings.facebook,
   formEndpoint: settings.formEndpoint,
+  /** Where job applications go. Must be a service that accepts file uploads; falls back to the general form address. */
+  careersFormEndpoint: settings.careersFormEndpoint || settings.formEndpoint,
+  /** Some form services (Web3Forms) need a public access key sent with every submission. */
+  formAccessKey: settings.formAccessKey,
   giftCardsUrl: settings.giftCardsUrl,
 };
 

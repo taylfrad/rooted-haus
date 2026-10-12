@@ -15,5 +15,7 @@
   "instagram": "https://www.instagram.com/",
   "facebook": "https://www.facebook.com/",
   "formEndpoint": "",
+  "careersFormEndpoint": "",
+  "formAccessKey": "",
   "giftCardsUrl": ""
 }

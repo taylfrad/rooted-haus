@@ -3,29 +3,94 @@ import Button from '../core/Button.astro';
 import { site } from '../../lib/site';
 
 interface Props {
-  /** Heading used for the email subject so the owner can tell forms apart. */
+  /** Used as the email subject so the owner can tell forms apart. */
   subject: string;
   submitLabel?: string;
+  /** Override where this form posts (the careers form uses a service that accepts uploads). */
+  endpoint?: string;
+  /** Set when the form contains a file field. */
+  multipart?: boolean;
+  success?: string;
 }
-const { subject, submitLabel = 'Send message' } = Astro.props;
-const ready = site.formEndpoint !== '';
+const {
+  subject,
+  submitLabel = 'Send message',
+  endpoint = site.formEndpoint,
+  multipart = false,
+  success = 'Thank you. We have your message and will be in touch soon.',
+} = Astro.props;
+const ready = endpoint !== '';
 ---
 
-<form class="form" action={ready ? site.formEndpoint : undefined} method="POST">
+<!-- Without JavaScript this is an ordinary form post. With it, the form submits in place and shows the result below. -->
+<form
+  class="form"
+  action={ready ? endpoint : undefined}
+  method="POST"
+  enctype={multipart ? 'multipart/form-data' : undefined}
+  data-form
+  data-endpoint={ready ? endpoint : undefined}
+  data-access-key={ready && site.formAccessKey ? site.formAccessKey : undefined}
+  data-success={success}
+  data-phone={site.phone}
+>
   <input type="hidden" name="subject" value={subject} />
   <input type="text" name="botcheck" tabindex="-1" autocomplete="off" class="honeypot" aria-hidden="true" />
-  <slot />
+  <div class="form__fields"><slot /></div>
   {ready ? (
-    <div><Button type="submit">{submitLabel}</Button></div>
+    <div class="form__actions"><Button type="submit">{submitLabel}</Button></div>
   ) : (
     <p class="form__note">
-      Online messages are being set up. For now, please call {site.phone} or book an appointment.
+      Online forms are being set up. For now, please call {site.phone} or book an appointment.
     </p>
   )}
+  <p class="form__status" role="status" aria-live="polite" tabindex="-1" hidden></p>
 </form>
+
+<script>
+  // Delegated on document so it survives page transitions.
+  document.addEventListener('submit', async (e) => {
+    const form = (e.target as Element).closest<HTMLFormElement>('form[data-form]');
+    const endpoint = form?.dataset.endpoint;
+    if (!form || !endpoint) return; // no endpoint: leave the normal post alone
+    e.preventDefault();
+
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const status = form.querySelector<HTMLElement>('.form__status')!;
+    const label = button?.textContent ?? '';
+    const data = new FormData(form);
+    if (form.dataset.accessKey) data.set('access_key', form.dataset.accessKey);
+    for (const [key, value] of [...data]) {
+      if (value instanceof File && value.size === 0 && value.name === '') data.delete(key); // no file chosen
+    }
+
+    if (button) { button.disabled = true; button.textContent = 'Sending…'; }
+    status.hidden = true;
+    try {
+      const res = await fetch(endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok || body.success === false) throw new Error(body.message ?? `HTTP ${res.status}`);
+      form.reset();
+      form.classList.add('form--done');
+      status.textContent = form.dataset.success ?? 'Thank you.';
+      status.dataset.state = 'ok';
+    } catch {
+      status.textContent = `Sorry, that did not send. Please try again, or call us at ${form.dataset.phone}.`;
+      status.dataset.state = 'error';
+      if (button) { button.disabled = false; button.textContent = label; }
+    }
+    status.hidden = false;
+    status.focus();
+  });
+</script>
 
 <style>
   .form { display: flex; flex-direction: column; gap: 20px; }
+  .form__fields { display: flex; flex-direction: column; gap: 20px; }
   .honeypot { position: absolute; left: -9999px; }
   .form__note { margin: 0; font-size: 14px; color: var(--text-muted); }
+  .form__status { margin: 0; padding: 18px 22px; border-radius: var(--radius-lg); font-size: 16px; outline: none; }
+  .form__status[data-state='ok'] { background: var(--rh-olive); color: var(--rh-ivory); }
+  .form__status[data-state='error'] { background: var(--rh-ivory); color: var(--status-error); border: 1px solid var(--status-error); }
+  .form--done .form__fields, .form--done .form__actions { display: none; }
 </style>

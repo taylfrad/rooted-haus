@@ -29,6 +29,7 @@ Send these in any format (photos, a text message, a voice memo all work). "Not s
 - [ ] Domain: register rootedhaus.com in her name (backup therootedhaus.com); we help with the DNS later
 - [ ] GitHub: a free account so she can sign in to the editing panel (or we invite her by email if that is supported)
 - [ ] Contact form service (Web3Forms or Formspree): free account, we set it up together
+- [ ] Resume uploads on the Careers page need a form service that accepts files, which is a paid plan on Web3Forms and Formspree but free on Netlify. See `docs/forms.md` and decide together.
 - [ ] Optional: a business email at the new domain (hello@rootedhaus.com). It is for looking professional and keeping personal and business mail separate; she can decide later.
 
 ## Decisions to make together

@@ -30,4 +30,5 @@ The original design tokens failed 20 of 58 pairings. These adjustments fixed the
 - No horizontal scrolling on any of the 9 pages at 375, 768 and 1280 px.
 - Keyboard: Tab order follows the page, focus ring visible, a "Skip to content" link appears on first Tab.
 - Reduced motion: all content visible with no transform, and transitions shortened to near zero.
+- Resume field: labelled, with its hint and any error announced, and bad files are rejected on selection with a visible message.
 - Not yet tested: a screen reader pass, and real photos (all current images are placeholders without alt text needs).

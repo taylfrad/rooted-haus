@@ -1,0 +1,63 @@
+---
+interface Props {
+  label: string;
+  name: string;
+  hint?: string;
+  required?: boolean;
+  /** Largest file accepted, in megabytes. Most form services cap uploads at 5 MB. */
+  maxMb?: number;
+}
+const { label, name, hint = 'PDF, DOC or DOCX, up to 5 MB.', required = false, maxMb = 5 } = Astro.props;
+const id = `f-${name}`;
+---
+
+<div class="field">
+  <label for={id}>{label}{required && <span aria-hidden="true"> *</span>}</label>
+  <input
+    id={id}
+    name={name}
+    type="file"
+    accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    required={required}
+    data-file
+    data-max-mb={maxMb}
+    aria-describedby={`${id}-hint ${id}-error`}
+  />
+  <p class="hint" id={`${id}-hint`}>{hint}</p>
+  <p class="error" id={`${id}-error`} role="alert" hidden></p>
+</div>
+
+<script>
+  // Check the file as soon as it is chosen, so a too-big or wrong-type file is caught before submitting.
+  const OK_TYPES = /\.(pdf|docx?)$/i;
+  document.addEventListener('change', (e) => {
+    const input = e.target as HTMLInputElement;
+    if (!input.matches?.('input[data-file]')) return;
+    const error = document.getElementById(`${input.id}-error`)!;
+    const file = input.files?.[0];
+    const maxMb = Number(input.dataset.maxMb ?? 5);
+    let message = '';
+    if (file && !OK_TYPES.test(file.name)) message = 'Please choose a PDF, DOC or DOCX file.';
+    else if (file && file.size > maxMb * 1024 * 1024) message = `That file is ${(file.size / 1048576).toFixed(1)} MB. Please choose one under ${maxMb} MB.`;
+    if (message) input.value = ''; // clear the bad choice so it cannot be submitted
+    error.textContent = message;
+    error.hidden = message === '';
+    input.toggleAttribute('aria-invalid', message !== '');
+  });
+</script>
+
+<style>
+  .field { display: flex; flex-direction: column; gap: 8px; }
+  label { font-size: 12px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--text-strong); }
+  input[type='file'] { font: inherit; font-size: 15px; color: var(--text-body); background: var(--surface-raised); box-sizing: border-box; width: 100%;
+    border: 1px dashed var(--rh-chocolate-50); border-radius: var(--radius-pill); padding: 8px; cursor: pointer;
+    transition: border-color var(--dur-base) var(--ease-soft); }
+  input[type='file']:hover { border-color: var(--rh-chocolate); }
+  input[type='file']::file-selector-button { margin-right: 14px; border: 0; border-radius: var(--radius-pill); padding: 11px 22px; cursor: pointer;
+    background: var(--rh-terracotta); color: var(--rh-ivory); font: inherit; font-size: 11px; font-weight: 500; letter-spacing: var(--ls-button);
+    text-transform: uppercase; transition: background var(--dur-base) var(--ease-soft); }
+  input[type='file']:hover::file-selector-button { background: var(--rh-chocolate); }
+  input[aria-invalid] { border-color: var(--status-error); border-style: solid; }
+  .hint { margin: 0; font-size: 13px; color: var(--text-muted); }
+  .error { margin: 0; font-size: 14px; color: var(--status-error); }
+</style>
