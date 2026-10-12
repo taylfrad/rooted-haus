@@ -1,0 +1,181 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../layouts/Section.astro';
+import SectionHeading from '../components/content/SectionHeading.astro';
+import PhotoFrame from '../components/content/PhotoFrame.astro';
+import Card from '../components/content/Card.astro';
+import ReviewCard from '../components/content/ReviewCard.astro';
+import Badge from '../components/content/Badge.astro';
+import Button from '../components/core/Button.astro';
+import BookButton from '../components/core/BookButton.astro';
+import DealBanner from '../components/DealBanner.astro';
+import { getCollection } from 'astro:content';
+import { url } from '../lib/paths';
+
+const featured = (await getCollection('reviews')).filter((r) => r.data.featured).slice(0, 2);
+const slides = [
+  { script: 'come as you are', bg: 'var(--rh-espresso)' },
+  { script: 'healthy hair, happier you', bg: 'var(--rh-terracotta)' },
+  { script: 'beauty with intention', bg: 'var(--rh-olive)' },
+];
+const services = [
+  { surface: 'sand', title: 'Cuts & styling', text: 'Precision cuts shaped around your natural texture.' },
+  { surface: 'sage', title: 'Color', text: 'Low-maintenance, lived-in color with gentler formulas.' },
+  { surface: 'terracotta', title: 'Scalp & treatments', text: 'Detox, massage and treatments for the scalp.' },
+] as const;
+---
+
+<BaseLayout>
+  <section class="hero" aria-roledescription="carousel" aria-label="Welcome">
+    {slides.map((s, i) => <div class="hero__bg" data-slide style={`background:${s.bg}`} data-active={i === 0} />)}
+    <div class="hero__content">
+      <div class="hero__eyebrow"><span class="hero__rule" /><span>Holistic hair studio</span></div>
+      <div class="hero__scripts">
+        {slides.map((s, i) => <span class="hero__script" data-phrase data-active={i === 0}>{s.script}</span>)}
+      </div>
+      <h1 class="hero__title">Healthy hair starts at the scalp.</h1>
+      <div class="hero__actions">
+        <BookButton variant="ivory" size="lg">Book an appointment</BookButton>
+        <Button variant="outline" tone="dark" size="lg" href={url('gallery/')}>See our work</Button>
+      </div>
+      <div class="hero__dots">
+        {slides.map((_, i) => <button type="button" data-dot aria-label={`Slide ${i + 1}`} data-active={i === 0} />)}
+      </div>
+    </div>
+  </section>
+
+  <DealBanner />
+
+  <Section>
+    <div class="split">
+      <div class="split__photos">
+        <PhotoFrame shape="arch" label="Studio interior" />
+        <PhotoFrame shape="circle" label="Scalp treatment" />
+      </div>
+      <div class="split__text">
+        <SectionHeading
+          align="left"
+          eyebrow="Our philosophy"
+          script="more than hair"
+          title="A slower, more thoughtful salon visit"
+          intro="We look at your scalp, your routine and what goes into your products before we pick up the scissors. Every service is built around long-term hair health."
+        />
+        <Button variant="outline" href={url('team/')}>About the studio</Button>
+      </div>
+    </div>
+  </Section>
+
+  <Section bg="var(--surface-raised)">
+    <SectionHeading eyebrow="Services" title="Care for every head of hair" />
+    <div class="cards">
+      {services.map((s) => (
+        <Card interactive surface={s.surface} title={s.title}>
+          {s.text}
+          <Button slot="footer" variant="text" tone={s.surface === 'terracotta' ? 'dark' : 'light'} href={url('services/')}>View menu</Button>
+        </Card>
+      ))}
+    </div>
+  </Section>
+
+  <Section bg="var(--surface-olive)">
+    <div class="reviews">
+      <SectionHeading align="left" tone="dark" eyebrow="Kind words" title="From our chairs" />
+      <div class="reviews__grid">
+        {featured.map((r) => <ReviewCard tone="dark" quote={r.data.quote} name={r.data.name} detail={r.data.detail} rating={r.data.rating} />)}
+      </div>
+    </div>
+  </Section>
+
+  <Section>
+    <div class="work__head">
+      <SectionHeading align="left" eyebrow="@therootedhaus" title="Recent work" />
+      <Button variant="outline" href={url('gallery/')}>Full gallery</Button>
+    </div>
+    <div class="work__grid">
+      {['Balayage', 'Curls', 'Cut', 'Color'].map((l, k) => <PhotoFrame shape={k % 2 ? 'rounded' : 'arch'} ratio="3 / 4" label={l} />)}
+    </div>
+  </Section>
+
+  <Section bg="var(--surface-sand)" center>
+    <div class="hiring">
+      <Badge tone="terracotta">Now hiring</Badge>
+      <SectionHeading script="wellness, beauty, community" title="Join the Haus" intro="We're looking for stylists who care about hair health as much as we do. Commission and chair rental options." />
+      <Button href={url('careers/')}>Careers</Button>
+    </div>
+  </Section>
+</BaseLayout>
+
+<script>
+  // Hero: cross-fades slides every 6s (design system: 1.2s cross-fade). Static when reduced motion is on.
+  let timer: number | undefined;
+
+  document.addEventListener('astro:page-load', () => {
+    window.clearInterval(timer);
+    const bgs = [...document.querySelectorAll<HTMLElement>('[data-slide]')];
+    if (bgs.length === 0) return; // not the home page
+    const phrases = [...document.querySelectorAll<HTMLElement>('[data-phrase]')];
+    const dots = [...document.querySelectorAll<HTMLButtonElement>('[data-dot]')];
+    let current = 0;
+
+    function show(i: number) {
+      current = i;
+      [bgs, phrases, dots].forEach((set) => set.forEach((el, k) => el.setAttribute('data-active', String(k === i))));
+    }
+    function start() {
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      timer = window.setInterval(() => show((current + 1) % bgs.length), 6000);
+    }
+    dots.forEach((d, i) =>
+      d.addEventListener('click', () => {
+        window.clearInterval(timer);
+        show(i);
+        start();
+      }),
+    );
+    start();
+  });
+</script>
+
+<style>
+  .hero { position: relative; height: min(82vh, 720px); min-height: 520px; overflow: hidden; color: var(--rh-ivory); }
+  .hero__bg { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s var(--ease-soft); }
+  .hero__bg[data-active='true'] { opacity: 1; }
+  .hero__content { position: relative; height: 100%; max-width: 1280px; margin: 0 auto; padding: 0 var(--gutter);
+    display: flex; flex-direction: column; justify-content: center; gap: 22px; }
+  .hero__eyebrow { display: flex; align-items: center; gap: 16px; font-size: 12px; font-weight: 500;
+    letter-spacing: .32em; text-transform: uppercase; color: var(--rh-ivory); }
+  .hero__rule { width: 48px; height: 1px; background: var(--rh-sand); }
+  .hero__scripts { display: grid; }
+  .hero__script { grid-area: 1 / 1; font-family: var(--font-script); font-size: clamp(56px, 8vw, 104px);
+    line-height: 1; opacity: 0; transition: opacity 1.2s var(--ease-soft); }
+  .hero__script[data-active='true'] { opacity: 1; }
+  .hero__title { margin: 0; max-width: 620px; font-family: var(--font-display); font-weight: 400;
+    font-size: clamp(30px, 3.6vw, 46px); line-height: 1.15; text-wrap: balance; }
+  .hero__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 8px; }
+  .hero__dots { position: absolute; bottom: 24px; left: calc(var(--gutter) - 7px); display: flex; gap: 0; }
+  /* 24px tappable area (WCAG target size); the visible dot is the ::before */
+  .hero__dots button { position: relative; min-width: 24px; height: 24px; padding: 0; border: 0; background: transparent;
+    cursor: pointer; display: grid; place-items: center; }
+  .hero__dots button::before { content: ''; width: 10px; height: 10px; border-radius: 999px;
+    background: var(--rh-ivory-30); transition: width .3s, background .3s; }
+  .hero__dots button[data-active='true']::before { width: 36px; background: var(--rh-sand); }
+
+  .split { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
+  .split__photos { display: grid; grid-template-columns: 1.2fr 1fr; gap: 18px; align-items: end; }
+  .split__text { display: flex; flex-direction: column; gap: 26px; align-items: flex-start; }
+
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 48px; }
+  .reviews { display: grid; grid-template-columns: 1fr 2fr; gap: 64px; align-items: center; }
+  .reviews__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .work__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px;
+    margin-bottom: 36px; flex-wrap: wrap; }
+  .work__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .hiring { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+
+  @media (max-width: 900px) {
+    .split, .reviews { grid-template-columns: 1fr; }
+    .cards { grid-template-columns: 1fr; }
+    .reviews__grid { grid-template-columns: 1fr; gap: 32px; }
+    .work__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>

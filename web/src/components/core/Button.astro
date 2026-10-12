@@ -1,0 +1,57 @@
+---
+interface Props {
+  variant?: 'primary' | 'secondary' | 'outline' | 'ivory' | 'text';
+  size?: 'sm' | 'md' | 'lg';
+  tone?: 'light' | 'dark';
+  href?: string;
+  fullWidth?: boolean;
+  class?: string;
+  [attr: string]: unknown;
+}
+const { variant = 'primary', size = 'md', tone = 'light', href, fullWidth = false, class: extra, ...rest } = Astro.props;
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag
+  href={href}
+  class:list={['btn', `btn--${variant}`, `btn--${size}`, `btn--${tone}`, { 'btn--full': fullWidth }, extra]}
+  {...rest}
+>
+  <slot name="icon" /><slot /><slot name="icon-right" />
+</Tag>
+
+<style>
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    white-space: nowrap; flex-shrink: 0; box-sizing: border-box; cursor: pointer;
+    font-family: var(--font-sans); font-weight: 500; letter-spacing: var(--ls-button);
+    text-transform: uppercase; text-decoration: none; border-radius: var(--radius-pill);
+    border: 1px solid transparent;
+    transition: background var(--dur-base) var(--ease-soft), color var(--dur-base) var(--ease-soft),
+      transform var(--dur-fast) var(--ease-soft);
+  }
+  .btn:active { transform: scale(.98); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn--full { display: flex; width: 100%; }
+
+  .btn--sm { padding: 10px 20px; font-size: 11px; }
+  .btn--md { padding: 14px 30px; font-size: 12px; }
+  .btn--lg { padding: 18px 40px; font-size: 13px; }
+
+  .btn--primary { background: var(--action-primary); color: var(--action-primary-text); }
+  .btn--primary:hover { background: var(--action-primary-hover); color: var(--action-primary-text); }
+  .btn--secondary { background: var(--action-secondary); color: var(--rh-ivory); }
+  .btn--secondary:hover { background: var(--action-secondary-hover); color: var(--rh-ivory); }
+  .btn--ivory { background: var(--rh-ivory); color: var(--rh-espresso); }
+  .btn--ivory:hover { background: var(--rh-sand); color: var(--rh-espresso); }
+
+  .btn--outline.btn--light { color: var(--rh-chocolate); border-color: var(--rh-chocolate); }
+  .btn--outline.btn--light:hover { background: var(--rh-chocolate); color: var(--rh-ivory); }
+  .btn--outline.btn--dark { color: var(--rh-ivory); border-color: var(--rh-ivory); }
+  .btn--outline.btn--dark:hover { background: var(--rh-ivory); color: var(--rh-espresso); }
+
+  /* chocolate, not terracotta: terracotta is only 4.2:1 on sand cards at this size */
+  .btn--text { padding: 6px 0; color: var(--rh-chocolate); }
+  .btn--text.btn--dark { color: var(--rh-ivory); }
+  .btn--text:hover { text-decoration: underline; text-underline-offset: 6px; }
+</style>

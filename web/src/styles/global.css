@@ -1,0 +1,38 @@
+/* Fonts are self-hosted via Fontsource (open licenses). Brand fonts Cassy Vogue /
+   Gotham Pro are listed after them in the token stacks and take over if ever licensed. */
+@import '@fontsource/gilda-display/400.css';
+@import '@fontsource-variable/montserrat/wght.css';
+@import '@fontsource/sacramento/400.css';
+
+@import './tokens/colors.css';
+@import './tokens/typography.css';
+@import './tokens/spacing.css';
+@import './tokens/effects.css';
+
+/* base (from design system tokens/base.css) */
+html{background:var(--surface-page);color:var(--text-body);font-family:var(--font-body);font-size:var(--fs-body);line-height:var(--lh-body);-webkit-font-smoothing:antialiased}
+a{color:var(--text-accent);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{color:var(--rh-chocolate)}
+::selection{background:var(--rh-sand);color:var(--rh-espresso)}
+
+body{margin:0}
+img{max-width:100%;display:block}
+/* Two-tone focus ring: dark ring + light halo stays visible on every surface, light or dark. */
+:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px;box-shadow:0 0 0 5px var(--focus-halo)}
+
+/* Olive is the one surface where only full-strength ivory reaches 4.5:1, so muted text goes full ivory. */
+.on-olive{--text-on-dark-muted:var(--rh-ivory)}
+
+/* Skip link: hidden until focused by keyboard */
+.skip-link{position:absolute;left:var(--gutter);top:-80px;z-index:100;padding:12px 24px;border-radius:var(--radius-pill);
+  background:var(--rh-chocolate);color:var(--rh-ivory);font-size:12px;font-weight:500;letter-spacing:var(--ls-button);
+  text-transform:uppercase;text-decoration:none}
+.skip-link:focus{top:12px}
+main:focus{outline:none}
+
+/* Scroll reveal: elements start hidden only when JS is running (see lib/motion.ts) */
+.js [data-reveal]{opacity:0;transform:translateY(var(--reveal-distance))}
+@media (prefers-reduced-motion:reduce){
+  .js [data-reveal]{opacity:1;transform:none}
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important;scroll-behavior:auto !important}
+}

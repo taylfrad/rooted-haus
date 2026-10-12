@@ -1,0 +1,13 @@
+---
+import Button from './Button.astro';
+import { site } from '../../lib/site';
+
+type Props = Parameters<typeof Button>[0];
+const { class: extra, ...props } = Astro.props as Props;
+---
+
+<!-- Opens the Boulevard overlay when its script is on the page (see BaseLayout);
+     otherwise it is a normal link to the Boulevard booking page. -->
+<Button {...props} href={site.bookingUrl} data-book target="_blank" rel="noopener" class={extra}>
+  <slot />
+</Button>

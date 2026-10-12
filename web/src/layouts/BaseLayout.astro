@@ -1,0 +1,103 @@
+---
+import '../styles/global.css';
+import { ClientRouter, fade } from 'astro:transitions';
+import { isStaging, url } from '../lib/paths';
+import { site } from '../lib/site';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Always hide this page from search engines (used by /styleguide). */
+  noindex?: boolean;
+}
+
+const {
+  title = 'The Rooted Haus · Holistic Hair Studio',
+  description = 'A holistic hair studio in Mandeville, Louisiana, where scalp and hair health come first.',
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL(url('og.png'), Astro.site).href;
+const ogImageAlt = `${site.name}, ${site.tagline}: come as you are`;
+
+// Business listing data for search engines. Skips social links that are still placeholders.
+const place = site.address.city.match(/^(.*?),\s*([A-Z]{2})\s+(\d{5})/);
+const realSocial = [site.instagram, site.facebook].filter((u) => new URL(u).pathname.length > 1);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'HairSalon',
+  name: site.name,
+  description,
+  url: new URL(url(), Astro.site).href,
+  image: ogImage,
+  telephone: site.phone,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address.line1,
+    addressLocality: place ? place[1] : site.address.city,
+    addressRegion: place?.[2],
+    postalCode: place?.[3],
+    addressCountry: 'US',
+  },
+  ...(realSocial.length > 0 && { sameAs: realSocial }),
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#F3ECE2" />
+    <link rel="canonical" href={canonical} />
+    {(isStaging || noindex) && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
+    <link rel="icon" href={url('favicon.ico')} sizes="48x48" />
+    <link rel="icon" type="image/png" sizes="32x32" href={url('favicon-32x32.png')} />
+    <link rel="icon" type="image/png" sizes="16x16" href={url('favicon-16x16.png')} />
+    <link rel="apple-touch-icon" href={url('apple-touch-icon.png')} />
+    <link rel="manifest" href={url('site.webmanifest')} />
+    <meta name="apple-mobile-web-app-title" content="Rooted Haus" />
+    <link rel="sitemap" href={url('sitemap-index.xml')} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <!-- Scripts on each page re-run after a page transition via the astro:page-load event. -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+      // Page transitions swap <html> attributes; put the class back.
+      document.addEventListener('astro:after-swap', () => document.documentElement.classList.add('js'));
+    </script>
+    <ClientRouter />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <SiteHeader />
+    <main id="main" tabindex="-1" transition:animate={fade({ duration: '320ms' })}><slot /></main>
+    <SiteFooter />
+    <!-- TODO: add the Boulevard self-booking overlay <script> here once the snippet is copied from
+         the owner's Boulevard dashboard (Settings > Online booking > Self-booking overlay). -->
+    <script>
+      import { initReveal } from '../lib/motion';
+      document.addEventListener('astro:page-load', initReveal);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "name": "rooted-haus",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm --filter web build",
+    "preview": "pnpm --filter web preview",
+    "check": "pnpm --filter web check"
+  }
+}

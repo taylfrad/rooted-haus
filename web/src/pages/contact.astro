@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../layouts/Section.astro';
+import PageHeader from '../components/PageHeader.astro';
+import ContactForm from '../components/forms/ContactForm.astro';
+import Field from '../components/forms/Field.astro';
+import Button from '../components/core/Button.astro';
+import BookButton from '../components/core/BookButton.astro';
+import { MapPin, Clock, Phone } from '@lucide/astro';
+import { site, hoursLine } from '../lib/site';
+import { url } from '../lib/paths';
+---
+
+<BaseLayout title="Contact · The Rooted Haus" description="Hours, location and how to reach The Rooted Haus in Mandeville, Louisiana.">
+  <PageHeader eyebrow="Contact" script="come as you are" title="Visit us" intro="We'd love to meet you." />
+  <Section>
+    <div class="layout">
+      <div class="info">
+        <div class="row">
+          <span class="ic"><MapPin size={20} stroke-width={1.5} /></span>
+          <div><strong>Find us</strong><br />{site.address.line1}<br />{site.address.city}</div>
+        </div>
+        <div class="row">
+          <span class="ic"><Clock size={20} stroke-width={1.5} /></span>
+          <div><strong>Hours</strong>{site.hours.map((h) => <><br />{hoursLine(h)}</>)}</div>
+        </div>
+        <div class="row">
+          <span class="ic"><Phone size={20} stroke-width={1.5} /></span>
+          <div><strong>Call</strong><br /><a href={`tel:${site.phone.replace(/[^\d+]/g, '')}`}>{site.phone}</a></div>
+        </div>
+        <div class="actions">
+          <BookButton>Book an appointment</BookButton>
+          <Button variant="outline" href={url('directions/')}>Get directions</Button>
+        </div>
+      </div>
+      <div class="formwrap" id="message">
+        <h2 class="h">Send us a message</h2>
+        <ContactForm subject="Website message">
+          <Field label="Name" name="name" required />
+          <Field label="Email" name="email" type="email" required />
+          <Field label="Message" name="message" type="textarea" required />
+        </ContactForm>
+      </div>
+    </div>
+  </Section>
+  <Section bg="var(--surface-sand)" center>
+    <div class="news">
+      <h2 class="h">Stay rooted</h2>
+      <p>News, openings and product drops, a few times a year.</p>
+      <ContactForm subject="Newsletter signup" submitLabel="Join the list">
+        <Field label="Email" name="email" type="email" required />
+      </ContactForm>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .layout { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 96px); }
+  .info { display: flex; flex-direction: column; gap: 28px; }
+  .row { display: flex; gap: 18px; }
+  .ic { flex: 0 0 44px; height: 44px; display: grid; place-items: center; border-radius: 50%;
+    background: var(--rh-sand); color: var(--rh-terracotta); }
+  .actions { display: flex; flex-wrap: wrap; gap: 14px; }
+  .h { margin: 0 0 20px; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-display-s); color: var(--text-strong); }
+  .news { max-width: 480px; margin: 0 auto; text-align: left; }
+  .news .h, .news p { text-align: center; }
+  @media (max-width: 800px) { .layout { grid-template-columns: 1fr; } }
+</style>

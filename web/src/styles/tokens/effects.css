@@ -1,0 +1,12 @@
+:root{
+--shadow-soft:0 18px 40px -24px rgba(59,40,25,.35);
+--shadow-lift:0 24px 60px -28px rgba(59,40,25,.45);
+--shadow-none:none;
+--ease-soft:cubic-bezier(.22,.61,.36,1);
+--dur-fast:180ms;
+--dur-base:320ms;
+--dur-reveal:900ms;
+--reveal-distance:16px;
+--photo-warmth:sepia(.12) saturate(.9);
+--overlay-moody:linear-gradient(180deg,rgba(59,40,25,0) 40%,rgba(59,40,25,.65) 100%);
+}

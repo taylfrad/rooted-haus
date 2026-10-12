@@ -1,0 +1,37 @@
+---
+import { Star } from '@lucide/astro';
+
+interface Props {
+  quote: string;
+  name: string;
+  detail?: string;
+  rating?: number;
+  tone?: 'light' | 'dark';
+}
+const { quote, name, detail, rating = 5, tone = 'light' } = Astro.props;
+---
+
+<figure class:list={['review', `review--${tone}`]}>
+  <div class="review__stars" role="img" aria-label={`${rating} out of 5`}>
+    {Array.from({ length: rating }).map(() => <Star size={14} stroke-width={1.5} fill="currentColor" />)}
+  </div>
+  <blockquote class="review__quote">“{quote}”</blockquote>
+  <figcaption class="review__by">
+    <span class="review__name">{name}</span>
+    {detail && <span class="review__detail">{detail}</span>}
+  </figcaption>
+</figure>
+
+<style>
+  .review { margin: 0; display: flex; flex-direction: column; gap: 18px; color: var(--text-body); }
+  .review--dark { color: var(--rh-ivory); }
+  .review__stars { display: flex; gap: 4px; color: var(--text-script); }
+  .review--dark .review__stars { color: var(--rh-caramel-soft); }
+  .review__quote { margin: 0; font-family: var(--font-display); font-size: 22px; line-height: 1.45;
+    color: var(--text-strong); text-wrap: pretty; }
+  .review--dark .review__quote { color: var(--rh-ivory); }
+  .review__by { display: flex; flex-direction: column; gap: 2px; }
+  .review__name { font-size: 12px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; }
+  .review__detail { font-size: 13px; color: var(--text-muted); }
+  .review--dark .review__detail { color: var(--text-on-dark-muted); }
+</style>

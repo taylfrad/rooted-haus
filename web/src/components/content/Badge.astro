@@ -1,0 +1,18 @@
+---
+interface Props {
+  // No caramel tone: espresso on caramel is 4.1:1, below AA for badge-sized text.
+  tone?: 'terracotta' | 'olive' | 'sand' | 'sage' | 'ivory';
+}
+const { tone = 'sand' } = Astro.props;
+---
+
+<span class={`badge badge--${tone}`}><slot /></span>
+
+<style>
+  .badge { display: inline-flex; align-items: center; gap: 6px; border-radius: var(--radius-pill); padding: 5px 12px;
+    font-size: 10.5px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; line-height: 1.4; }
+  .badge--terracotta { background: var(--rh-terracotta); color: var(--rh-ivory); }
+  .badge--olive { background: var(--rh-olive); color: var(--rh-ivory); }
+  .badge--sand { background: var(--rh-sand); color: var(--rh-espresso); }
+  .badge--sage { background: var(--rh-sage-soft); color: var(--rh-espresso); }
+  .badge--ivory { background: var(--rh-ivory); color: var(--rh-chocolate); }</style>

@@ -1,0 +1,51 @@
+---
+interface Props {
+  eyebrow?: string;
+  script?: string;
+  title?: string;
+  intro?: string;
+  align?: 'center' | 'left';
+  /** light: on linen/ivory · dark: on terracotta, olive, chocolate, espresso · sage: on the sage surface */
+  tone?: 'light' | 'dark' | 'sage';
+  ruled?: boolean;
+  as?: 'h1' | 'h2';
+}
+const { eyebrow, script, title, intro, align = 'center', tone = 'light', ruled = true, as: Heading = 'h2' } = Astro.props;
+---
+
+<div class:list={['sh', `sh--${align}`, `sh--${tone}`]}>
+  {eyebrow && (
+    <div class="sh__eyebrow">
+      {ruled && align === 'center' && <span class="sh__rule" />}
+      <span>{eyebrow}</span>
+      {ruled && <span class="sh__rule" />}
+    </div>
+  )}
+  {script && <span class="sh__script">{script}</span>}
+  {title && <Heading class="sh__title">{title}</Heading>}
+  {intro && <p class="sh__intro">{intro}</p>}
+</div>
+
+<style>
+  .sh { display: flex; flex-direction: column; gap: 14px; }
+  .sh--center { align-items: center; text-align: center; }
+  .sh--left { align-items: flex-start; text-align: left; }
+  .sh__eyebrow { display: flex; align-items: center; gap: 16px; font-size: 12px; font-weight: 500;
+    letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
+  .sh--dark .sh__eyebrow { color: var(--rh-ivory); }
+  .sh--sage .sh__eyebrow, .sh--sage .sh__script, .sh--sage .sh__intro { color: var(--rh-espresso); }
+  .sh--sage .sh__rule { background: var(--rh-espresso); }
+  .sh__rule { flex: 0 0 36px; height: 1px; background: var(--rh-terracotta); }
+  .sh--center .sh__rule { flex-basis: 48px; }
+  .sh--dark .sh__rule { background: var(--rh-sand); }
+  .sh__script { font-family: var(--font-script); font-size: var(--fs-script-s); line-height: 1;
+    color: var(--text-script); margin-bottom: -8px; }
+  .sh--dark .sh__script { color: var(--rh-caramel-soft); }
+  .sh__title { margin: 0; font-family: var(--font-display); font-weight: 400;
+    font-size: clamp(30px, 4vw, var(--fs-display-l)); line-height: var(--lh-tight);
+    letter-spacing: var(--ls-display); color: var(--text-strong); text-wrap: balance; }
+  .sh--dark .sh__title { color: var(--rh-ivory); }
+  .sh__intro { margin: 0; max-width: 620px; font-size: var(--fs-body-l); line-height: var(--lh-body);
+    color: var(--text-muted); text-wrap: pretty; }
+  .sh--dark .sh__intro { color: var(--text-on-dark-muted); }
+</style>

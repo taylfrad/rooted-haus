@@ -1,0 +1,67 @@
+:root{
+/* Logo palette — supplied by client (hex codes from the logo designer) */
+--rh-chocolate:#593E2B;
+--rh-sage:#A6A680;
+--rh-sand:#E8D4B9;
+--rh-caramel:#BF7B3F;
+--rh-terracotta:#8C5637;
+--rh-olive:#727259;
+--rh-ivory:#FFF4E1;
+/* Derived (oklch-shifted from the logo palette). No pure black or white — client request. */
+--rh-espresso:#3B2819;
+--rh-linen:#F3ECE2;
+--rh-oat:#F7E9D3;
+--rh-chocolate-70:rgba(89,62,43,.72);
+--rh-chocolate-50:rgba(89,62,43,.5);
+--rh-chocolate-20:rgba(89,62,43,.2);
+--rh-chocolate-10:rgba(89,62,43,.1);
+--rh-chocolate-85:rgba(89,62,43,.85);
+--rh-ivory-70:rgba(255,244,225,.75);
+--rh-ivory-90:rgba(255,244,225,.9);
+--rh-ivory-30:rgba(255,244,225,.3);
+--rh-caramel-soft:#E9C9A5;
+--rh-sage-soft:#D9D9C4;
+
+/* Semantic — surfaces */
+--surface-page:var(--rh-linen);
+--surface-raised:var(--rh-ivory);
+--surface-sand:var(--rh-sand);
+--surface-sage:var(--rh-sage);
+--surface-olive:var(--rh-olive);
+--surface-terracotta:var(--rh-terracotta);
+--surface-moody:var(--rh-espresso);
+--surface-chocolate:var(--rh-chocolate);
+
+/* Semantic — text */
+--text-strong:var(--rh-espresso);
+--text-body:var(--rh-chocolate);
+/* Accessibility overrides of the design-system values (measured WCAG AA, see docs/accessibility.md):
+   muted text .72 -> .85 alpha; on-dark muted .75 -> .9 alpha (olive surfaces use full ivory, see .on-olive);
+   script "gold" #BF7B3F (2.9:1 on linen) -> #A8662A (3.9:1). */
+--text-muted:var(--rh-chocolate-85);
+--text-on-dark:var(--rh-ivory);
+--text-on-dark-muted:var(--rh-ivory-90);
+--text-accent:var(--rh-terracotta);
+--text-script:#A8662A;
+
+/* Semantic — actions */
+--action-primary:var(--rh-terracotta);
+--action-primary-hover:var(--rh-chocolate);
+--action-primary-text:var(--rh-ivory);
+--action-secondary:var(--rh-olive);
+--action-secondary-hover:#5E5E48;
+--action-outline:var(--rh-chocolate);
+--accent-gold:var(--rh-caramel);
+
+/* Semantic — lines */
+--border-hairline:var(--rh-chocolate-20);
+--border-strong:var(--rh-chocolate);
+--border-on-dark:var(--rh-ivory-30);
+--focus-ring:var(--rh-chocolate); /* caramel is only 2.9:1 on linen; paired with an ivory halo, see global.css */
+--focus-halo:var(--rh-ivory);
+
+/* Feedback (kept inside the earthy family) */
+--status-success:var(--rh-olive);
+--status-warning:var(--rh-caramel);
+--status-error:#9A3B2A;
+}

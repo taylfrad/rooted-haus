@@ -1,0 +1,19 @@
+{
+  "name": "The Rooted Haus",
+  "tagline": "Holistic Hair Studio",
+  "bookingUrl": "https://www.joinblvd.com/b/rosebeauty/widget#/visit-type",
+  "addressLine1": "1685 North Causeway Blvd., Suite A",
+  "addressCity": "Mandeville, LA 70471",
+  "phone": "(985) 778-0109",
+  "email": "",
+  "hours": [
+    { "days": "Monday", "time": "8 AM–6 PM" },
+    { "days": "Tuesday to Thursday", "time": "8 AM–8 PM" },
+    { "days": "Friday and Saturday", "time": "8 AM–6 PM" },
+    { "days": "Sunday", "time": "Closed" }
+  ],
+  "instagram": "https://www.instagram.com/",
+  "facebook": "https://www.facebook.com/",
+  "formEndpoint": "",
+  "giftCardsUrl": ""
+}

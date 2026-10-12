@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../layouts/Section.astro';
+import PageHeader from '../components/PageHeader.astro';
+import ReviewCard from '../components/content/ReviewCard.astro';
+import BookButton from '../components/core/BookButton.astro';
+
+const reviews = await getCollection('reviews');
+---
+
+<BaseLayout title="Reviews · The Rooted Haus" description="Kind words from the people who sit in our chairs.">
+  <PageHeader eyebrow="Reviews" script="kind words" title="From our chairs" bg="var(--surface-olive)" />
+  <Section>
+    <div class="grid">
+      {reviews.map((r) => <div data-reveal><ReviewCard quote={r.data.quote} name={r.data.name} detail={r.data.detail} rating={r.data.rating} /></div>)}
+    </div>
+    <div class="cta"><BookButton>Book an appointment</BookButton></div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 56px 64px; }
+  .cta { margin-top: 64px; }
+</style>

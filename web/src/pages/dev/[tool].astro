@@ -1,0 +1,41 @@
+---
+// Dev-only helper: renders the 1200x630 share banner so it can be screenshotted into public/og.png
+// (see scripts/README.md). The route is not built for production.
+import { Image } from 'astro:assets';
+import logo from '../../assets/logo-wordmark-chocolate.png';
+import '../../styles/global.css';
+
+export function getStaticPaths() {
+  return import.meta.env.DEV ? [{ params: { tool: 'og' } }] : [];
+}
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <title>OG banner</title>
+  </head>
+  <body>
+    <div class="banner">
+      <div class="frame">
+        <Image src={logo} alt="" width={840} class="logo" />
+        <div class="rule"></div>
+        <p class="script">come as you are</p>
+        <p class="line">Mandeville, Louisiana &nbsp;·&nbsp; Book online</p>
+      </div>
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  body { margin: 0; }
+  astro-dev-toolbar { display: none; } /* keep the dev toolbar out of the screenshot */
+  .banner { width: 1200px; height: 630px; background: var(--rh-linen); display: grid; place-items: center; box-sizing: border-box; padding: 28px; }
+  .frame { width: 100%; height: 100%; box-sizing: border-box; border: 1px solid var(--rh-chocolate-20); border-radius: 28px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; }
+  .logo { width: 840px; height: auto; }
+  .rule { width: 96px; height: 1px; background: var(--rh-terracotta); }
+  .script { margin: 0; font-family: var(--font-script); font-size: 76px; line-height: 1; color: var(--text-script); }
+  .line { margin: 0; font-size: 20px; font-weight: 500; letter-spacing: .32em; text-transform: uppercase; color: var(--rh-chocolate); }
+</style>

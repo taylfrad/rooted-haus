@@ -1,0 +1,72 @@
+---
+import { Image } from 'astro:assets';
+import { Menu, X } from '@lucide/astro';
+import logo from '../assets/logo-wordmark-chocolate.png';
+import BookButton from './core/BookButton.astro';
+import { nav, site } from '../lib/site';
+import { url } from '../lib/paths';
+
+const path = Astro.url.pathname;
+---
+
+<header class="header">
+  <div class="header__inner">
+    <a href={url()} class="header__logo" aria-label={`${site.name} — ${site.tagline}`}>
+      <Image src={logo} alt={`${site.name} — ${site.tagline}`} height={88} densities={[1, 2]} />
+    </a>
+    <nav class="header__nav" aria-label="Main">
+      <ul class="header__links" id="site-menu">
+        {nav.map((item) => (
+          <li>
+            <a href={url(item.href)} aria-current={path === url(item.href) ? 'page' : undefined}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+      <BookButton size="sm">Book now</BookButton>
+      <button class="header__toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu">
+        <span class="icon-open"><Menu size={20} stroke-width={1.5} /></span>
+        <span class="icon-close"><X size={20} stroke-width={1.5} /></span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // Delegated on document so it survives page transitions (the header is re-rendered each time).
+  document.addEventListener('click', (e) => {
+    const toggle = (e.target as Element).closest<HTMLButtonElement>('.header__toggle');
+    if (!toggle) return;
+    const open = toggle.closest('.header')?.classList.toggle('is-open') ?? false;
+    toggle.setAttribute('aria-expanded', String(open));
+  });
+</script>
+
+<style>
+  .header { position: sticky; top: 0; z-index: 20; background: rgba(243, 236, 226, .92);
+    backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-hairline); }
+  .header__inner { max-width: 1280px; margin: 0 auto; padding: 14px var(--gutter); display: flex;
+    align-items: center; justify-content: space-between; gap: 24px; }
+  .header__logo { display: flex; min-width: 0; }
+  .header__logo :global(img) { height: 44px; width: auto; max-width: 100%; object-fit: contain; }
+  .header__nav { display: flex; align-items: center; gap: 24px; }
+  .header__links { display: flex; gap: 24px; margin: 0; padding: 0; list-style: none; }
+  .header__links a { color: var(--rh-chocolate); text-decoration: none; white-space: nowrap; font-size: 12px;
+    font-weight: 500; letter-spacing: .18em; text-transform: uppercase; padding-bottom: 4px;
+    border-bottom: 1px solid transparent; }
+  .header__links a:hover, .header__links a[aria-current='page'] { border-bottom-color: var(--rh-terracotta); }
+  .header__toggle { display: none; width: 40px; height: 40px; border: 0; background: transparent;
+    color: var(--rh-chocolate); border-radius: var(--radius-pill); cursor: pointer; place-items: center; }
+  .icon-close { display: none; }
+  .is-open .icon-open { display: none; }
+  .is-open .icon-close { display: inline; }
+
+  @media (max-width: 1099px) {
+    .header__logo :global(img) { height: 36px; }
+    .header__nav { gap: 12px; }
+    .header__toggle { display: grid; }
+    .header__links { display: none; position: absolute; left: 0; right: 0; top: 100%; flex-direction: column;
+      gap: 18px; padding: 20px var(--gutter) 28px; background: var(--surface-page);
+      border-top: 1px solid var(--border-hairline); border-bottom: 1px solid var(--border-hairline); }
+    .is-open .header__links { display: flex; }
+  }
+</style>

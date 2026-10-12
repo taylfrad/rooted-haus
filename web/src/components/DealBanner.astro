@@ -1,0 +1,33 @@
+---
+import { getCollection } from 'astro:content';
+import Badge from './content/Badge.astro';
+import BookButton from './core/BookButton.astro';
+import { isDealActive } from '../lib/deals';
+
+const deals = (await getCollection('deals')).filter((d) => isDealActive(d.data));
+---
+
+{deals.length > 0 && (
+  <aside class="deals" aria-label="Current offers">
+    {deals.map((d) => (
+      <div class="deal" data-reveal>
+        <Badge tone="ivory">Seasonal offer</Badge>
+        <div class="deal__text">
+          <h2 class="deal__title">{d.data.title}</h2>
+          <p class="deal__body">{d.data.body}</p>
+        </div>
+        <BookButton variant="ivory" size="sm">{d.data.ctaLabel}</BookButton>
+      </div>
+    ))}
+  </aside>
+)}
+
+<style>
+  .deals { background: var(--surface-terracotta); color: var(--rh-ivory); padding: 28px var(--gutter);
+    display: flex; flex-direction: column; gap: 20px; }
+  .deal { max-width: var(--container-max); margin: 0 auto; width: 100%; display: flex; align-items: center;
+    gap: 24px; flex-wrap: wrap; }
+  .deal__text { flex: 1 1 320px; }
+  .deal__title { margin: 0 0 4px; font-family: var(--font-display); font-weight: 400; font-size: 26px; }
+  .deal__body { margin: 0; color: var(--text-on-dark-muted); }
+</style>

@@ -1,0 +1,58 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../layouts/Section.astro';
+import PageHeader from '../components/PageHeader.astro';
+import PhotoFrame from '../components/content/PhotoFrame.astro';
+import BookButton from '../components/core/BookButton.astro';
+import { site } from '../lib/site';
+
+const items = (await getCollection('gallery')).sort((a, b) => a.data.order - b.data.order);
+const tags = ['all', ...new Set(items.map((i) => i.data.tag))];
+---
+
+<BaseLayout title="Gallery · The Rooted Haus" description="Recent work from The Rooted Haus.">
+  <PageHeader eyebrow="Gallery" script="our work" title="Recent work" intro="Healthy hair, finished with care." bg="var(--surface-chocolate)" />
+  <Section>
+    <div class="filters" role="group" aria-label="Filter gallery">
+      {tags.map((t, i) => <button type="button" class="chip" data-filter={t} aria-pressed={i === 0}>{t}</button>)}
+    </div>
+    <div class="grid">
+      {items.map((i) => (
+        <div class="grid__item" data-tag={i.data.tag}>
+          <PhotoFrame shape={i.data.shape} ratio="3 / 4" label={i.data.label} />
+        </div>
+      ))}
+    </div>
+    <div class="cta">
+      <BookButton>Book an appointment</BookButton>
+      <a href={site.instagram} target="_blank" rel="noopener">Follow us on Instagram</a>
+    </div>
+  </Section>
+</BaseLayout>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const chips = [...document.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+    const cells = [...document.querySelectorAll<HTMLElement>('[data-tag]')];
+    chips.forEach((chip) =>
+      chip.addEventListener('click', () => {
+        const f = chip.dataset.filter;
+        chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+        cells.forEach((cell) => (cell.hidden = f !== 'all' && cell.dataset.tag !== f));
+      }),
+    );
+  });
+</script>
+
+<style>
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 40px; }
+  .chip { font: inherit; font-size: 12px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
+    border: 1px solid var(--rh-chocolate); background: transparent; color: var(--rh-chocolate); cursor: pointer;
+    border-radius: var(--radius-pill); padding: 9px 20px;
+    transition: background var(--dur-base) var(--ease-soft), color var(--dur-base) var(--ease-soft); }
+  .chip:hover, .chip[aria-pressed='true'] { background: var(--rh-chocolate); color: var(--rh-ivory); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; align-items: end; }
+  .grid__item[hidden] { display: none; }
+  .cta { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; margin-top: 56px; }
+</style>

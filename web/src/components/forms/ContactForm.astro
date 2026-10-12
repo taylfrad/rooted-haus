@@ -1,0 +1,31 @@
+---
+import Button from '../core/Button.astro';
+import { site } from '../../lib/site';
+
+interface Props {
+  /** Heading used for the email subject so the owner can tell forms apart. */
+  subject: string;
+  submitLabel?: string;
+}
+const { subject, submitLabel = 'Send message' } = Astro.props;
+const ready = site.formEndpoint !== '';
+---
+
+<form class="form" action={ready ? site.formEndpoint : undefined} method="POST">
+  <input type="hidden" name="subject" value={subject} />
+  <input type="text" name="botcheck" tabindex="-1" autocomplete="off" class="honeypot" aria-hidden="true" />
+  <slot />
+  {ready ? (
+    <div><Button type="submit">{submitLabel}</Button></div>
+  ) : (
+    <p class="form__note">
+      Online messages are being set up. For now, please call {site.phone} or book an appointment.
+    </p>
+  )}
+</form>
+
+<style>
+  .form { display: flex; flex-direction: column; gap: 20px; }
+  .honeypot { position: absolute; left: -9999px; }
+  .form__note { margin: 0; font-size: 14px; color: var(--text-muted); }
+</style>

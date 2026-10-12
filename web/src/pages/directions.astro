@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../layouts/Section.astro';
+import PageHeader from '../components/PageHeader.astro';
+import DirectionsMap from '../components/DirectionsMap.astro';
+import BookButton from '../components/core/BookButton.astro';
+import Button from '../components/core/Button.astro';
+import { MapPin, Clock, Phone } from '@lucide/astro';
+import { maps, site, hoursLine } from '../lib/site';
+import { url } from '../lib/paths';
+---
+
+<BaseLayout title="Directions · The Rooted Haus" description={`How to find The Rooted Haus at ${site.address.line1}, ${site.address.city}.`}>
+  <PageHeader eyebrow="Directions" script="find us" title="Visit us in Mandeville" intro="Tap the map and choose Apple Maps or Google Maps. Your route to the studio opens ready to go." bg="var(--surface-olive)" />
+  <Section>
+    <div class="layout">
+      <DirectionsMap />
+      <div class="info">
+        <div class="row">
+          <span class="ic"><MapPin size={20} stroke-width={1.5} /></span>
+          <div><strong>Address</strong><br />{site.address.line1}<br />{site.address.city}</div>
+        </div>
+        <div class="row">
+          <span class="ic"><Clock size={20} stroke-width={1.5} /></span>
+          <div><strong>Hours</strong>{site.hours.map((h) => <><br />{hoursLine(h)}</>)}</div>
+        </div>
+        <div class="row">
+          <span class="ic"><Phone size={20} stroke-width={1.5} /></span>
+          <div><strong>Running late or lost?</strong><br />Call <a href={`tel:${site.phone.replace(/[^\d+]/g, '')}`}>{site.phone}</a></div>
+        </div>
+        <div class="actions">
+          <Button href={maps.google} target="_blank" rel="noopener" data-directions-open>Get directions</Button>
+          <BookButton variant="outline">Book an appointment</BookButton>
+        </div>
+        <p class="back"><a href={url('contact/')}>Send us a message instead</a></p>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .layout { display: grid; grid-template-columns: 1.4fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: center; }
+  .info { display: flex; flex-direction: column; gap: 26px; }
+  .row { display: flex; gap: 18px; }
+  .ic { flex: 0 0 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: var(--rh-sand); color: var(--rh-terracotta); }
+  .actions { display: flex; flex-wrap: wrap; gap: 14px; }
+  .back { margin: 0; font-size: 14px; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+</style>

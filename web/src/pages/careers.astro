@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../layouts/Section.astro';
+import PageHeader from '../components/PageHeader.astro';
+import ContactForm from '../components/forms/ContactForm.astro';
+import Field from '../components/forms/Field.astro';
+import Badge from '../components/content/Badge.astro';
+---
+
+<BaseLayout title="Careers · The Rooted Haus" description="Join The Rooted Haus as a stylist: commission and chair rental options.">
+  <PageHeader eyebrow="Careers" script="wellness, beauty, community" title="Join the Haus" intro="We're looking for stylists who care about hair health as much as we do. Commission and chair rental options." bg="var(--surface-chocolate)" />
+  <Section>
+    <div class="layout">
+      <div class="about">
+        <Badge tone="terracotta">Now hiring</Badge>
+        <h2 class="h">What we offer</h2>
+        <p>A calm, well-lit studio, clients who value quality, and room to practice the way you want to. Tell us about your experience and what you are looking for.</p>
+        <p class="note">Placeholder copy: the owner will supply details on commission and chair rental terms.</p>
+      </div>
+      <div>
+        <ContactForm subject="Careers application" submitLabel="Send application">
+          <Field label="Name" name="name" required />
+          <Field label="Email" name="email" type="email" required />
+          <Field label="Phone" name="phone" type="tel" />
+          <Field label="I'm interested in" name="interest" type="select" options={['Commission', 'Chair rental', 'Assistant role', 'Not sure yet']} required />
+          <Field label="Tell us about yourself" name="message" type="textarea" required />
+        </ContactForm>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .layout { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 96px); }
+  .about { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
+  .h { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-display-m); color: var(--text-strong); }
+  .about p { margin: 0; }
+  .note { font-size: 14px; color: var(--text-muted); }
+  @media (max-width: 800px) { .layout { grid-template-columns: 1fr; } }
+</style>

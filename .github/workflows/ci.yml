@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches-ignore: [main] # main is checked by the deploy workflow
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter web check
+      - run: pnpm --filter web build
+        env:
+          SITE_URL: https://taylfrad.github.io
+          BASE_PATH: /rooted-haus
+      - name: No pure black or white colors
+        run: |
+          if grep -rEn '#000\b|#fff\b|#000000|#ffffff|:\s*(black|white)\b' web/src --include=*.astro --include=*.css --include=*.ts; then
+            echo "Pure black/white found; use palette tokens (client requirement)."; exit 1
+          fi

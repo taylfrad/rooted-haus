@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+*.log
+
+# local tooling notes, not part of the site
+CLAUDE.md
+.claude/
+.playwright-mcp/

@@ -1,0 +1,18 @@
+---
+interface Props {
+  bg?: string;
+  center?: boolean;
+  id?: string;
+}
+const { bg = 'var(--surface-page)', center = false, id } = Astro.props;
+---
+
+<section id={id} style={`background:${bg}`} class:list={['section', { 'section--center': center, 'on-olive': bg.includes('olive') }]}>
+  <div class="section__inner" data-reveal><slot /></div>
+</section>
+
+<style>
+  .section { padding: var(--section-y) var(--gutter); }
+  .section--center { text-align: center; }
+  .section__inner { max-width: var(--container-max); margin: 0 auto; }
+</style>

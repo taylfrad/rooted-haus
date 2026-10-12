@@ -1,0 +1,23 @@
+---
+import SectionHeading from './content/SectionHeading.astro';
+
+interface Props {
+  eyebrow: string;
+  script?: string;
+  title: string;
+  intro?: string;
+  bg?: string;
+}
+const { eyebrow, script, title, intro, bg = 'var(--surface-terracotta)' } = Astro.props;
+---
+
+<header class:list={['ph', { 'on-olive': bg.includes('olive') }]} style={`background:${bg}`}>
+  <div class="ph__inner">
+    <SectionHeading as="h1" tone="dark" {eyebrow} {script} {title} {intro} />
+  </div>
+</header>
+
+<style>
+  .ph { padding: clamp(56px, 8vw, 104px) var(--gutter); }
+  .ph__inner { max-width: var(--container-max); margin: 0 auto; }
+</style>

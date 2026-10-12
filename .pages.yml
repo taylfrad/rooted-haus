@@ -1,0 +1,119 @@
+# Pages CMS (https://pagescms.org) config: this is the owner's editing panel.
+# Every save is a commit to this repo, which rebuilds and redeploys the site.
+content:
+  - name: settings
+    label: Studio details
+    type: file
+    path: web/src/content/settings.json
+    format: json
+    fields:
+      - { name: name, label: Studio name, type: string }
+      - { name: tagline, label: Tagline, type: string }
+      - { name: bookingUrl, label: Booking link (Boulevard), type: string }
+      - { name: addressLine1, label: Street address, type: string }
+      - { name: addressCity, label: City, state and zip, type: string }
+      - { name: phone, label: Phone, type: string }
+      - { name: email, label: Email, type: string }
+      - name: hours
+        label: Hours
+        type: object
+        list: true
+        fields:
+          - { name: days, label: Days (e.g. Tue to Fri), type: string }
+          - { name: time, label: Time (e.g. 9am to 5pm), type: string }
+      - { name: instagram, label: Instagram link, type: string }
+      - { name: facebook, label: Facebook link, type: string }
+      - { name: giftCardsUrl, label: Gift cards link, type: string }
+      - { name: formEndpoint, label: Contact form address (set up by your web person), type: string }
+
+  - name: services
+    label: Services & prices
+    type: collection
+    path: web/src/content/services
+    format: yaml
+    view:
+      fields: [title, order]
+    fields:
+      - { name: title, label: Category name, type: string, required: true }
+      - { name: order, label: Order on the page (1 is first), type: number }
+      - { name: blurb, label: Short intro, type: text }
+      - name: items
+        label: Services
+        type: object
+        list: true
+        fields:
+          - { name: name, label: Service, type: string, required: true }
+          - { name: price, label: Price (e.g. from $85), type: string }
+          - { name: duration, label: Time (e.g. 60 min), type: string }
+          - { name: description, label: Description, type: text }
+
+  - name: deals
+    label: Seasonal deals
+    type: collection
+    path: web/src/content/deals
+    format: yaml
+    view:
+      fields: [title, start, end]
+    fields:
+      - { name: title, label: Deal title, type: string, required: true }
+      - { name: body, label: Details, type: text, required: true }
+      - { name: start, label: First day shown, type: date, required: true }
+      - { name: end, label: Last day shown, type: date, required: true }
+      - { name: ctaLabel, label: Button words, type: string }
+
+  - name: team
+    label: Team
+    type: collection
+    path: web/src/content/team
+    format: yaml
+    view:
+      fields: [name, role]
+    fields:
+      - { name: name, label: Name, type: string, required: true }
+      - { name: role, label: Role, type: string, required: true }
+      - { name: order, label: Order (1 is first), type: number }
+      - { name: bio, label: Bio, type: text, required: true }
+      - { name: specialties, label: Specialties, type: string, list: true }
+
+  - name: reviews
+    label: Reviews
+    type: collection
+    path: web/src/content/reviews
+    format: yaml
+    view:
+      fields: [name, featured]
+    fields:
+      - { name: quote, label: What they said, type: text, required: true }
+      - { name: name, label: Client name, type: string, required: true }
+      - { name: detail, label: Where it was posted, type: string }
+      - { name: rating, label: Stars (1 to 5), type: number }
+      - { name: featured, label: Show on the Home page, type: boolean }
+
+  - name: faq
+    label: FAQ
+    type: collection
+    path: web/src/content/faq
+    format: yaml
+    view:
+      fields: [question, order]
+    fields:
+      - { name: question, label: Question, type: string, required: true }
+      - { name: answer, label: Answer, type: text, required: true }
+      - { name: order, label: Order (1 is first), type: number }
+
+  - name: gallery
+    label: Gallery
+    type: collection
+    path: web/src/content/gallery
+    format: yaml
+    view:
+      fields: [label, tag]
+    fields:
+      - { name: label, label: Caption, type: string, required: true }
+      - { name: tag, label: Group (e.g. color, cut, scalp), type: string, required: true }
+      - name: shape
+        label: Photo shape
+        type: select
+        options:
+          values: [arch, circle, rounded, soft]
+      - { name: order, label: Order (1 is first), type: number }
