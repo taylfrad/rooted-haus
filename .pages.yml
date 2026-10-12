@@ -1,5 +1,11 @@
 # Pages CMS (https://pagescms.org) config: this is the owner's editing panel.
 # Every save is a commit to this repo, which rebuilds and redeploys the site.
+# Photos uploaded in the panel are saved here, and the paths written into content files are relative to them.
+# (Untested against the live panel; see docs/gallery.md.)
+media:
+  input: web/src/assets/gallery
+  output: ../../assets/gallery
+
 content:
   - name: settings
     label: Studio details
@@ -112,9 +118,16 @@ content:
       fields: [label, tag]
     fields:
       - { name: label, label: Caption, type: string, required: true }
+      - { name: image, label: Photo, type: image }
+      - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
       - { name: tag, label: Group (e.g. color, cut, scalp), type: string, required: true }
+      - name: size
+        label: Size in the gallery
+        type: select
+        options:
+          values: [small, wide, tall, large]
       - name: shape
-        label: Photo shape
+        label: Photo shape (circles only show on small and large photos)
         type: select
         options:
           values: [arch, circle, rounded, soft]

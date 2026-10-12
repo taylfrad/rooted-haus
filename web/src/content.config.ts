@@ -66,12 +66,18 @@ const faq = defineCollection({
 
 const gallery = defineCollection({
   loader: yml('gallery'),
-  schema: z.object({
-    label: z.string(),
-    tag: z.string(),
-    shape: z.enum(['arch', 'circle', 'rounded', 'soft']).default('arch'),
-    order: z.number().default(0),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      label: z.string(),
+      tag: z.string(),
+      shape: z.enum(['arch', 'circle', 'rounded', 'soft']).default('arch'),
+      /** How much room the photo takes in the mosaic: small = 1 cell, wide = 2 across, tall = 2 down, large = 2 x 2. */
+      size: z.enum(['small', 'wide', 'tall', 'large']).default('small'),
+      /** Path relative to this file, e.g. ../../assets/gallery/balayage.jpg. Leave empty to show a placeholder. */
+      image: image().optional(),
+      alt: z.string().optional(),
+      order: z.number().default(0),
+    }),
 });
 
 export const collections = { services, deals, team, reviews, faq, gallery };

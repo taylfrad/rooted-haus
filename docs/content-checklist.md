@@ -18,7 +18,7 @@ Send these in any format (photos, a text message, a voice memo all work). "Not s
 - [ ] The public Google Business link, and 4 to 6 reviews she wants shown (name + wording, with the client's OK)
 
 ## Photos and logo
-- [ ] 8 to 20 photos of her work (natural light, warm tones; phone photos are fine, original size please)
+- [ ] 8 to 20 photos of her work (the gallery mixes sizes: some portrait, some landscape, a few big hero shots; see `docs/gallery.md`) (natural light, warm tones; phone photos are fine, original size please)
 - [ ] 2 to 4 photos of the studio
 - [ ] A headshot of each team member
 - [ ] Logo files from her designer: SVG or the `.ai` / PDF, plus a light (ivory) version for dark backgrounds, and the monogram

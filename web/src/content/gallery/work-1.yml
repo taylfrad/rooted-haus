@@ -1,4 +1,5 @@
 label: Balayage
 tag: color
-shape: arch
+shape: rounded
+size: large
 order: 1

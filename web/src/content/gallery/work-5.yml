@@ -1,4 +1,5 @@
-label: Scalp care
-tag: scalp
-shape: circle
+label: Color
+tag: color
+shape: rounded
+size: wide
 order: 5

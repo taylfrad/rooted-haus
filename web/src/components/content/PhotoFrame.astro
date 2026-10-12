@@ -8,17 +8,30 @@ interface Props {
   shape?: 'arch' | 'circle' | 'rounded' | 'soft';
   ratio?: string;
   label?: string;
+  /** Stretch to fill the parent (used in the gallery mosaic) instead of keeping `ratio`. */
+  fill?: boolean;
+  /** Hint to the browser for picking an image size. */
+  sizes?: string;
 }
-const { src, alt = '', shape = 'arch', ratio = '4 / 5', label = 'Photo' } = Astro.props;
+const {
+  src,
+  alt = '',
+  shape = 'arch',
+  ratio = '4 / 5',
+  label = 'Photo',
+  fill = false,
+  sizes = '(min-width: 900px) 40vw, 90vw',
+} = Astro.props;
 ---
 
-<div class={`pf pf--${shape}`} style={`--ratio:${shape === 'circle' ? '1 / 1' : ratio}`}>
-  {src ? <Image src={src} alt={alt} widths={[400, 800, 1200]} sizes="(min-width: 900px) 40vw, 90vw" class="pf__img" /> : <span class="pf__label">{label}</span>}
+<div class:list={['pf', `pf--${shape}`, { 'pf--fill': fill }]} style={`--ratio:${shape === 'circle' ? '1 / 1' : ratio}`}>
+  {src ? <Image src={src} alt={alt} widths={[400, 800, 1200, 1600]} sizes={sizes} class="pf__img" /> : <span class="pf__label">{label}</span>}
 </div>
 
 <style>
   .pf { position: relative; overflow: hidden; aspect-ratio: var(--ratio);
     background: linear-gradient(160deg, var(--rh-sand), var(--rh-caramel-soft)); }
+  .pf--fill { aspect-ratio: auto; width: 100%; height: 100%; }
   .pf--arch { border-radius: var(--radius-arch); }
   .pf--circle { border-radius: 50%; }
   .pf--rounded { border-radius: var(--radius-lg); }
