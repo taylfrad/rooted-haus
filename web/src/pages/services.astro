@@ -53,7 +53,7 @@ const categories = (await getCollection('services')).sort((a, b) => a.data.order
     ))}
     </div>
     <div class="photo-col">
-      {photos.map((p) => <PhotoFrame src={p.src} alt={p.alt} shape={p.shape} ratio="4 / 5" sizes="(min-width: 900px) 30vw, 33vw" reveal />)}
+      {photos.map((p) => <PhotoFrame src={p.src} alt={p.alt} shape={p.shape} ratio="4 / 5" sizes="(min-width: 900px) 30vw, 33vw" />)}
     </div>
     </div>
     <div class="cta">

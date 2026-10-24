@@ -1,0 +1,65 @@
+---
+import { ChevronUp } from '@lucide/astro';
+---
+
+<!-- Appears once the guest scrolls down; the label pops up on hover or keyboard focus, and briefly the first
+     time the button appears in a visit, so people on phones (no hover) learn what it does too. -->
+<button class="totop" type="button" data-totop aria-label="Back to top of page">
+  <ChevronUp size={22} stroke-width={1.5} aria-hidden="true" />
+  <span class="totop__tip" aria-hidden="true">Back to top of page</span>
+</button>
+
+<script>
+  const SHOW_AFTER = 400; // px scrolled before the button appears
+  const HINT_KEY = 'rh-totop-hint';
+
+  const sync = () => {
+    const btn = document.querySelector<HTMLButtonElement>('[data-totop]');
+    if (!btn) return;
+    const show = window.scrollY > SHOW_AFTER;
+    if (show === btn.classList.contains('is-shown')) return;
+    btn.classList.toggle('is-shown', show);
+    if (show) hintOnce(btn);
+  };
+
+  // Show the label for a few seconds the first time per visit. If storage is blocked, it shows on each page instead.
+  function hintOnce(btn: HTMLButtonElement) {
+    try {
+      if (sessionStorage.getItem(HINT_KEY)) return;
+      sessionStorage.setItem(HINT_KEY, '1');
+    } catch {}
+    btn.classList.add('is-hinting');
+    window.setTimeout(() => btn.classList.remove('is-hinting'), 3000);
+  }
+
+  // Delegated on document so it survives page transitions (the button is re-rendered each time).
+  document.addEventListener('click', (e) => {
+    if (!(e.target as Element).closest('[data-totop]')) return;
+    const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: smooth ? 'smooth' : 'auto' });
+    // Keyboard and screen-reader users continue from the top of the content, not from the hidden button.
+    document.querySelector<HTMLElement>('#main')?.focus({ preventScroll: true });
+  });
+  window.addEventListener('scroll', sync, { passive: true });
+  document.addEventListener('astro:page-load', sync);
+</script>
+
+<style>
+  .totop { position: fixed; z-index: 15; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom));
+    width: 48px; height: 48px; padding: 0; display: grid; place-items: center; cursor: pointer;
+    border: 1px solid var(--border-on-dark); border-radius: var(--radius-pill);
+    background: var(--rh-chocolate); color: var(--rh-ivory); box-shadow: var(--shadow-lift);
+    opacity: 0; visibility: hidden;
+    transition: opacity var(--dur-base) var(--ease-soft), visibility 0s linear var(--dur-base), background var(--dur-base) var(--ease-soft); }
+  .totop.is-shown { opacity: 1; visibility: visible; transition-delay: 0s; }
+  .totop:hover { background: var(--rh-espresso); }
+
+  .totop__tip { position: absolute; right: calc(100% + 12px); top: 50%; translate: 0 -50%;
+    padding: 8px 14px; border-radius: var(--radius-pill); white-space: nowrap; pointer-events: none;
+    background: var(--rh-espresso); color: var(--rh-ivory); box-shadow: var(--shadow-soft);
+    font-size: 11px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase;
+    opacity: 0; transition: opacity var(--dur-fast) var(--ease-soft); }
+  .totop:hover .totop__tip, .totop:focus-visible .totop__tip, .totop.is-hinting .totop__tip { opacity: 1; }
+  /* Touch screens report a sticky "hover" after a tap; only the first-visit hint shows the label there. */
+  @media (hover: none) { .totop:hover:not(.is-hinting) .totop__tip { opacity: 0; } }
+</style>

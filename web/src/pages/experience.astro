@@ -22,7 +22,7 @@ const shapes = ['arch', 'rounded', 'circle', 'rounded'] as const;
       {items.map((it, i) => (
         <article class:list={['row', { 'row--flip': i % 2 === 1 }]} data-reveal>
           <div class="row__photo">
-            <PhotoFrame src={it.data.image} alt={it.data.alt ?? ''} label={it.data.title} shape={shapes[i % shapes.length]} ratio="4 / 5" sizes="(min-width: 900px) 40vw, 90vw" reveal />
+            <PhotoFrame src={it.data.image} alt={it.data.alt ?? ''} label={it.data.title} shape={shapes[i % shapes.length]} ratio="4 / 5" sizes="(min-width: 900px) 40vw, 90vw" />
           </div>
           <div class="row__text">
             <span class="row__n">{String(i + 1).padStart(2, '0')}</span>

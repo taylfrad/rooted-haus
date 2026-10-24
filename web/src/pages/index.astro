@@ -121,7 +121,7 @@ const recent = (await getCollection('gallery'))
       {specialties.map((s) => (
         <li class="sp">
           <a class="sp__link" href={url('services/')}>
-            <PhotoFrame src={s.src} alt={s.alt} shape="rounded" ratio="4 / 5" sizes="(min-width: 900px) 22vw, 45vw" reveal />
+            <PhotoFrame src={s.src} alt={s.alt} shape="rounded" ratio="4 / 5" sizes="(min-width: 900px) 22vw, 45vw" />
             <span class="sp__label">{s.label}</span>
           </a>
         </li>
@@ -149,7 +149,7 @@ const recent = (await getCollection('gallery'))
         <Button variant="outline" href={url('experience/')}>See The Experience</Button>
       </div>
       <div class="split__photo">
-        <PhotoFrame src={experiencePhoto} alt="A stylist chats with a smiling client who holds a warm drink in the chair." shape="arch" ratio="4 / 5" focus="50% 30%" sizes="(min-width: 900px) 40vw, 90vw" reveal />
+        <PhotoFrame src={experiencePhoto} alt="A stylist chats with a smiling client who holds a warm drink in the chair." shape="arch" ratio="4 / 5" focus="50% 30%" sizes="(min-width: 900px) 40vw, 90vw" />
       </div>
     </div>
   </Section>
@@ -177,7 +177,7 @@ const recent = (await getCollection('gallery'))
     </div>
     <div class="work__grid">
       {recent.map((g) => (
-        <PhotoFrame src={g.data.image} alt={g.data.alt ?? g.data.label} label={g.data.label} shape="soft" ratio="3 / 4" sizes="(min-width: 900px) 25vw, 50vw" reveal />
+        <PhotoFrame src={g.data.image} alt={g.data.alt ?? g.data.label} label={g.data.label} shape="soft" ratio="3 / 4" sizes="(min-width: 900px) 25vw, 50vw" />
       ))}
     </div>
   </Section>
@@ -194,7 +194,9 @@ const recent = (await getCollection('gallery'))
 
 <script>
   // Hero: cross-fades photos every 6s (design system: 1.2s cross-fade). Static when reduced motion is on.
+  // Guests can also swipe between photos on touch screens, or tap the dots.
   let timer: number | undefined;
+  const SWIPE_MIN = 40; // px of sideways travel before a touch counts as a swipe
 
   const whenSettled = (fn: () => void) => {
     const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(fn, { timeout: 2000 }) : setTimeout(fn, 800));
@@ -242,23 +244,50 @@ const recent = (await getCollection('gallery'))
     }
     function start() {
       if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      timer = window.setInterval(() => show((current + 1) % slides.length), 6000);
+      timer = window.setInterval(() => {
+        hero.classList.remove('is-manual');
+        show((current + 1) % slides.length);
+      }, 6000);
     }
-    dots.forEach((d, i) =>
-      d.addEventListener('click', () => {
-        window.clearInterval(timer);
-        show(i);
-        start();
-      }),
-    );
+    // A photo the guest picked (dot or swipe) fades in quickly and restarts the 6s timer.
+    function go(i: number) {
+      window.clearInterval(timer);
+      hero.classList.add('is-manual');
+      show((i + slides.length) % slides.length);
+      start();
+    }
+    dots.forEach((d, i) => d.addEventListener('click', () => go(i)));
+
+    // Swipe left for the next photo, right for the previous one. Mouse drags are ignored, and so are
+    // touches that start on a button, so the booking buttons and dots still work normally.
+    let startX = 0;
+    let startY = 0;
+    let tracking = false;
+    hero.addEventListener('pointerdown', (e) => {
+      tracking = e.pointerType !== 'mouse' && !(e.target as Element).closest('a, button');
+      startX = e.clientX;
+      startY = e.clientY;
+    });
+    hero.addEventListener('pointercancel', () => (tracking = false));
+    hero.addEventListener('pointerup', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < Math.abs(e.clientY - startY)) return;
+      go(current + (dx < 0 ? 1 : -1));
+    });
     start();
   }
 </script>
 
 <style>
-  .hero { position: relative; height: min(88vh, 780px); min-height: 560px; overflow: hidden; color: var(--rh-ivory); background: var(--rh-espresso); }
+  /* Exactly one screen tall on every device. svh is the height with a phone's browser bars showing, so
+     the hero fits on load and does not resize while those bars slide away. */
+  .hero { position: relative; height: 100vh; height: 100svh; overflow: hidden; color: var(--rh-ivory); background: var(--rh-espresso);
+    touch-action: pan-y pinch-zoom; /* the page still scrolls and zooms; sideways swipes go to the slideshow */ }
   .hero__slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s var(--ease-soft); }
   .hero__slide[data-active='true'] { opacity: 1; }
+  .hero.is-manual .hero__slide, .hero.is-manual .hero__script { transition-duration: .5s; }
   .hero__img { width: 100%; height: 100%; object-fit: cover; filter: var(--photo-warmth); }
   /* Darkens the bottom-left corner where the text sits, so ivory text stays readable on any photo. */
   .hero__top { position: absolute; z-index: 1; left: 0; right: 0; top: 0; height: 200px; pointer-events: none;
@@ -353,5 +382,18 @@ const recent = (await getCollection('gallery'))
     .hero__shade--right { display: none; }
     .hero[data-align='right'] .hero__content { align-items: flex-start; text-align: left; }
     .hero[data-align='right'] .hero__actions { justify-content: flex-start; }
+  }
+  /* Short screens (laptops with a small window, phones turned sideways): tighten the text so it fits. */
+  @media (max-height: 640px) {
+    .hero__content { gap: 10px; padding-bottom: 56px; }
+    .hero__script { font-size: clamp(36px, 10vh, 64px); }
+    .hero__title { font-size: clamp(22px, 5.5vh, 34px); }
+    .hero__actions { margin-top: 2px; gap: 10px; }
+    .hero__actions :global(.btn--lg) { padding: 12px 26px; font-size: 12px; }
+    .hero__dots { bottom: 12px; }
+  }
+  @media (max-height: 440px) {
+    .hero__eyebrow { display: none; }
+    .hero__content { padding-bottom: 44px; }
   }
 </style>
