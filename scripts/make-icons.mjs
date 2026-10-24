@@ -87,3 +87,12 @@ const monogramSand = await sharp({ create: { width: info.width, height: info.hei
   .toBuffer();
 writeFileSync(path.join(root, 'web/src/assets/monogram-sand.png'), monogramSand);
 console.log(`wrote web/src/assets/monogram-sand.png (${info.width}x${info.height})`);
+
+// Ivory wordmark for dark backgrounds (the header while it sits over the Home photo).
+const word = sharp(path.join(root, 'web/src/assets/logo-wordmark-chocolate.png')).ensureAlpha();
+const { data: wordAlpha, info: wordInfo } = await word.clone().extractChannel(3).raw().toBuffer({ resolveWithObject: true });
+await sharp({ create: { width: wordInfo.width, height: wordInfo.height, channels: 3, background: IVORY } })
+  .joinChannel(wordAlpha, { raw: { width: wordInfo.width, height: wordInfo.height, channels: 1 } })
+  .png({ compressionLevel: 9 })
+  .toFile(path.join(root, 'web/src/assets/logo-wordmark-ivory.png'));
+console.log(`wrote web/src/assets/logo-wordmark-ivory.png (${wordInfo.width}x${wordInfo.height})`);

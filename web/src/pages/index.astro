@@ -10,14 +10,21 @@ import Badge from '../components/content/Badge.astro';
 import Button from '../components/core/Button.astro';
 import BookButton from '../components/core/BookButton.astro';
 import DealBanner from '../components/DealBanner.astro';
+import Watermark from '../components/Watermark.astro';
 import { url } from '../lib/paths';
 
 import hero0156 from '../assets/photos/hero/img-0156.jpg';
 import hero0145 from '../assets/photos/hero/img-0145.jpg';
 import hero0161 from '../assets/photos/hero/img-0161.jpg';
 import hero0086 from '../assets/photos/hero/img-0086.jpg';
-import specialtiesPhoto from '../assets/photos/rituals/img-0142.jpg';
-import experiencePhoto from '../assets/photos/hero/img-0145.jpg';
+import spLowTox from '../assets/photos/rituals/img-0213.jpg';
+import spBlonding from '../assets/photos/rituals/img-0142.jpg';
+import spDimensional from '../assets/photos/rituals/img-0127.jpg';
+import spLowMaintenance from '../assets/photos/rituals/img-9951.jpg';
+import spGrey from '../assets/photos/rituals/img-9956.jpg';
+import spCuts from '../assets/photos/rituals/img-0039.jpg';
+import spScalp from '../assets/photos/rituals/img-0098.jpg';
+import experiencePhoto from '../assets/photos/rituals/img-0168.jpg';
 
 // Slides: photo, a script phrase, crop anchor, and which side the text sits on (the side away from the faces).
 const slides = [
@@ -36,19 +43,27 @@ const steps = [
 ];
 
 const specialties = [
-  'Low-tox hair appointments',
-  'Blonding',
-  'Dimensional color',
-  'Low-maintenance color',
-  'Grey blending',
-  'Precision cuts',
-  'Revitalizing scalp services',
+  { label: 'Low-tox hair appointments', src: spLowTox, alt: 'Amber dropper bottles of the salon’s scalp oil.' },
+  { label: 'Blonding', src: spBlonding, alt: 'A client’s finished blonde dimensional color.' },
+  { label: 'Dimensional color', src: spDimensional, alt: 'A stylist checks the blend of a soft blonde balayage.' },
+  { label: 'Low-maintenance color', src: spLowMaintenance, alt: 'A client watches in the mirror while her stylist paints in foils.' },
+  { label: 'Grey blending', src: spGrey, alt: 'Lightener painted onto sections of hair in foils.' },
+  { label: 'Precision cuts', src: spCuts, alt: 'A stylist runs her fingers through a client’s long brunette waves.' },
+  { label: 'Revitalizing scalp services', src: spScalp, alt: 'A client relaxes under a stone eye mask during a scalp treatment.' },
 ];
 
 const reviews = (await getCollection('reviews')).filter((r) => r.data.featured);
+// One love letter is shown large (set "Feature this one large" in the panel); the rest sit beside it.
+const lead = reviews.find((r) => r.data.highlight) ?? reviews[0];
+const others = reviews.filter((r) => r !== lead);
 const team = await getCollection('team');
 const stylistName = (slug?: string) => team.find((t) => t.id === slug)?.data.name;
-const recent = (await getCollection('gallery')).sort((a, b) => a.data.order - b.data.order).slice(0, 4);
+// Recent work skips any photo already shown higher on this page, so nothing repeats.
+const usedOnHome = new Set([...slides.map((s) => s.src.src), ...specialties.map((s) => s.src.src), experiencePhoto.src]);
+const recent = (await getCollection('gallery'))
+  .sort((a, b) => a.data.order - b.data.order)
+  .filter((g) => !g.data.image || !usedOnHome.has(g.data.image.src))
+  .slice(0, 4);
 ---
 
 <BaseLayout>
@@ -65,6 +80,7 @@ const recent = (await getCollection('gallery')).sort((a, b) => a.data.order - b.
         </div>
       ))}
     </template>
+    <div class="hero__top" aria-hidden="true"></div>
     <div class="hero__shade hero__shade--left" aria-hidden="true"></div>
     <div class="hero__shade hero__shade--right" aria-hidden="true"></div>
     <div class="hero__content">
@@ -100,18 +116,24 @@ const recent = (await getCollection('gallery')).sort((a, b) => a.data.order - b.
   </Section>
 
   <Section bg="var(--surface-raised)">
-    <div class="split">
-      <div class="split__photo">
-        <PhotoFrame src={specialtiesPhoto} alt="A client’s finished blonde dimensional color, softly waved." shape="arch" ratio="4 / 5" sizes="(min-width: 900px) 40vw, 90vw" />
-      </div>
-      <div class="split__text">
-        <SectionHeading align="left" eyebrow="Our specialties" script="the rituals" title="Beautiful hair, low-tox and intentional" />
-        <ul class="specialties">
-          {specialties.map((s) => <li>{s}</li>)}
-        </ul>
-        <Button variant="outline" href={url('services/')}>See our Rituals</Button>
-      </div>
-    </div>
+    <SectionHeading eyebrow="Our specialties" script="the rituals" title="Beautiful hair, low-tox and intentional" />
+    <ul class="specialties">
+      {specialties.map((s) => (
+        <li class="sp">
+          <a class="sp__link" href={url('services/')}>
+            <PhotoFrame src={s.src} alt={s.alt} shape="rounded" ratio="4 / 5" sizes="(min-width: 900px) 22vw, 45vw" reveal />
+            <span class="sp__label">{s.label}</span>
+          </a>
+        </li>
+      ))}
+      <li class="sp sp--cta">
+        <a class="sp__cta" href={url('services/')}>
+          <span class="sp__cta-script">the full menu</span>
+          <span class="sp__cta-title">See our Rituals</span>
+          <span class="sp__cta-text">Every service and price, in one place.</span>
+        </a>
+      </li>
+    </ul>
   </Section>
 
   <Section bg="var(--surface-sand)">
@@ -127,7 +149,7 @@ const recent = (await getCollection('gallery')).sort((a, b) => a.data.order - b.
         <Button variant="outline" href={url('experience/')}>See The Experience</Button>
       </div>
       <div class="split__photo">
-        <PhotoFrame src={experiencePhoto} alt="A smiling guest is handed a lavender drink in a gold-rimmed glass." shape="rounded" ratio="4 / 3" sizes="(min-width: 900px) 45vw, 90vw" />
+        <PhotoFrame src={experiencePhoto} alt="A stylist chats with a smiling client who holds a warm drink in the chair." shape="arch" ratio="4 / 5" focus="50% 30%" sizes="(min-width: 900px) 40vw, 90vw" reveal />
       </div>
     </div>
   </Section>
@@ -135,9 +157,16 @@ const recent = (await getCollection('gallery')).sort((a, b) => a.data.order - b.
   <Section bg="var(--surface-olive)">
     <SectionHeading tone="dark" eyebrow="Success stories" script="love letters" title="From our clients" />
     <div class="letters">
-      {reviews.map((r) => (
-        <ReviewCard tone="dark" quote={r.data.quote} name={r.data.name} detail={r.data.stylist ? `with ${stylistName(r.data.stylist)}` : r.data.detail} rating={r.data.rating} />
-      ))}
+      {lead && (
+        <div class="letters__lead">
+          <ReviewCard tone="dark" quote={lead.data.quote} name={lead.data.name} detail={lead.data.stylist ? `with ${stylistName(lead.data.stylist)}` : lead.data.detail} rating={lead.data.rating} />
+        </div>
+      )}
+      <div class="letters__rest">
+        {others.map((r) => (
+          <ReviewCard tone="dark" quote={r.data.quote} name={r.data.name} detail={r.data.stylist ? `with ${stylistName(r.data.stylist)}` : r.data.detail} rating={r.data.rating} />
+        ))}
+      </div>
     </div>
   </Section>
 
@@ -148,18 +177,19 @@ const recent = (await getCollection('gallery')).sort((a, b) => a.data.order - b.
     </div>
     <div class="work__grid">
       {recent.map((g) => (
-        <PhotoFrame src={g.data.image} alt={g.data.alt ?? g.data.label} label={g.data.label} shape="soft" ratio="3 / 4" sizes="(min-width: 900px) 25vw, 50vw" />
+        <PhotoFrame src={g.data.image} alt={g.data.alt ?? g.data.label} label={g.data.label} shape="soft" ratio="3 / 4" sizes="(min-width: 900px) 25vw, 50vw" reveal />
       ))}
     </div>
   </Section>
 
-  <Section bg="var(--surface-moody)" center>
-    <div class="hiring">
-      <Badge tone="sand">Now hiring</Badge>
+  <section class="band">
+    <Watermark side="right" />
+    <div class="hiring" data-reveal>
+      <Badge tone="ivory">Now hiring</Badge>
       <SectionHeading tone="dark" script="plant your roots" title="Come grow with us" intro="We’re always looking for wellness-minded stylists. Commission and booth rental opportunities." />
       <Button variant="ivory" href={url('careers/')}>Plant your roots</Button>
     </div>
-  </Section>
+  </section>
 </BaseLayout>
 
 <script>
@@ -231,6 +261,8 @@ const recent = (await getCollection('gallery')).sort((a, b) => a.data.order - b.
   .hero__slide[data-active='true'] { opacity: 1; }
   .hero__img { width: 100%; height: 100%; object-fit: cover; filter: var(--photo-warmth); }
   /* Darkens the bottom-left corner where the text sits, so ivory text stays readable on any photo. */
+  .hero__top { position: absolute; z-index: 1; left: 0; right: 0; top: 0; height: 200px; pointer-events: none;
+    background: linear-gradient(180deg, rgba(59, 40, 25, .8) 0%, rgba(59, 40, 25, .62) 40%, rgba(59, 40, 25, 0) 100%); }
   .hero__shade { position: absolute; inset: 0; pointer-events: none; transition: opacity 1.2s var(--ease-soft); }
   .hero__shade--left {
     background:
@@ -268,8 +300,8 @@ const recent = (await getCollection('gallery')).sort((a, b) => a.data.order - b.
   .hero__dots button[data-active='true']::before { width: 36px; background: var(--rh-sand); }
 
   .steps { list-style: none; margin: 48px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; counter-reset: none; }
-  .step { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 32px 28px; border-radius: var(--radius-lg); background: var(--surface-raised); }
-  .step__n { font-family: var(--font-display); font-size: 40px; line-height: 1; color: var(--text-script); }
+  .step { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 32px 28px; border-radius: var(--radius-lg); background: var(--surface-sand); }
+  .step__n { font-family: var(--font-display); font-size: 52px; line-height: 1; color: var(--rh-terracotta); }
   .step__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 26px; color: var(--text-strong); }
   .step__text { margin: 0 0 4px; color: var(--text-muted); }
 
@@ -277,28 +309,44 @@ const recent = (await getCollection('gallery')).sort((a, b) => a.data.order - b.
   .split--flip { grid-template-columns: 1.1fr 1fr; }
   .split__text { display: flex; flex-direction: column; gap: 28px; align-items: flex-start; }
   .split__photo { max-width: 520px; width: 100%; justify-self: center; }
-  .specialties { list-style: none; margin: 0; padding: 0; width: 100%; columns: 2; column-gap: 32px; }
-  .specialties li { break-inside: avoid; padding: 12px 0; border-bottom: 1px solid var(--border-hairline);
-    font-family: var(--font-display); font-size: 20px; color: var(--text-strong); }
+  .specialties { list-style: none; margin: 48px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px 20px; }
+  .sp__link { display: flex; flex-direction: column; gap: 14px; text-decoration: none; color: var(--text-strong); }
+  .sp__link :global(.pf) { transition: transform var(--dur-base) var(--ease-soft), box-shadow var(--dur-base) var(--ease-soft); }
+  .sp__link:hover :global(.pf) { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+  .sp__label { font-family: var(--font-display); font-size: 21px; line-height: 1.2; }
+  .sp__link:hover .sp__label { color: var(--text-accent); }
+  .sp__cta { height: 100%; min-height: 220px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; gap: 8px;
+    padding: 28px; border-radius: var(--radius-lg); background: var(--surface-terracotta); color: var(--rh-ivory); text-decoration: none;
+    transition: background var(--dur-base) var(--ease-soft); }
+  .sp__cta:hover { background: var(--rh-chocolate); color: var(--rh-ivory); }
+  .sp__cta-script { font-family: var(--font-script); font-size: var(--fs-script-s); line-height: 1; color: var(--rh-caramel-soft); }
+  .sp__cta-title { font-family: var(--font-display); font-size: 28px; line-height: 1.15; }
+  .sp__cta-text { font-size: 15px; color: var(--text-on-dark-muted); }
 
-  .letters { margin: 48px 0; columns: 3; column-gap: 40px; }
-  .letters > :global(*) { break-inside: avoid; margin-bottom: 44px; }
+  .letters { margin: 48px 0 8px; display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: start; }
+  .letters__lead :global(.review__quote) { font-size: clamp(24px, 2.4vw, 32px); line-height: 1.4; }
+  .letters__rest { columns: 2; column-gap: 36px; }
+  .letters__rest > :global(*) { break-inside: avoid; margin-bottom: 36px; }
+  .letters__rest :global(.review__quote) { font-size: 18px; }
   .center { display: flex; justify-content: center; }
 
   .work__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 36px; flex-wrap: wrap; }
   .work__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-  .hiring { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+  .band { position: relative; overflow: hidden; padding: var(--section-y) var(--gutter); background: var(--surface-terracotta); text-align: center; }
+  .hiring { position: relative; z-index: 1; max-width: var(--container-max); margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 24px; }
 
   @media (max-width: 900px) {
     .steps { grid-template-columns: 1fr; }
     .split, .split--flip { grid-template-columns: 1fr; }
     .split--flip .split__photo { order: -1; }
-    .letters { columns: 1; }
+    .letters { grid-template-columns: 1fr; }
+    .specialties { grid-template-columns: repeat(2, 1fr); }
     .work__grid { grid-template-columns: repeat(2, 1fr); }
   }
-  @media (max-width: 1100px) and (min-width: 901px) { .letters { columns: 2; } }
+  @media (max-width: 1100px) and (min-width: 901px) { .letters__rest { columns: 1; } }
   @media (max-width: 560px) {
-    .specialties { columns: 1; }
+    .hero__eyebrow { font-size: 10.5px; letter-spacing: .2em; padding: 7px 14px; }
+    .letters__rest { columns: 1; }
     .hero__content { padding-bottom: 72px; }
     .hero__shade--left, .hero__shade--right, .hero[data-align='right'] .hero__shade--left { opacity: 1;
       background: linear-gradient(0deg, rgba(59, 40, 25, .9) 0%, rgba(59, 40, 25, .65) 45%, rgba(59, 40, 25, 0) 80%); }

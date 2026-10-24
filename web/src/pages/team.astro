@@ -1,4 +1,5 @@
 ---
+import headerPhoto from '../assets/photos/rituals/img-0041.jpg';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
@@ -17,6 +18,9 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
     title="The hands and hearts of our foundation"
     intro="Just as every living thing depends on its roots to grow and flourish, The Rooted Haus also depends on ours. Meet the hands and hearts of our foundation who help nurture and grow our Haus, bringing our vision of beauty and wellness to life."
     bg="var(--surface-olive)"
+    image={headerPhoto}
+    imageAlt="Stylists at work with clients across the salon floor."
+    focus="50% 40%"
   />
   <Section>
     <div class="mission">

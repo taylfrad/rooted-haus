@@ -14,6 +14,8 @@ interface Props {
   sizes?: string;
   /** Which part of the photo to keep when cropping (CSS object-position), e.g. "50% 20%" keeps the upper middle. */
   focus?: string;
+  /** Unveil the photo from the bottom up when it scrolls into view (see lib/motion.ts). */
+  reveal?: boolean;
 }
 const {
   src,
@@ -24,10 +26,11 @@ const {
   fill = false,
   sizes = '(min-width: 900px) 40vw, 90vw',
   focus,
+  reveal = false,
 } = Astro.props;
 ---
 
-<div class:list={['pf', `pf--${shape}`, { 'pf--fill': fill }]} style={`--ratio:${shape === 'circle' ? '1 / 1' : ratio}`}>
+<div class:list={['pf', `pf--${shape}`, { 'pf--fill': fill }]} data-reveal-photo={reveal ? '' : undefined} style={`--ratio:${shape === 'circle' ? '1 / 1' : ratio}`}>
   {src ? <Image src={src} alt={alt} widths={[400, 800, 1200, 1600]} sizes={sizes} class="pf__img" style={focus ? `object-position:${focus}` : undefined} /> : <span class="pf__label">{label}</span>}
 </div>
 

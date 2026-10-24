@@ -12,11 +12,12 @@ import { Check } from '@lucide/astro';
 import { site } from '../lib/site';
 import { url } from '../lib/paths';
 import careers from '../content/careers.json';
-import teamPhoto from '../assets/photos/hero/img-9947.jpg';
+import headerPhoto from '../assets/photos/hero/img-9947.jpg';
+import teamPhoto from '../assets/photos/stylists/img-9934.jpg';
 ---
 
 <BaseLayout title="Plant Your Roots: careers · The Rooted Haus" description="Join The Rooted Haus in Mandeville: commission, booth rental and hourly opportunities in a calm, low-tox salon.">
-  <PageHeader eyebrow="Plant your roots" script="come grow with us" title={careers.title} bg="var(--surface-chocolate)" />
+  <PageHeader eyebrow="Plant your roots" script="come grow with us" title={careers.title} bg="var(--surface-chocolate)" image={headerPhoto} imageAlt="A stylist in a wide-brim hat paints in foils for a smiling client." focus="58% 40%" />
 
   <Section>
     <div class="split">
@@ -27,7 +28,7 @@ import teamPhoto from '../assets/photos/hero/img-9947.jpg';
         <Button variant="outline" href={url('team/')}>Meet the Haus</Button>
       </div>
       <div class="split__photo">
-        <PhotoFrame src={teamPhoto} alt="A stylist in a wide-brim hat paints in foils for a smiling client." shape="rounded" ratio="4 / 3" sizes="(min-width: 900px) 45vw, 90vw" />
+        <PhotoFrame src={teamPhoto} alt="Sadie laughs as she spins in a salon chair." shape="rounded" ratio="4 / 5" focus="50% 30%" sizes="(min-width: 900px) 40vw, 90vw" reveal />
       </div>
     </div>
   </Section>

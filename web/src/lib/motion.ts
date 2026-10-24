@@ -24,4 +24,11 @@ export function initReveal(): void {
     onEnter: (els) =>
       gsap.to(els, { opacity: 1, y: 0, duration: DURATION, stagger: STAGGER, ease: 'soft', overwrite: true }),
   });
+  // Photos marked `reveal` unveil from the bottom up: calm, no zoom (design system rule).
+  ScrollTrigger.batch('[data-reveal-photo]', {
+    start: TRIGGER_START,
+    once: true,
+    onEnter: (els) =>
+      gsap.to(els, { clipPath: 'inset(0% 0 0 0)', duration: 1.1, stagger: STAGGER, ease: 'soft', overwrite: true }),
+  });
 }

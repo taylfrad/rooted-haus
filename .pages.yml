@@ -138,6 +138,7 @@ content:
       - { name: stylist, label: Stylist file name if the review is about them (e.g. ashley), type: string }
       - { name: rating, label: Stars (1 to 5), type: number }
       - { name: featured, label: Show on the Home page, type: boolean }
+      - { name: highlight, label: Feature this one large on Home (pick just one), type: boolean }
 
   - name: faq
     label: FAQ (shown on the Connect page)

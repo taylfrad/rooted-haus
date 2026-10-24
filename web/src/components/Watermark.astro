@@ -1,0 +1,20 @@
+---
+// The RH monogram as a faint decorative watermark for dark sections (design system: sand monogram at 10–14%).
+// Place inside a parent with position: relative and overflow: hidden.
+import { Image } from 'astro:assets';
+import monogram from '../assets/monogram-sand.png';
+
+interface Props {
+  /** Corner it sits in. */
+  side?: 'left' | 'right';
+}
+const { side = 'right' } = Astro.props;
+---
+
+<Image src={monogram} alt="" aria-hidden="true" width={640} class:list={['wm', `wm--${side}`]} loading="lazy" />
+
+<style>
+  .wm { position: absolute; z-index: 0; width: min(560px, 70vw); height: auto; opacity: .12; pointer-events: none; user-select: none; }
+  .wm--right { right: -6%; bottom: -18%; }
+  .wm--left { left: -8%; bottom: -22%; }
+</style>

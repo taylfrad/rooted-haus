@@ -1,4 +1,5 @@
 ---
+import headerPhoto from '../assets/photos/hero/img-0156.jpg';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
@@ -15,7 +16,7 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
 ---
 
 <BaseLayout title="Connect · The Rooted Haus" description="Find The Rooted Haus in Mandeville, Louisiana: address, hours, directions and how to reach us.">
-  <PageHeader eyebrow="Connect" script="come as you are" title="Visit us" intro="We would love to meet you." />
+  <PageHeader eyebrow="Connect" script="come as you are" title="Visit us" intro="We would love to meet you." image={headerPhoto} imageAlt="A guest relaxes with a magazine on a cream armchair in the salon lounge." focus="62% 40%" />
 
   <Section>
     <div class="visit connect-visit">

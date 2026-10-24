@@ -2,17 +2,21 @@
 import { Image } from 'astro:assets';
 import { Menu, X } from '@lucide/astro';
 import logo from '../assets/logo-wordmark-chocolate.png';
+import logoIvory from '../assets/logo-wordmark-ivory.png';
 import BookButton from './core/BookButton.astro';
 import { nav, site } from '../lib/site';
 import { url } from '../lib/paths';
 
 const path = Astro.url.pathname;
+// Home only: the header starts see-through over the hero photo (ivory logo and links) and turns solid on scroll.
+const overlay = path === url();
 ---
 
-<header class="header">
+<header class:list={['header', { 'header--overlay': overlay }]}>
   <div class="header__inner">
     <a href={url()} class="header__logo" aria-label={`${site.name} — ${site.tagline}`}>
-      <Image src={logo} alt={`${site.name} — ${site.tagline}`} height={88} densities={[1, 2]} />
+      <Image src={logo} alt={`${site.name} — ${site.tagline}`} height={88} densities={[1, 2]} class="logo--dark" />
+      {overlay && <Image src={logoIvory} alt="" aria-hidden="true" height={88} densities={[1, 2]} class="logo--light" />}
     </a>
     <nav class="header__nav" aria-label="Main">
       <ul class="header__links" id="site-menu">
@@ -39,6 +43,14 @@ const path = Astro.url.pathname;
     const open = toggle.closest('.header')?.classList.toggle('is-open') ?? false;
     toggle.setAttribute('aria-expanded', String(open));
   });
+
+  // Home: solid header once the page scrolls, see-through at the very top.
+  const syncHeader = () => {
+    const h = document.querySelector('.header--overlay');
+    h?.classList.toggle('is-solid', window.scrollY > 24);
+  };
+  window.addEventListener('scroll', syncHeader, { passive: true });
+  document.addEventListener('astro:page-load', syncHeader);
 </script>
 
 <style>
@@ -59,6 +71,18 @@ const path = Astro.url.pathname;
   .icon-close { display: none; }
   .is-open .icon-open { display: none; }
   .is-open .icon-close { display: inline; }
+
+  /* --- Home: see-through over the hero until scrolled (or the menu is opened) --- */
+  .logo--light { display: none; }
+  .header--overlay { position: fixed; left: 0; right: 0; transition: background var(--dur-base) var(--ease-soft), border-color var(--dur-base) var(--ease-soft); }
+  .header--overlay:not(.is-solid):not(.is-open) { background: transparent; border-bottom-color: transparent; backdrop-filter: none; }
+  .header--overlay:not(.is-solid):not(.is-open) :global(.logo--dark) { display: none; }
+  .header--overlay:not(.is-solid):not(.is-open) :global(.logo--light) { display: block; }
+  .header--overlay:not(.is-solid):not(.is-open) .header__toggle { color: var(--rh-ivory); }
+  @media (min-width: 1100px) {
+    .header--overlay:not(.is-solid):not(.is-open) .header__links a { color: var(--rh-ivory); text-shadow: 0 1px 8px rgba(59, 40, 25, .6); }
+    .header--overlay:not(.is-solid):not(.is-open) .header__links a:hover { border-bottom-color: var(--rh-sand); }
+  }
 
   /* Five menu items need about 1100px; below that the menu moves behind the toggle. */
   @media (max-width: 1099px) {

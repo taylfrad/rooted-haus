@@ -1,5 +1,8 @@
 ---
+import type { ImageMetadata } from 'astro';
 import SectionHeading from './content/SectionHeading.astro';
+import PhotoFrame from './content/PhotoFrame.astro';
+import Watermark from './Watermark.astro';
 
 interface Props {
   eyebrow: string;
@@ -7,17 +10,39 @@ interface Props {
   title: string;
   intro?: string;
   bg?: string;
+  /** A photo beside the heading. Without one, the heading is centered. */
+  image?: ImageMetadata;
+  imageAlt?: string;
+  /** Which part of the photo to keep in the arch crop (CSS object-position). */
+  focus?: string;
 }
-const { eyebrow, script, title, intro, bg = 'var(--surface-terracotta)' } = Astro.props;
+const { eyebrow, script, title, intro, bg = 'var(--surface-terracotta)', image, imageAlt = '', focus } = Astro.props;
 ---
 
-<header class:list={['ph', { 'on-olive': bg.includes('olive') }]} style={`background:${bg}`}>
+<header class:list={['ph', { 'on-olive': bg.includes('olive'), 'ph--photo': !!image }]} style={`background:${bg}`}>
+  <Watermark side={image ? 'left' : 'right'} />
   <div class="ph__inner">
-    <SectionHeading as="h1" tone="dark" {eyebrow} {script} {title} {intro} />
+    <div class="ph__text">
+      <SectionHeading as="h1" tone="dark" align={image ? 'left' : 'center'} {eyebrow} {script} {title} {intro} />
+    </div>
+    {image && (
+      <div class="ph__photo">
+        <PhotoFrame src={image} alt={imageAlt} shape="arch" ratio="4 / 5" focus={focus} sizes="(min-width: 900px) 34vw, 70vw" reveal />
+      </div>
+    )}
   </div>
 </header>
 
 <style>
-  .ph { padding: clamp(56px, 8vw, 104px) var(--gutter); }
-  .ph__inner { max-width: var(--container-max); margin: 0 auto; }
+  .ph { position: relative; overflow: hidden; padding: clamp(56px, 8vw, 104px) var(--gutter); }
+  .ph__inner { position: relative; z-index: 1; max-width: var(--container-max); margin: 0 auto; }
+  .ph--photo { padding-top: clamp(48px, 6vw, 80px); padding-bottom: clamp(48px, 6vw, 80px); }
+  .ph--photo .ph__inner { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
+  .ph__photo { width: 100%; max-width: 330px; justify-self: end; }
+  @media (max-width: 900px) {
+    .ph--photo .ph__inner { grid-template-columns: 1fr; }
+    /* Phones: a short, wide crop under the text instead of a tall arch, so headers stay compact. */
+    .ph__photo { max-width: none; justify-self: stretch; }
+    .ph__photo :global(.pf) { aspect-ratio: 16 / 9; border-radius: var(--radius-lg); }
+  }
 </style>

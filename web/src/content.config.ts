@@ -64,6 +64,8 @@ const reviews = defineCollection({
     stylist: z.string().optional(),
     rating: z.number().min(1).max(5).default(5),
     featured: z.boolean().default(false),
+    /** Shown large on Home; the others sit beside it. Only one should be set. */
+    highlight: z.boolean().default(false),
   }),
 });
 

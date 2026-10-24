@@ -1,4 +1,5 @@
 ---
+import headerPhoto from '../assets/photos/rituals/img-0117.jpg';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
@@ -14,14 +15,14 @@ const shapes = ['arch', 'rounded', 'circle', 'rounded'] as const;
 ---
 
 <BaseLayout title="The Experience · The Rooted Haus" description="What to expect at The Rooted Haus: a cozy space, curated low-tox refreshments, and an appointment that is entirely yours.">
-  <PageHeader eyebrow="New guests welcome!" script="the experience" title="Make yourself at home" bg="var(--surface-chocolate)" />
+  <PageHeader eyebrow="New guests welcome!" script="the experience" title="Make yourself at home" bg="var(--surface-chocolate)" image={headerPhoto} imageAlt="A slow hand and arm massage during a service." focus="50% 45%" />
 
   <Section>
     <div class="rows">
       {items.map((it, i) => (
         <article class:list={['row', { 'row--flip': i % 2 === 1 }]} data-reveal>
           <div class="row__photo">
-            <PhotoFrame src={it.data.image} alt={it.data.alt ?? ''} label={it.data.title} shape={shapes[i % shapes.length]} ratio="4 / 5" sizes="(min-width: 900px) 40vw, 90vw" />
+            <PhotoFrame src={it.data.image} alt={it.data.alt ?? ''} label={it.data.title} shape={shapes[i % shapes.length]} ratio="4 / 5" sizes="(min-width: 900px) 40vw, 90vw" reveal />
           </div>
           <div class="row__text">
             <span class="row__n">{String(i + 1).padStart(2, '0')}</span>

@@ -1,4 +1,5 @@
 ---
+import headerPhoto from '../assets/photos/rituals/img-9963.jpg';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
@@ -22,7 +23,7 @@ const categories = (await getCollection('services')).sort((a, b) => a.data.order
 ---
 
 <BaseLayout title="The Rituals: services & prices · The Rooted Haus" description="Haircuts, blonding, dimensional color, grey blending, scalp services and extensions at The Rooted Haus in Mandeville, Louisiana.">
-  <PageHeader eyebrow="Services & prices" script="the rituals" title="Our rituals" intro="Personalized hair care, rooted in wellness." />
+  <PageHeader eyebrow="Services & prices" script="the rituals" title="Our rituals" intro="Personalized hair care, rooted in wellness." image={headerPhoto} imageAlt="Color mixed by hand in a bowl at the station." focus="45% 50%" />
   <DealBanner />
   <Section bg="var(--surface-raised)">
     <div class="layout">
@@ -52,7 +53,7 @@ const categories = (await getCollection('services')).sort((a, b) => a.data.order
     ))}
     </div>
     <div class="photo-col">
-      {photos.map((p) => <PhotoFrame src={p.src} alt={p.alt} shape={p.shape} ratio="4 / 5" sizes="(min-width: 900px) 30vw, 33vw" />)}
+      {photos.map((p) => <PhotoFrame src={p.src} alt={p.alt} shape={p.shape} ratio="4 / 5" sizes="(min-width: 900px) 30vw, 33vw" reveal />)}
     </div>
     </div>
     <div class="cta">
