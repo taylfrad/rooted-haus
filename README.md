@@ -13,8 +13,9 @@ pnpm check      # type-check
 pnpm build      # static site in web/dist
 ```
 
-Staging on GitHub Pages builds with `SITE_URL=https://taylfrad.github.io` and `BASE_PATH=/rooted-haus`.
-Any other host only needs those two environment variables changed (leave `BASE_PATH` unset for a root domain).
+Hosted on GitHub Pages. The deploy workflow asks GitHub for the site address, so it builds under `/rooted-haus/` (staging,
+hidden from search) until a custom domain is connected, then at the domain root. Transfer and domain steps: `docs/launch-runbook.md`.
+Any other host needs `SITE_URL` set (and `BASE_PATH` only when served under a sub-path).
 
 ## Layout
 

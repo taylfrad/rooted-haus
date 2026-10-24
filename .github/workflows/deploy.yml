@@ -30,10 +30,15 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter web check
+      # Asks GitHub where this Pages site actually lives, so moving the repo to another account or
+      # connecting a custom domain needs no edits here: <account>.github.io/rooted-haus builds under
+      # /rooted-haus (staging, hidden from search), a custom domain builds at the root (live, indexed).
+      - id: pages
+        uses: actions/configure-pages@v5
       - run: pnpm --filter web build
         env:
-          SITE_URL: https://taylfrad.github.io
-          BASE_PATH: /rooted-haus
+          SITE_URL: ${{ steps.pages.outputs.origin }}
+          BASE_PATH: ${{ steps.pages.outputs.base_path || '/' }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: web/dist

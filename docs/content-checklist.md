@@ -35,7 +35,7 @@ Send these in any format (photos, a text message, a voice memo all work). "Not s
 ## Accounts (she owns every one; we only need to be added as a helper)
 - [ ] Boulevard: the self-booking overlay snippet (Boulevard dashboard, Online booking settings)
 - [ ] Domain: register rootedhaus.com in her name (backup therootedhaus.com); we help with the DNS later
-- [ ] GitHub: a free account so she can sign in to the editing panel (or we invite her by email if that is supported)
+- [ ] GitHub: a free account; the site's repository is transferred to it so she owns it (we stay on as a helper), and she signs in to the editing panel with it
 - [ ] Contact form service (Web3Forms or Formspree): free account, we set it up together
 - [ ] Resume uploads on the Careers page need a form service that accepts files, which is a paid plan on Web3Forms and Formspree but free on Netlify. See `docs/forms.md` and decide together.
 - [ ] Optional: a business email at the new domain (hello@rootedhaus.com). It is for looking professional and keeping personal and business mail separate; she can decide later.

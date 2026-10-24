@@ -20,9 +20,9 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter web check
       - run: pnpm --filter web build
-        env:
-          SITE_URL: https://taylfrad.github.io
-          BASE_PATH: /rooted-haus
+        env: # a staging-style build for whichever account owns the repo (deploy.yml asks GitHub for the real address)
+          SITE_URL: https://${{ github.repository_owner }}.github.io
+          BASE_PATH: /${{ github.event.repository.name }}
       - name: No pure black or white colors
         run: |
           if grep -rEn '#000\b|#fff\b|#000000|#ffffff|:\s*(black|white)\b' web/src --include=*.astro --include=*.css --include=*.ts; then
