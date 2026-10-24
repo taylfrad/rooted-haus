@@ -42,7 +42,6 @@ export const nav = [
   { href: 'services/', label: 'The Rituals' },
   { href: 'team/', label: 'Meet the Haus' },
   { href: 'experience/', label: 'The Experience' },
-  { href: 'about/', label: 'Our Roots' },
-  { href: 'careers/', label: 'Plant Your Roots' },
+  { href: 'gallery/', label: 'Gallery' },
   { href: 'contact/', label: 'Connect' },
 ];

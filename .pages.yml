@@ -125,7 +125,7 @@ content:
           - { name: name, label: Name, type: string }
 
   - name: reviews
-    label: Love letters (reviews)
+    label: Love letters (reviews on Home and stylist pages)
     type: collection
     path: web/src/content/reviews
     format: yaml
@@ -140,7 +140,7 @@ content:
       - { name: featured, label: Show on the Home page, type: boolean }
 
   - name: faq
-    label: FAQ
+    label: FAQ (shown on the Connect page)
     type: collection
     path: web/src/content/faq
     format: yaml

@@ -139,7 +139,6 @@ const recent = (await getCollection('gallery')).sort((a, b) => a.data.order - b.
         <ReviewCard tone="dark" quote={r.data.quote} name={r.data.name} detail={r.data.stylist ? `with ${stylistName(r.data.stylist)}` : r.data.detail} rating={r.data.rating} />
       ))}
     </div>
-    <div class="center"><Button variant="outline" tone="dark" href={url('reviews/')}>Read more love letters</Button></div>
   </Section>
 
   <Section>

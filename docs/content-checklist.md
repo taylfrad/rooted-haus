@@ -8,21 +8,21 @@ Send these in any format (photos, a text message, a voice memo all work). "Not s
 - [x] Team bios and quotes for Shelby, Ashley, Sadie, Bridgette, Sophie and Victoria (Meet the Haus)
 - [x] The Experience page wording (first four sections)
 - [x] Careers page wording, perks, commission, booth rental and hourly details (Plant Your Roots)
-- [x] Mission statement (Our Roots)
+- [x] Mission statement (shown at the top of Meet the Haus)
 - [x] Five client reviews (Love letters)
 - [x] Professional photo shoot: hero, stylist and rituals photos
 
 ## Words
 - [x] Who is in each stylist photo (portrait + second photo for all six; crop tweaks via `photoFocus` in each team file)
 - [ ] Vision statement, mission statement and core values for the Careers page (left blank in her doc)
-- [ ] Culture and core values for Our Roots (marked "not finished")
+- [ ] Culture and core values (marked "not finished"; would go on Meet the Haus under the mission)
 - [ ] The rest of The Experience page (marked "not finished"; more sections can be added in the panel)
-- [ ] FAQ answers: first visit, cancellation policy, products used, anything clients always ask
+- [ ] FAQ answers: first visit, cancellation policy, products used, anything clients always ask (a FAQ section appears on Connect as soon as one is added in the panel)
 - [ ] Optional: a one-line description for any service (the menu currently shows names and prices only)
 
 ## Facts
 - [ ] Confirm address and phone (currently copied from the old website)
-- [ ] Arrival notes for the Directions page: parking, which door, what the building looks like (optional but clients love it)
+- [ ] Arrival notes for the Connect page: parking, which door, what the building looks like (optional but clients love it)
 - [ ] Instagram and Facebook links
 - [ ] Gift card link from Boulevard (if gift cards are sold there)
 - [ ] Permission from each reviewer to show their name and words on the site, if not already given

@@ -60,8 +60,8 @@ const path = Astro.url.pathname;
   .is-open .icon-open { display: none; }
   .is-open .icon-close { display: inline; }
 
-  /* Six menu items need about 1280px; below that the menu moves behind the toggle. */
-  @media (max-width: 1279px) {
+  /* Five menu items need about 1100px; below that the menu moves behind the toggle. */
+  @media (max-width: 1099px) {
     .header__logo { flex-shrink: 1; min-width: 0; } /* with the menu collapsed, the logo may shrink a little on very narrow phones */
     .header__logo :global(img) { height: 36px; }
     .header__nav { gap: 12px; }

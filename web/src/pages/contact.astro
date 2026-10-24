@@ -1,20 +1,25 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
 import PageHeader from '../components/PageHeader.astro';
+import DirectionsMap from '../components/DirectionsMap.astro';
 import ContactForm from '../components/forms/ContactForm.astro';
 import Field from '../components/forms/Field.astro';
-import Button from '../components/core/Button.astro';
 import BookButton from '../components/core/BookButton.astro';
-import { MapPin, Clock, Phone } from '@lucide/astro';
+import { MapPin, Clock, Phone, ChevronDown } from '@lucide/astro';
 import { site, hoursLine } from '../lib/site';
-import { url } from '../lib/paths';
+
+// FAQ lives here (no separate page). The section only appears once there are questions in the panel.
+const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.order);
 ---
 
-<BaseLayout title="Contact · The Rooted Haus" description="Hours, location and how to reach The Rooted Haus in Mandeville, Louisiana.">
+<BaseLayout title="Connect · The Rooted Haus" description="Find The Rooted Haus in Mandeville, Louisiana: address, hours, directions and how to reach us.">
   <PageHeader eyebrow="Connect" script="come as you are" title="Visit us" intro="We would love to meet you." />
+
   <Section>
-    <div class="layout">
+    <div class="visit connect-visit">
+      <DirectionsMap />
       <div class="info">
         <div class="row">
           <span class="ic"><MapPin size={20} stroke-width={1.5} /></span>
@@ -29,22 +34,45 @@ import { url } from '../lib/paths';
           <div><strong>Call</strong><br /><a href={`tel:${site.phone.replace(/[^\d+]/g, '')}`}>{site.phone}</a></div>
         </div>
         <div class="actions">
-          <BookButton>Book an appointment</BookButton>
-          <Button variant="outline" href={url('directions/')}>Get directions</Button>
+          <BookButton>Get Rooted</BookButton>
         </div>
-      </div>
-      <div class="formwrap" id="message">
-        <h2 class="h">Send us a message</h2>
-        <ContactForm subject="Website message">
-          <Field label="Name" name="name" required />
-          <Field label="Email" name="email" type="email" required />
-          <Field label="Message" name="message" type="textarea" required />
-        </ContactForm>
       </div>
     </div>
   </Section>
+
+  <Section bg="var(--surface-raised)">
+    <div class="message" id="message">
+      <div>
+        <h2 class="h">Send us a message</h2>
+        <p class="lead">Questions about a service, a gift, or your first visit? We read every message.</p>
+      </div>
+      <ContactForm subject="Website message">
+        <Field label="Name" name="name" required />
+        <Field label="Email" name="email" type="email" required />
+        <Field label="Message" name="message" type="textarea" required />
+      </ContactForm>
+    </div>
+  </Section>
+
+  {faqs.length > 0 && (
+    <Section>
+      <div class="faq" id="faq">
+        <h2 class="h">Questions, answered</h2>
+        {faqs.map((f) => (
+          <details class="faq__item">
+            <summary>
+              <span>{f.data.question}</span>
+              <ChevronDown size={20} stroke-width={1.5} class="chev" />
+            </summary>
+            <p>{f.data.answer}</p>
+          </details>
+        ))}
+      </div>
+    </Section>
+  )}
+
   <Section bg="var(--surface-sand)" center>
-    <div class="news">
+    <div class="news" id="newsletter">
       <h2 class="h">Stay rooted</h2>
       <p>News, openings and product drops, a few times a year.</p>
       <ContactForm subject="Newsletter signup" submitLabel="Join the list">
@@ -55,14 +83,29 @@ import { url } from '../lib/paths';
 </BaseLayout>
 
 <style>
-  .layout { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 96px); }
-  .info { display: flex; flex-direction: column; gap: 28px; }
+  .visit { display: grid; grid-template-columns: 1.3fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: center; }
+  .info { display: flex; flex-direction: column; gap: 26px; }
   .row { display: flex; gap: 18px; }
-  .ic { flex: 0 0 44px; height: 44px; display: grid; place-items: center; border-radius: 50%;
-    background: var(--rh-sand); color: var(--rh-terracotta); }
+  .ic { flex: 0 0 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: var(--rh-sand); color: var(--rh-terracotta); }
   .actions { display: flex; flex-wrap: wrap; gap: 14px; }
-  .h { margin: 0 0 20px; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-display-s); color: var(--text-strong); }
+  .h { margin: 0 0 16px; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-display-s); color: var(--text-strong); }
+  .lead { margin: 0; color: var(--text-muted); }
+  .message { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
+  .faq { max-width: var(--container-narrow); }
+  .faq__item { border-top: 1px solid var(--border-hairline); }
+  .faq__item:last-child { border-bottom: 1px solid var(--border-hairline); }
+  summary { list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 24px;
+    padding: 22px 0; cursor: pointer; font-family: var(--font-display); font-size: 22px; color: var(--text-strong); }
+  summary::-webkit-details-marker { display: none; }
+  summary :global(.chev) { flex-shrink: 0; transition: transform var(--dur-base) var(--ease-soft); }
+  details[open] summary :global(.chev) { transform: rotate(180deg); }
+  .faq__item p { margin: 0 0 22px; max-width: 60ch; }
   .news { max-width: 480px; margin: 0 auto; text-align: left; }
   .news .h, .news p { text-align: center; }
-  @media (max-width: 800px) { .layout { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { .visit, .message { grid-template-columns: 1fr; } }
+</style>
+
+<style is:global>
+  /* This page already has the big map, so the footer map is hidden here. */
+  body:has(.connect-visit) .footer__visit .dm { display: none; }
 </style>

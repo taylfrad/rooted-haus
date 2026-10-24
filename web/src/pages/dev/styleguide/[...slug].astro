@@ -1,13 +1,17 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Section from '../layouts/Section.astro';
-import SectionHeading from '../components/content/SectionHeading.astro';
-import PhotoFrame from '../components/content/PhotoFrame.astro';
-import Card from '../components/content/Card.astro';
-import Badge from '../components/content/Badge.astro';
-import ReviewCard from '../components/content/ReviewCard.astro';
-import Button from '../components/core/Button.astro';
-import Field from '../components/forms/Field.astro';
+// Dev-only (`pnpm dev` → /dev/styleguide/): every component rendered from the design tokens. Not built for production.
+export function getStaticPaths() {
+  return import.meta.env.DEV ? [{ params: { slug: undefined } }] : [];
+}
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Section from '../../../layouts/Section.astro';
+import SectionHeading from '../../../components/content/SectionHeading.astro';
+import PhotoFrame from '../../../components/content/PhotoFrame.astro';
+import Card from '../../../components/content/Card.astro';
+import Badge from '../../../components/content/Badge.astro';
+import ReviewCard from '../../../components/content/ReviewCard.astro';
+import Button from '../../../components/core/Button.astro';
+import Field from '../../../components/forms/Field.astro';
 
 const palette = [
   ['chocolate', '#593E2B'], ['sage', '#A6A680'], ['sand', '#E8D4B9'], ['caramel', '#BF7B3F'],
