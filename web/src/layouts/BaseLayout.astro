@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
-import { ClientRouter, fade } from 'astro:transitions';
+import { ClientRouter } from 'astro:transitions';
+import { settle } from '../lib/page-transition';
 import { isStaging, url } from '../lib/paths';
 import { site } from '../lib/site';
 import SiteHeader from '../components/SiteHeader.astro';
@@ -93,7 +94,7 @@ const jsonLd = {
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <SiteHeader />
-    <main id="main" tabindex="-1" transition:animate={fade({ duration: '160ms' })}><slot /></main>
+    <main id="main" tabindex="-1" transition:animate={settle}><slot /></main>
     <SiteFooter />
     <DirectionsDialog />
     <BackToTop />

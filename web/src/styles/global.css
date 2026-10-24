@@ -30,12 +30,18 @@ img{max-width:100%;display:block}
 .skip-link:focus{top:12px}
 main:focus{outline:none}
 
-/* Scroll reveal: blocks start hidden only when JS is running. Photos never animate, so any part of a
-   block that holds a photo stays visible and only the photo-free parts fade (REVEAL in lib/motion.ts). */
+/* Scroll reveal: blocks start hidden (and a little low) only when JS is running. Photos never animate, so any
+   part of a block that holds a photo stays put and only the photo-free parts rise in (REVEAL in lib/motion.ts).
+   `translate` rather than `transform`, so hover lifts on the same elements keep working. */
 @media (prefers-reduced-motion:no-preference){
   .js [data-reveal]:not(:has(img)),
-  .js :is([data-reveal],[data-reveal] *):has(img) > :not(:has(img),img){opacity:0}
+  .js :is([data-reveal],[data-reveal] *):has(img) > :not(:has(img),img){opacity:0;translate:0 var(--rise-reveal)}
 }
+
+/* Page change (lib/page-transition.ts): the old page fades out, the new one fades in and settles up into place.
+   Astro turns these off for reduced motion. */
+@keyframes rh-page-out{to{opacity:0}}
+@keyframes rh-page-in{from{opacity:0;transform:translateY(var(--rise-page))}}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important;scroll-behavior:auto !important}
 }
