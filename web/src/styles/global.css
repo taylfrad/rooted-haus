@@ -31,11 +31,11 @@ img{max-width:100%;display:block}
 main:focus{outline:none}
 
 /* Scroll reveal: elements start hidden only when JS is running (see lib/motion.ts) */
-.js [data-reveal]{opacity:0;transform:translateY(var(--reveal-distance))}
-/* Photo reveal: hidden behind a clip until it scrolls into view, then unveiled bottom-up (see lib/motion.ts) */
-.js [data-reveal-photo]{clip-path:inset(100% 0 0 0)}
+.js [data-reveal]{opacity:0}
+/* Photo reveal: a quick fade once the photo scrolls into view (see lib/motion.ts) */
+.js [data-reveal-photo]{opacity:0}
 @media (prefers-reduced-motion:reduce){
-  .js [data-reveal]{opacity:1;transform:none}
-  .js [data-reveal-photo]{clip-path:none}
+  .js [data-reveal]{opacity:1}
+  .js [data-reveal-photo]{opacity:1}
   *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important;scroll-behavior:auto !important}
 }

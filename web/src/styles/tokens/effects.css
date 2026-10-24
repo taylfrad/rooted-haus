@@ -5,8 +5,8 @@
 --ease-soft:cubic-bezier(.22,.61,.36,1);
 --dur-fast:180ms;
 --dur-base:320ms;
---dur-reveal:900ms;
---reveal-distance:16px;
+--dur-reveal:450ms;
+--dur-page:160ms;
 --photo-warmth:sepia(.12) saturate(.9);
 --overlay-moody:linear-gradient(180deg,rgba(59,40,25,0) 40%,rgba(59,40,25,.65) 100%);
 }
