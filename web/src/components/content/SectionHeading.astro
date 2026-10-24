@@ -17,7 +17,7 @@ const { eyebrow, script, title, intro, align = 'center', tone = 'light', ruled =
   {eyebrow && (
     <div class="sh__eyebrow">
       {ruled && align === 'center' && <span class="sh__rule" />}
-      <span>{eyebrow}</span>
+      <span class="sh__label">{eyebrow}</span>
       {ruled && <span class="sh__rule" />}
     </div>
   )}
@@ -30,13 +30,21 @@ const { eyebrow, script, title, intro, align = 'center', tone = 'light', ruled =
   .sh { display: flex; flex-direction: column; gap: 14px; }
   .sh--center { align-items: center; text-align: center; }
   .sh--left { align-items: flex-start; text-align: left; }
-  .sh__eyebrow { display: flex; align-items: center; gap: 16px; font-size: 12px; font-weight: 500;
+  /* The eyebrow row sizes itself to its content. Rule widths and margins (unlike flex-basis and gap) count
+     toward that size in every browser, so Safari no longer squeezes the label onto two lines. The label
+     never wraps; on very narrow screens the rules shrink first. */
+  .sh__eyebrow { display: flex; align-items: center; max-width: 100%; font-size: 12px; font-weight: 500;
     letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
+  /* letter-spacing also follows the last letter; cancel it so the label sits centered between its rules */
+  .sh__label { white-space: nowrap; margin-right: calc(-1 * var(--ls-eyebrow)); }
+  .sh__rule:first-child { margin-right: 16px; }
+  .sh__rule:last-child { margin-left: 16px; }
   .sh--dark .sh__eyebrow { color: var(--rh-ivory); }
   .sh--sage .sh__eyebrow, .sh--sage .sh__script, .sh--sage .sh__intro { color: var(--rh-espresso); }
   .sh--sage .sh__rule { background: var(--rh-espresso); }
-  .sh__rule { flex: 0 0 36px; height: 1px; background: var(--rh-terracotta); }
-  .sh--center .sh__rule { flex-basis: 48px; }
+  /* A real width (not flex-basis): an empty span's flex-basis is ignored when the row sizes itself to fit. */
+  .sh__rule { flex: 0 1 auto; width: 36px; min-width: 16px; height: 1px; background: var(--rh-terracotta); }
+  .sh--center .sh__rule { width: 48px; }
   .sh--dark .sh__rule { background: var(--rh-sand); }
   .sh__script { font-family: var(--font-script); font-size: var(--fs-script-s); line-height: 1;
     color: var(--text-script); margin-bottom: -8px; }
