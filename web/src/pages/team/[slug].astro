@@ -27,11 +27,11 @@ const reviews = (await getCollection('reviews')).filter((r) => r.data.stylist ==
     <div class="intro">
       <div class="photos">
         <div class="photos__main">
-          <PhotoFrame shape="arch" ratio="4 / 5" src={m.photo} alt={`${m.name}, ${m.role}`} label={m.name} sizes="(min-width: 900px) 34vw, 80vw" />
+          <PhotoFrame shape="arch" ratio="4 / 5" focus={m.photoFocus} src={m.photo} alt={`${m.name}, ${m.role}`} label={m.name} sizes="(min-width: 900px) 34vw, 80vw" />
         </div>
         {m.extraPhoto ? (
           <div class="photos__extra">
-            <PhotoFrame shape="circle" src={m.extraPhoto} alt={`${m.name} at The Rooted Haus`} label={m.name} sizes="200px" />
+            <PhotoFrame shape="circle" focus="50% 20%" src={m.extraPhoto} alt={`${m.name} at The Rooted Haus`} label={m.name} sizes="200px" />
           </div>
         ) : null}
       </div>

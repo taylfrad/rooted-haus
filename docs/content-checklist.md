@@ -13,7 +13,7 @@ Send these in any format (photos, a text message, a voice memo all work). "Not s
 - [x] Professional photo shoot: hero, stylist and rituals photos
 
 ## Words
-- [ ] **Who is in each stylist photo.** Run `pnpm dev` and open `http://localhost:4321/dev/photos/` to see every stylist photo with its file name; each person needs a portrait and (optionally) a second photo.
+- [x] Who is in each stylist photo (portrait + second photo for all six; crop tweaks via `photoFocus` in each team file)
 - [ ] Vision statement, mission statement and core values for the Careers page (left blank in her doc)
 - [ ] Culture and core values for Our Roots (marked "not finished")
 - [ ] The rest of The Experience page (marked "not finished"; more sections can be added in the panel)

@@ -24,7 +24,7 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
         <li>
           <a class="member" href={url(`team/${m.id}/`)}>
             <div class="member__photo">
-              <PhotoFrame shape="circle" src={m.data.photo} alt={`${m.data.name}, ${m.data.role}`} label={m.data.name} sizes="240px" />
+              <PhotoFrame shape="circle" focus={m.data.photoFocus} src={m.data.photo} alt={`${m.data.name}, ${m.data.role}`} label={m.data.name} sizes="240px" />
             </div>
             <span class="member__name">{m.data.name}</span>
             <span class="member__role">{m.data.role}</span>

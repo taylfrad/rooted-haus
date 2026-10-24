@@ -10,8 +10,8 @@ quote: >-
   The things in life I value most are my relationship with Jesus, my beautiful family, helping women see themselves
   the way God sees them, and how far I have come in my own health journey. I’m always here for a good conspiracy
   theory and one thing’s for sure.. you will never catch me putting my trust in the government!
-# photo: ../../assets/photos/stylists/img-XXXX.jpg
-# extraPhoto: ../../assets/photos/stylists/img-XXXX.jpg
+photo: ../../assets/photos/stylists/img-0240.jpg
+extraPhoto: ../../assets/photos/stylists/img-0237.jpg
 ---
 
 Shelby has been in the industry for 11 years and 8 of them specializing in the art of blonding. She brings both experience and intention to her craft. Beyond the salon, she is a wife, mama to 2 boys with a 3rd little blessing on the way, and a dog mom to a golden retriever and a red lab.

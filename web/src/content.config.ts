@@ -47,6 +47,8 @@ const team = defineCollection({
       quote: z.string().optional(),
       /** Portrait for the team grid and the top of their page. Leave empty to show a placeholder. */
       photo: image().optional(),
+      /** Which part of the portrait to keep in the round crop (CSS object-position). Raise or lower the second number to move the crop. */
+      photoFocus: z.string().default("50% 15%"),
       /** Second photo shown on their own page. */
       extraPhoto: image().optional(),
     }),
