@@ -14,7 +14,13 @@ const { side = 'right' } = Astro.props;
 <Image src={monogram} alt="" aria-hidden="true" width={640} class:list={['wm', `wm--${side}`]} loading="lazy" />
 
 <style>
-  .wm { position: absolute; z-index: 0; width: min(560px, 70vw); height: auto; opacity: .12; pointer-events: none; user-select: none; }
-  .wm--right { right: -6%; bottom: -18%; }
-  .wm--left { left: -8%; bottom: -22%; }
+  /* Sized from the section's height so the whole mark fits any band, centered top to bottom, with only a
+     small tuck (8% of its own width) past the side edge. */
+  .wm { position: absolute; z-index: 0; top: 50%; height: min(86%, 520px); width: auto; opacity: .12; pointer-events: none; user-select: none; }
+  .wm--right { right: 0; translate: 8% -50%; }
+  .wm--left { left: 0; translate: -8% -50%; }
+  /* Stacked layouts put a photo in the lower half, so the mark moves to the top right, behind the text. */
+  @media (max-width: 900px) {
+    .wm, .wm--left { top: 24px; left: auto; right: 0; height: auto; width: min(240px, 62vw); translate: 8% 0; }
+  }
 </style>
