@@ -12,3 +12,6 @@ Thumbs.db
 CLAUDE.md
 .claude/
 .playwright-mcp/
+
+# full-size photo shoot originals (hundreds of MB); optimized copies live in web/src/assets/photos
+photos-originals/

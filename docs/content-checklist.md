@@ -2,25 +2,33 @@
 
 Send these in any format (photos, a text message, a voice memo all work). "Not sure yet" is fine for anything.
 
+## Received (October 2026)
+- [x] Opening hours
+- [x] Service menu and prices (The Rituals)
+- [x] Team bios and quotes for Shelby, Ashley, Sadie, Bridgette, Sophie and Victoria (Meet the Haus)
+- [x] The Experience page wording (first four sections)
+- [x] Careers page wording, perks, commission, booth rental and hourly details (Plant Your Roots)
+- [x] Mission statement (Our Roots)
+- [x] Five client reviews (Love letters)
+- [x] Professional photo shoot: hero, stylist and rituals photos
+
 ## Words
-- [ ] Her own wording for the home page, the "about the studio" story, and each team bio (we write as "we"; more detail is welcome)
-- [ ] Brand phrases she loves beyond *come as you are*, *healthy hair, happier you*, *more than hair*
+- [ ] **Who is in each stylist photo.** Run `pnpm dev` and open `http://localhost:4321/dev/photos/` to see every stylist photo with its file name; each person needs a portrait and (optionally) a second photo.
+- [ ] Vision statement, mission statement and core values for the Careers page (left blank in her doc)
+- [ ] Culture and core values for Our Roots (marked "not finished")
+- [ ] The rest of The Experience page (marked "not finished"; more sections can be added in the panel)
 - [ ] FAQ answers: first visit, cancellation policy, products used, anything clients always ask
-- [ ] Careers page: commission and chair rental terms, what she looks for in a stylist
+- [ ] Optional: a one-line description for any service (the menu currently shows names and prices only)
 
 ## Facts
 - [ ] Confirm address and phone (currently copied from the old website)
-- [ ] Opening hours
 - [ ] Arrival notes for the Directions page: parking, which door, what the building looks like (optional but clients love it)
-- [ ] Every service with price, rough time, and a one-line description (grouped as Hair / Color / Scalp & treatments, or her own groups)
 - [ ] Instagram and Facebook links
 - [ ] Gift card link from Boulevard (if gift cards are sold there)
-- [ ] The public Google Business link, and 4 to 6 reviews she wants shown (name + wording, with the client's OK)
+- [ ] Permission from each reviewer to show their name and words on the site, if not already given
 
 ## Photos and logo
-- [ ] 8 to 20 photos of her work (the gallery mixes sizes: some portrait, some landscape, a few big hero shots; see `docs/gallery.md`) (natural light, warm tones; phone photos are fine, original size please)
-- [ ] 2 to 4 photos of the studio
-- [ ] A headshot of each team member
+- [ ] More finished-work photos for the gallery over time (see `docs/gallery.md`)
 - [ ] Logo files from her designer: SVG or the `.ai` / PDF, plus a light (ivory) version for dark backgrounds, and the monogram
 - [ ] The picture of the "softer" font she mentioned
 

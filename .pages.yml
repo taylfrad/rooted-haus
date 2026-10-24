@@ -3,8 +3,8 @@
 # Photos uploaded in the panel are saved here, and the paths written into content files are relative to them.
 # (Untested against the live panel; see docs/gallery.md.)
 media:
-  input: web/src/assets/gallery
-  output: ../../assets/gallery
+  input: web/src/assets/photos
+  output: ../../assets/photos
 
 content:
   - name: settings
@@ -70,21 +70,62 @@ content:
       - { name: ctaLabel, label: Button words, type: string }
 
   - name: team
-    label: Team
+    label: Meet the Haus
     type: collection
     path: web/src/content/team
-    format: yaml
+    format: yaml-frontmatter
     view:
       fields: [name, role]
     fields:
       - { name: name, label: Name, type: string, required: true }
       - { name: role, label: Role, type: string, required: true }
       - { name: order, label: Order (1 is first), type: number }
-      - { name: bio, label: Bio, type: text, required: true }
+      - { name: experience, label: Short line under the name (e.g. 12 years behind the chair), type: string }
+      - { name: photo, label: Portrait, type: image }
+      - { name: extraPhoto, label: Second photo (shown on their own page), type: image }
       - { name: specialties, label: Specialties, type: string, list: true }
+      - { name: quote, label: Quote in their own words, type: text }
+      - { name: body, label: Bio, type: rich-text }
+
+  - name: experience
+    label: The Experience
+    type: collection
+    path: web/src/content/experience
+    format: yaml
+    view:
+      fields: [title, order]
+    fields:
+      - { name: title, label: Heading, type: string, required: true }
+      - { name: body, label: Text, type: text, required: true }
+      - { name: image, label: Photo, type: image }
+      - { name: alt, label: Describe the photo, type: string }
+      - { name: order, label: Order (1 is first), type: number }
+
+  - name: careers
+    label: Plant Your Roots (careers)
+    type: file
+    path: web/src/content/careers.json
+    format: json
+    fields:
+      - { name: title, label: Heading, type: string }
+      - { name: intro, label: Intro, type: text }
+      - { name: offer, label: Line under the intro, type: string }
+      - { name: perks, label: Perks of working in our salon, type: string, list: true }
+      - { name: commission, label: Commission stylists, type: string, list: true }
+      - { name: boothRentalPrice, label: Booth rental price, type: string }
+      - { name: boothRental, label: Booth rentals, type: string, list: true }
+      - { name: hourlyPrice, label: Hourly pay, type: string }
+      - { name: hourlyRoles, label: Hourly roles, type: string, list: true }
+      - name: stylistQuotes
+        label: What our stylists say
+        type: object
+        list: true
+        fields:
+          - { name: quote, label: Quote, type: text }
+          - { name: name, label: Name, type: string }
 
   - name: reviews
-    label: Reviews
+    label: Love letters (reviews)
     type: collection
     path: web/src/content/reviews
     format: yaml
@@ -93,7 +134,8 @@ content:
     fields:
       - { name: quote, label: What they said, type: text, required: true }
       - { name: name, label: Client name, type: string, required: true }
-      - { name: detail, label: Where it was posted, type: string }
+      - { name: detail, label: Where it was posted (optional), type: string }
+      - { name: stylist, label: Stylist file name if the review is about them (e.g. ashley), type: string }
       - { name: rating, label: Stars (1 to 5), type: number }
       - { name: featured, label: Show on the Home page, type: boolean }
 

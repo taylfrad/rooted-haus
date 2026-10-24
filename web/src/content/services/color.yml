@@ -1,13 +1,13 @@
-title: Color
+title: "Color"
 order: 2
-blurb: Low-maintenance, lived-in color with gentler formulas.
 items:
-  - name: Root color
-    price: from $—
-    description: A refresh at the regrowth, blended so it grows out softly.
-  - name: Balayage & highlights
-    price: by consultation
-    description: Hand-painted dimension, planned around your hair's history.
-  - name: Gloss & tone
-    price: from $—
-    description: Shine and warmth between color appointments.
+  - name: "Blonding Services"
+    price: "$160–$350"
+  - name: "Root Retouch"
+    price: "$75–$105"
+  - name: "Grey Blending"
+    price: "$215–$310"
+  - name: "Full Color Refresh"
+    price: "$110–$150"
+  - name: "Dimensional Color"
+    price: "$160–$340"

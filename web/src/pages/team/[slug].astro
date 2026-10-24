@@ -1,0 +1,102 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Section from '../../layouts/Section.astro';
+import PhotoFrame from '../../components/content/PhotoFrame.astro';
+import ReviewCard from '../../components/content/ReviewCard.astro';
+import Badge from '../../components/content/Badge.astro';
+import Button from '../../components/core/Button.astro';
+import BookButton from '../../components/core/BookButton.astro';
+import { url } from '../../lib/paths';
+
+// One page per team file: team/shelby.md -> /team/shelby/
+export async function getStaticPaths() {
+  const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.order);
+  return team.map((member, i) => ({ params: { slug: member.id }, props: { member, next: team[(i + 1) % team.length] } }));
+}
+
+const { member, next } = Astro.props;
+const { Content } = await render(member);
+const m = member.data;
+const reviews = (await getCollection('reviews')).filter((r) => r.data.stylist === member.id);
+---
+
+<BaseLayout title={`${m.name}, ${m.role} · The Rooted Haus`} description={`Meet ${m.name}, ${m.role.toLowerCase()} at The Rooted Haus in Mandeville, Louisiana.`}>
+  <Section>
+    <a class="back" href={url('team/')}>← Meet the Haus</a>
+    <div class="intro">
+      <div class="photos">
+        <div class="photos__main">
+          <PhotoFrame shape="arch" ratio="4 / 5" src={m.photo} alt={`${m.name}, ${m.role}`} label={m.name} sizes="(min-width: 900px) 34vw, 80vw" />
+        </div>
+        {m.extraPhoto ? (
+          <div class="photos__extra">
+            <PhotoFrame shape="circle" src={m.extraPhoto} alt={`${m.name} at The Rooted Haus`} label={m.name} sizes="200px" />
+          </div>
+        ) : null}
+      </div>
+      <div class="text">
+        <span class="role">{m.role}</span>
+        <h1 class="name">{m.name}</h1>
+        {m.experience && <p class="exp">{m.experience}</p>}
+        {m.specialties.length > 0 && <div class="tags">{m.specialties.map((s) => <Badge tone="sand">{s}</Badge>)}</div>}
+        <div class="bio"><Content /></div>
+        <BookButton>Book with {m.name}</BookButton>
+      </div>
+    </div>
+  </Section>
+
+  {m.quote && (
+    <Section bg="var(--surface-olive)" center>
+      <figure class="quote">
+        <span class="quote__script">in her words</span>
+        <blockquote>“{m.quote}”</blockquote>
+        <figcaption>{m.name}</figcaption>
+      </figure>
+    </Section>
+  )}
+
+  {reviews.length > 0 && (
+    <Section bg="var(--surface-raised)">
+      <h2 class="h2">Love letters for {m.name}</h2>
+      <div class="reviews">
+        {reviews.map((r) => <ReviewCard quote={r.data.quote} name={r.data.name} rating={r.data.rating} />)}
+      </div>
+    </Section>
+  )}
+
+  <Section bg="var(--surface-sand)" center>
+    <div class="next">
+      <span class="next__label">Next in the Haus</span>
+      <Button variant="outline" href={url(`team/${next.id}/`)}>Meet {next.data.name}</Button>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .back { display: inline-block; margin-bottom: 32px; font-size: 12px; font-weight: 500; letter-spacing: var(--ls-button); text-transform: uppercase;
+    color: var(--rh-chocolate); text-decoration: none; }
+  .back:hover { text-decoration: underline; text-underline-offset: 6px; }
+  .intro { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(32px, 6vw, 88px); align-items: start; }
+  .photos { position: relative; max-width: 460px; width: 100%; justify-self: center; }
+  .photos__extra { position: absolute; width: 42%; right: -8%; bottom: -6%; border-radius: 50%; box-shadow: 0 0 0 8px var(--surface-page); }
+  .text { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+  .role { font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
+  .name { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(40px, 5vw, var(--fs-display-xl)); line-height: 1; color: var(--text-strong); }
+  .exp { margin: 0; font-family: var(--font-script); font-size: var(--fs-script-s); line-height: 1.2; color: var(--text-script); }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .bio { max-width: 62ch; margin-bottom: 8px; }
+  .bio :global(p) { margin: 0 0 1em; }
+  .quote { margin: 0 auto; max-width: 760px; display: flex; flex-direction: column; align-items: center; gap: 18px; color: var(--rh-ivory); }
+  .quote__script { font-family: var(--font-script); font-size: var(--fs-script-s); color: var(--rh-caramel-soft); }
+  .quote blockquote { margin: 0; font-family: var(--font-display); font-size: clamp(22px, 2.4vw, 30px); line-height: 1.45; text-wrap: pretty; }
+  .quote figcaption { font-size: 12px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; }
+  .h2 { margin: 0 0 40px; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-display-m); color: var(--text-strong); }
+  .reviews { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 48px; }
+  .next { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .next__label { font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
+  @media (max-width: 900px) {
+    .intro { grid-template-columns: 1fr; }
+    .photos { max-width: 360px; margin-bottom: 24px; }
+  }
+</style>

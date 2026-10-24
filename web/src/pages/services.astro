@@ -7,14 +7,26 @@ import DealBanner from '../components/DealBanner.astro';
 import BookButton from '../components/core/BookButton.astro';
 import Button from '../components/core/Button.astro';
 import { site } from '../lib/site';
+import PhotoFrame from '../components/content/PhotoFrame.astro';
+import photoCut from '../assets/photos/rituals/img-0046.jpg';
+import photoColor from '../assets/photos/rituals/img-0127.jpg';
+import photoScalp from '../assets/photos/rituals/img-0098.jpg';
+
+const photos = [
+  { src: photoCut, alt: 'A stylist in a newsboy cap curls a client’s long blonde hair.', shape: 'arch' },
+  { src: photoColor, alt: 'A stylist checks the blend of a client’s soft blonde balayage.', shape: 'rounded' },
+  { src: photoScalp, alt: 'A client relaxes under a stone eye mask while a scalp treatment is brushed on.', shape: 'arch' },
+] as const;
 
 const categories = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
 ---
 
-<BaseLayout title="Services & prices · The Rooted Haus" description="Hair, color and scalp services at The Rooted Haus.">
-  <PageHeader eyebrow="Services & prices" script="care with intention" title="Our menu" intro="Every service begins with a conversation about your hair and your scalp." />
+<BaseLayout title="The Rituals: services & prices · The Rooted Haus" description="Haircuts, blonding, dimensional color, grey blending, scalp services and extensions at The Rooted Haus in Mandeville, Louisiana.">
+  <PageHeader eyebrow="Services & prices" script="the rituals" title="Our rituals" intro="Personalized hair care, rooted in wellness." />
   <DealBanner />
   <Section bg="var(--surface-raised)">
+    <div class="layout">
+    <div class="menu-col">
     <nav class="jump" aria-label="Service categories">
       {categories.map((c) => <a href={`#${c.id}`}>{c.data.title}</a>)}
     </nav>
@@ -38,6 +50,11 @@ const categories = (await getCollection('services')).sort((a, b) => a.data.order
         </ul>
       </div>
     ))}
+    </div>
+    <div class="photo-col">
+      {photos.map((p) => <PhotoFrame src={p.src} alt={p.alt} shape={p.shape} ratio="4 / 5" sizes="(min-width: 900px) 30vw, 33vw" />)}
+    </div>
+    </div>
     <div class="cta">
       <BookButton size="lg">Book an appointment</BookButton>
       {site.giftCardsUrl && <Button variant="outline" size="lg" href={site.giftCardsUrl} target="_blank" rel="noopener">Give a gift card</Button>}
@@ -46,6 +63,10 @@ const categories = (await getCollection('services')).sort((a, b) => a.data.order
 </BaseLayout>
 
 <style>
+  .layout { display: grid; grid-template-columns: 1fr minmax(240px, 0.55fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
+  .menu-col { min-width: 0; }
+  .photo-col { display: flex; flex-direction: column; gap: 24px; position: sticky; top: 110px; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .photo-col { position: static; flex-direction: row; order: -1; } .photo-col > :global(*) { flex: 1; } }
   .jump { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 56px; }
   .jump a { border: 1px solid var(--rh-chocolate); border-radius: var(--radius-pill); padding: 10px 22px;
     color: var(--rh-chocolate); text-decoration: none; font-size: 12px; font-weight: 500; letter-spacing: .18em;

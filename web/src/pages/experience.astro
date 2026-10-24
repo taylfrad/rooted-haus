@@ -1,0 +1,66 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../layouts/Section.astro';
+import PageHeader from '../components/PageHeader.astro';
+import PhotoFrame from '../components/content/PhotoFrame.astro';
+import BookButton from '../components/core/BookButton.astro';
+import Button from '../components/core/Button.astro';
+import { url } from '../lib/paths';
+
+const items = (await getCollection('experience')).sort((a, b) => a.data.order - b.data.order);
+// Photo shapes alternate down the page so the rows don't feel repetitive.
+const shapes = ['arch', 'rounded', 'circle', 'rounded'] as const;
+---
+
+<BaseLayout title="The Experience · The Rooted Haus" description="What to expect at The Rooted Haus: a cozy space, curated low-tox refreshments, and an appointment that is entirely yours.">
+  <PageHeader eyebrow="New guests welcome!" script="the experience" title="Make yourself at home" bg="var(--surface-chocolate)" />
+
+  <Section>
+    <div class="rows">
+      {items.map((it, i) => (
+        <article class:list={['row', { 'row--flip': i % 2 === 1 }]} data-reveal>
+          <div class="row__photo">
+            <PhotoFrame src={it.data.image} alt={it.data.alt ?? ''} label={it.data.title} shape={shapes[i % shapes.length]} ratio="4 / 5" sizes="(min-width: 900px) 40vw, 90vw" />
+          </div>
+          <div class="row__text">
+            <span class="row__n">{String(i + 1).padStart(2, '0')}</span>
+            <h2 class="row__title">{it.data.title}</h2>
+            <p class="row__body">{it.data.body}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </Section>
+
+  <Section bg="var(--surface-sand)" center>
+    <div class="closing">
+      <span class="closing__script">unhurried · intentional · yours</span>
+      <p class="closing__line">Above all, we want your experience to feel unhurried, intentional, and entirely your own.</p>
+      <div class="closing__actions">
+        <BookButton size="lg">Get Rooted</BookButton>
+        <Button variant="outline" size="lg" href={url('services/')}>See our Rituals</Button>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .rows { display: flex; flex-direction: column; gap: clamp(64px, 9vw, 120px); }
+  .row { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
+  .row--flip .row__photo { order: 2; }
+  .row__photo { max-width: 460px; width: 100%; justify-self: center; }
+  .row__text { display: flex; flex-direction: column; gap: 12px; max-width: 520px; }
+  .row__n { font-family: var(--font-display); font-size: 40px; line-height: 1; color: var(--text-script); }
+  .row__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 3.6vw, var(--fs-display-l)); line-height: var(--lh-tight); color: var(--text-strong); }
+  .row__body { margin: 0; font-size: var(--fs-body-l); }
+  .closing { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .closing__script { font-family: var(--font-script); font-size: var(--fs-script-s); color: var(--text-script); }
+  .closing__line { margin: 0; font-family: var(--font-display); font-size: clamp(24px, 2.8vw, 34px); line-height: 1.35; color: var(--text-strong); text-wrap: balance; }
+  .closing__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 8px; }
+  @media (max-width: 900px) {
+    .row { grid-template-columns: 1fr; }
+    .row--flip .row__photo { order: 0; }
+    .row__photo { max-width: 380px; }
+  }
+</style>

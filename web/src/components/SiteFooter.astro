@@ -37,7 +37,8 @@ import { url } from '../lib/paths';
     <div class="footer__col footer__explore">
       <span class="footer__h">Explore</span>
       {nav.map((item) => <a href={url(item.href)}>{item.label}</a>)}
-      <a href={url('reviews/')}>Reviews</a>
+      <a href={url('gallery/')}>Gallery</a>
+      <a href={url('reviews/')}>Love letters</a>
       <a href={url('faq/')}>FAQ</a>
       <a href={url('directions/')}>Directions</a>
       {site.giftCardsUrl && <a href={site.giftCardsUrl} target="_blank" rel="noopener">Gift cards</a>}

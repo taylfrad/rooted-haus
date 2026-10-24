@@ -1,129 +1,219 @@
 ---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
 import SectionHeading from '../components/content/SectionHeading.astro';
 import PhotoFrame from '../components/content/PhotoFrame.astro';
-import Card from '../components/content/Card.astro';
 import ReviewCard from '../components/content/ReviewCard.astro';
 import Badge from '../components/content/Badge.astro';
 import Button from '../components/core/Button.astro';
 import BookButton from '../components/core/BookButton.astro';
 import DealBanner from '../components/DealBanner.astro';
-import { getCollection } from 'astro:content';
 import { url } from '../lib/paths';
 
-const featured = (await getCollection('reviews')).filter((r) => r.data.featured).slice(0, 2);
+import hero0156 from '../assets/photos/hero/img-0156.jpg';
+import hero0145 from '../assets/photos/hero/img-0145.jpg';
+import hero0161 from '../assets/photos/hero/img-0161.jpg';
+import hero0086 from '../assets/photos/hero/img-0086.jpg';
+import specialtiesPhoto from '../assets/photos/rituals/img-0142.jpg';
+import experiencePhoto from '../assets/photos/hero/img-0145.jpg';
+
+// Slides: photo, a script phrase, crop anchor, and which side the text sits on (the side away from the faces).
 const slides = [
-  { script: 'come as you are', bg: 'var(--rh-espresso)' },
-  { script: 'healthy hair, happier you', bg: 'var(--rh-terracotta)' },
-  { script: 'beauty with intention', bg: 'var(--rh-olive)' },
+  { src: hero0156, alt: 'A guest relaxes with a magazine on a cream armchair in the salon lounge.', script: 'come as you are', pos: '62% 35%', align: 'left' },
+  { src: hero0145, alt: 'A smiling guest is handed a lavender drink in a gold-rimmed glass.', script: 'make yourself at home', pos: '40% 30%', align: 'right' },
+  { src: hero0161, alt: 'A stylist greets a guest with a hug among plants, candles and a tufted settee.', script: 'more than hair', pos: '52% 30%', align: 'left' },
+  { src: hero0086, alt: 'A guest rests under a stone eye mask while a scalp treatment is brushed on.', script: 'beauty with intention', pos: '40% 45%', align: 'right' },
 ];
-const services = [
-  { surface: 'sand', title: 'Cuts & styling', text: 'Precision cuts shaped around your natural texture.' },
-  { surface: 'sage', title: 'Color', text: 'Low-maintenance, lived-in color with gentler formulas.' },
-  { surface: 'terracotta', title: 'Scalp & treatments', text: 'Detox, massage and treatments for the scalp.' },
-] as const;
+
+const heroWidths = [640, 960, 1280, 1920, 2400];
+
+const steps = [
+  { n: '01', title: 'Meet the Haus', text: 'Get to know the hands and hearts behind every chair.', href: url('team/'), cta: 'Meet the Haus' },
+  { n: '02', title: 'See our Rituals', text: 'Browse our services and pricing.', href: url('services/'), cta: 'See our Rituals' },
+  { n: '03', title: 'Book your appointment', text: 'Choose a time that works for you, online.', book: true, cta: 'Get Rooted' },
+];
+
+const specialties = [
+  'Low-tox hair appointments',
+  'Blonding',
+  'Dimensional color',
+  'Low-maintenance color',
+  'Grey blending',
+  'Precision cuts',
+  'Revitalizing scalp services',
+];
+
+const reviews = (await getCollection('reviews')).filter((r) => r.data.featured);
+const team = await getCollection('team');
+const stylistName = (slug?: string) => team.find((t) => t.id === slug)?.data.name;
+const recent = (await getCollection('gallery')).sort((a, b) => a.data.order - b.data.order).slice(0, 4);
 ---
 
 <BaseLayout>
-  <section class="hero" aria-roledescription="carousel" aria-label="Welcome">
-    {slides.map((s, i) => <div class="hero__bg" data-slide style={`background:${s.bg}`} data-active={i === 0} />)}
+  <section class="hero" data-align="left" aria-roledescription="carousel" aria-label="Welcome to The Rooted Haus">
+    <!-- First photo is in the page; the other three wait in a <template> and are added after the page has loaded,
+         so they never compete with the first photo (the page's largest paint). Without JavaScript the first photo stays. -->
+    <div class="hero__slide" data-slide data-align={slides[0].align} data-active="true">
+      <Image src={slides[0].src} alt={slides[0].alt} widths={heroWidths} sizes="100vw" loading="eager" fetchpriority="high" class="hero__img" style={`object-position:${slides[0].pos}`} />
+    </div>
+    <template data-more-slides>
+      {slides.slice(1).map((s) => (
+        <div class="hero__slide" data-slide data-align={s.align} data-active="false" aria-hidden="true">
+          <Image src={s.src} alt={s.alt} widths={heroWidths} sizes="100vw" class="hero__img" style={`object-position:${s.pos}`} />
+        </div>
+      ))}
+    </template>
+    <div class="hero__shade hero__shade--left" aria-hidden="true"></div>
+    <div class="hero__shade hero__shade--right" aria-hidden="true"></div>
     <div class="hero__content">
-      <div class="hero__eyebrow"><span class="hero__rule" /><span>Holistic hair studio</span></div>
+      <div class="hero__eyebrow"><span>Holistic hair studio · Mandeville</span></div>
       <div class="hero__scripts">
         {slides.map((s, i) => <span class="hero__script" data-phrase data-active={i === 0}>{s.script}</span>)}
       </div>
-      <h1 class="hero__title">Healthy hair starts at the scalp.</h1>
+      <h1 class="hero__title">Healthy hair, rooted in wellness and faith.</h1>
       <div class="hero__actions">
-        <BookButton variant="ivory" size="lg">Book an appointment</BookButton>
-        <Button variant="outline" tone="dark" size="lg" href={url('gallery/')}>See our work</Button>
+        <BookButton variant="ivory" size="lg">Get Rooted</BookButton>
+        <Button variant="outline" tone="dark" size="lg" href={url('services/')}>See our Rituals</Button>
       </div>
-      <div class="hero__dots">
-        {slides.map((_, i) => <button type="button" data-dot aria-label={`Slide ${i + 1}`} data-active={i === 0} />)}
-      </div>
+    </div>
+    <div class="hero__dots">
+      {slides.map((_, i) => <button type="button" data-dot aria-label={`Show photo ${i + 1} of ${slides.length}`} data-active={i === 0}></button>)}
     </div>
   </section>
 
   <DealBanner />
 
   <Section>
+    <SectionHeading eyebrow="New guest?" script="start here" title="Your first visit, in three steps" />
+    <ol class="steps">
+      {steps.map((s) => (
+        <li class="step">
+          <span class="step__n">{s.n}</span>
+          <h3 class="step__title">{s.title}</h3>
+          <p class="step__text">{s.text}</p>
+          {s.book ? <BookButton variant="text">{s.cta}</BookButton> : <Button variant="text" href={s.href}>{s.cta}</Button>}
+        </li>
+      ))}
+    </ol>
+  </Section>
+
+  <Section bg="var(--surface-raised)">
     <div class="split">
-      <div class="split__photos">
-        <PhotoFrame shape="arch" label="Studio interior" />
-        <PhotoFrame shape="circle" label="Scalp treatment" />
+      <div class="split__photo">
+        <PhotoFrame src={specialtiesPhoto} alt="A client’s finished blonde dimensional color, softly waved." shape="arch" ratio="4 / 5" sizes="(min-width: 900px) 40vw, 90vw" />
       </div>
       <div class="split__text">
-        <SectionHeading
-          align="left"
-          eyebrow="Our philosophy"
-          script="more than hair"
-          title="A slower, more thoughtful salon visit"
-          intro="We look at your scalp, your routine and what goes into your products before we pick up the scissors. Every service is built around long-term hair health."
-        />
-        <Button variant="outline" href={url('team/')}>About the studio</Button>
+        <SectionHeading align="left" eyebrow="Our specialties" script="the rituals" title="Beautiful hair, low-tox and intentional" />
+        <ul class="specialties">
+          {specialties.map((s) => <li>{s}</li>)}
+        </ul>
+        <Button variant="outline" href={url('services/')}>See our Rituals</Button>
       </div>
     </div>
   </Section>
 
-  <Section bg="var(--surface-raised)">
-    <SectionHeading eyebrow="Services" title="Care for every head of hair" />
-    <div class="cards">
-      {services.map((s) => (
-        <Card interactive surface={s.surface} title={s.title}>
-          {s.text}
-          <Button slot="footer" variant="text" tone={s.surface === 'terracotta' ? 'dark' : 'light'} href={url('services/')}>View menu</Button>
-        </Card>
-      ))}
+  <Section bg="var(--surface-sand)">
+    <div class="split split--flip">
+      <div class="split__text">
+        <SectionHeading
+          align="left"
+          eyebrow="The Experience"
+          script="come as you are"
+          title="Make yourself at home"
+          intro="From the moment you step into the Rooted Haus, we want you to feel right at home. Settle into our cozy space, flip through a magazine, and help yourself to a thoughtfully curated selection of refreshments."
+        />
+        <Button variant="outline" href={url('experience/')}>See The Experience</Button>
+      </div>
+      <div class="split__photo">
+        <PhotoFrame src={experiencePhoto} alt="A smiling guest is handed a lavender drink in a gold-rimmed glass." shape="rounded" ratio="4 / 3" sizes="(min-width: 900px) 45vw, 90vw" />
+      </div>
     </div>
   </Section>
 
   <Section bg="var(--surface-olive)">
-    <div class="reviews">
-      <SectionHeading align="left" tone="dark" eyebrow="Kind words" title="From our chairs" />
-      <div class="reviews__grid">
-        {featured.map((r) => <ReviewCard tone="dark" quote={r.data.quote} name={r.data.name} detail={r.data.detail} rating={r.data.rating} />)}
-      </div>
+    <SectionHeading tone="dark" eyebrow="Success stories" script="love letters" title="From our clients" />
+    <div class="letters">
+      {reviews.map((r) => (
+        <ReviewCard tone="dark" quote={r.data.quote} name={r.data.name} detail={r.data.stylist ? `with ${stylistName(r.data.stylist)}` : r.data.detail} rating={r.data.rating} />
+      ))}
     </div>
+    <div class="center"><Button variant="outline" tone="dark" href={url('reviews/')}>Read more love letters</Button></div>
   </Section>
 
   <Section>
     <div class="work__head">
-      <SectionHeading align="left" eyebrow="@therootedhaus" title="Recent work" />
+      <SectionHeading align="left" eyebrow="Gallery" title="Recent work" />
       <Button variant="outline" href={url('gallery/')}>Full gallery</Button>
     </div>
     <div class="work__grid">
-      {['Balayage', 'Curls', 'Cut', 'Color'].map((l, k) => <PhotoFrame shape={k % 2 ? 'rounded' : 'arch'} ratio="3 / 4" label={l} />)}
+      {recent.map((g, k) => (
+        <PhotoFrame src={g.data.image} alt={g.data.alt ?? g.data.label} label={g.data.label} shape={k % 2 ? 'rounded' : 'arch'} ratio="3 / 4" sizes="(min-width: 900px) 25vw, 50vw" />
+      ))}
     </div>
   </Section>
 
-  <Section bg="var(--surface-sand)" center>
+  <Section bg="var(--surface-moody)" center>
     <div class="hiring">
-      <Badge tone="terracotta">Now hiring</Badge>
-      <SectionHeading script="wellness, beauty, community" title="Join the Haus" intro="We're looking for stylists who care about hair health as much as we do. Commission and chair rental options." />
-      <Button href={url('careers/')}>Careers</Button>
+      <Badge tone="sand">Now hiring</Badge>
+      <SectionHeading tone="dark" script="plant your roots" title="Come grow with us" intro="We’re always looking for wellness-minded stylists. Commission and booth rental opportunities." />
+      <Button variant="ivory" href={url('careers/')}>Plant your roots</Button>
     </div>
   </Section>
 </BaseLayout>
 
 <script>
-  // Hero: cross-fades slides every 6s (design system: 1.2s cross-fade). Static when reduced motion is on.
+  // Hero: cross-fades photos every 6s (design system: 1.2s cross-fade). Static when reduced motion is on.
   let timer: number | undefined;
+
+  const whenSettled = (fn: () => void) => {
+    const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(fn, { timeout: 2000 }) : setTimeout(fn, 800));
+    if (document.readyState === 'complete') idle();
+    else window.addEventListener('load', idle, { once: true });
+  };
 
   document.addEventListener('astro:page-load', () => {
     window.clearInterval(timer);
-    const bgs = [...document.querySelectorAll<HTMLElement>('[data-slide]')];
-    if (bgs.length === 0) return; // not the home page
+    const hero = document.querySelector<HTMLElement>('.hero');
+    if (!hero) return; // not the home page
+    whenSettled(() => {
+      const more = hero.querySelector<HTMLTemplateElement>('template[data-more-slides]');
+      if (more) {
+        hero.querySelector('.hero__shade--left')!.before(more.content.cloneNode(true));
+        more.remove();
+      }
+      hero.classList.add('has-slides');
+      initSlideshow(hero);
+    });
+  });
+
+  function initSlideshow(hero: HTMLElement) {
+    const slides = [...hero.querySelectorAll<HTMLElement>('[data-slide]')];
     const phrases = [...document.querySelectorAll<HTMLElement>('[data-phrase]')];
     const dots = [...document.querySelectorAll<HTMLButtonElement>('[data-dot]')];
     let current = 0;
 
+    let swap: number | undefined;
+
     function show(i: number) {
       current = i;
-      [bgs, phrases, dots].forEach((set) => set.forEach((el, k) => el.setAttribute('data-active', String(k === i))));
+      [slides, phrases, dots].forEach((set) => set.forEach((el, k) => el.setAttribute('data-active', String(k === i))));
+      const side = slides[i].dataset.align ?? 'left';
+      if (side !== hero.dataset.align) {
+        // Fade the text out, switch sides while it is invisible, then fade it back in.
+        hero.classList.add('is-moving');
+        window.clearTimeout(swap);
+        swap = window.setTimeout(() => {
+          hero.dataset.align = side;
+          hero.classList.remove('is-moving');
+        }, 450);
+      }
+      slides.forEach((el, k) => el.toggleAttribute('aria-hidden', k !== i));
     }
     function start() {
       if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      timer = window.setInterval(() => show((current + 1) % bgs.length), 6000);
+      timer = window.setInterval(() => show((current + 1) % slides.length), 6000);
     }
     dots.forEach((d, i) =>
       d.addEventListener('click', () => {
@@ -133,49 +223,88 @@ const services = [
       }),
     );
     start();
-  });
+  }
 </script>
 
 <style>
-  .hero { position: relative; height: min(82vh, 720px); min-height: 520px; overflow: hidden; color: var(--rh-ivory); }
-  .hero__bg { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s var(--ease-soft); }
-  .hero__bg[data-active='true'] { opacity: 1; }
-  .hero__content { position: relative; height: 100%; max-width: 1280px; margin: 0 auto; padding: 0 var(--gutter);
-    display: flex; flex-direction: column; justify-content: center; gap: 22px; }
-  .hero__eyebrow { display: flex; align-items: center; gap: 16px; font-size: 12px; font-weight: 500;
+  .hero { position: relative; height: min(88vh, 780px); min-height: 560px; overflow: hidden; color: var(--rh-ivory); background: var(--rh-espresso); }
+  .hero__slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s var(--ease-soft); }
+  .hero__slide[data-active='true'] { opacity: 1; }
+  .hero__img { width: 100%; height: 100%; object-fit: cover; filter: var(--photo-warmth); }
+  /* Darkens the bottom-left corner where the text sits, so ivory text stays readable on any photo. */
+  .hero__shade { position: absolute; inset: 0; pointer-events: none; transition: opacity 1.2s var(--ease-soft); }
+  .hero__shade--left {
+    background:
+      radial-gradient(ellipse 85% 120% at 0% 100%, rgba(59, 40, 25, .9) 0%, rgba(59, 40, 25, .72) 45%, rgba(59, 40, 25, 0) 80%),
+      linear-gradient(0deg, rgba(59, 40, 25, .55) 0%, rgba(59, 40, 25, 0) 45%); }
+  .hero__shade--right { opacity: 0;
+    background:
+      radial-gradient(ellipse 85% 120% at 100% 100%, rgba(59, 40, 25, .92) 0%, rgba(59, 40, 25, .78) 45%, rgba(59, 40, 25, 0) 82%),
+      linear-gradient(0deg, rgba(59, 40, 25, .55) 0%, rgba(59, 40, 25, 0) 45%); }
+  .hero[data-align='right'] .hero__shade--left { opacity: 0; }
+  .hero[data-align='right'] .hero__shade--right { opacity: 1; }
+  .hero__content { position: absolute; left: 0; right: 0; bottom: 0; max-width: 1280px; margin: 0 auto;
+    padding: 0 var(--gutter) clamp(72px, 9vh, 104px); display: flex; flex-direction: column; gap: 16px; }
+  .hero__content > * { max-width: 600px; }
+  .hero__content { transition: opacity .45s var(--ease-soft); align-items: flex-start; }
+  .hero.is-moving .hero__content { opacity: 0; }
+  .hero[data-align='right'] .hero__content { align-items: flex-end; text-align: right; }
+  .hero[data-align='right'] .hero__actions { justify-content: flex-end; }
+  /* Small text over a changing photo: a translucent espresso pill keeps it readable on every slide. */
+  .hero__eyebrow { display: inline-flex; padding: 7px 16px; border-radius: var(--radius-pill);
+    background: rgba(59, 40, 25, .78); backdrop-filter: blur(4px); font-size: 12px; font-weight: 500;
     letter-spacing: .32em; text-transform: uppercase; color: var(--rh-ivory); }
-  .hero__rule { width: 48px; height: 1px; background: var(--rh-sand); }
   .hero__scripts { display: grid; }
-  .hero__script { grid-area: 1 / 1; font-family: var(--font-script); font-size: clamp(56px, 8vw, 104px);
-    line-height: 1; opacity: 0; transition: opacity 1.2s var(--ease-soft); }
+  .hero__script { grid-area: 1 / 1; font-family: var(--font-script); font-size: clamp(48px, 6.5vw, 88px);
+    line-height: 1; color: var(--rh-caramel-soft); opacity: 0; transition: opacity 1.2s var(--ease-soft);
+    text-shadow: 0 2px 16px rgba(59, 40, 25, .7); }
   .hero__script[data-active='true'] { opacity: 1; }
-  .hero__title { margin: 0; max-width: 620px; font-family: var(--font-display); font-weight: 400;
-    font-size: clamp(30px, 3.6vw, 46px); line-height: 1.15; text-wrap: balance; }
+  .hero__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 3.4vw, 44px);
+    line-height: 1.15; text-wrap: balance; text-shadow: 0 1px 18px rgba(59, 40, 25, .45); }
   .hero__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 8px; }
-  .hero__dots { position: absolute; bottom: 24px; left: calc(var(--gutter) - 7px); display: flex; gap: 0; }
-  /* 24px tappable area (WCAG target size); the visible dot is the ::before */
-  .hero__dots button { position: relative; min-width: 24px; height: 24px; padding: 0; border: 0; background: transparent;
-    cursor: pointer; display: grid; place-items: center; }
-  .hero__dots button::before { content: ''; width: 10px; height: 10px; border-radius: 999px;
-    background: var(--rh-ivory-30); transition: width .3s, background .3s; }
+  .hero__dots { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); display: none; }
+  .hero.has-slides .hero__dots { display: flex; }
+  .hero__dots button { min-width: 24px; height: 24px; padding: 0; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
+  .hero__dots button::before { content: ''; width: 10px; height: 10px; border-radius: 999px; background: var(--rh-ivory-30); transition: width .3s, background .3s; }
   .hero__dots button[data-active='true']::before { width: 36px; background: var(--rh-sand); }
 
-  .split { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
-  .split__photos { display: grid; grid-template-columns: 1.2fr 1fr; gap: 18px; align-items: end; }
-  .split__text { display: flex; flex-direction: column; gap: 26px; align-items: flex-start; }
+  .steps { list-style: none; margin: 48px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; counter-reset: none; }
+  .step { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 32px 28px; border-radius: var(--radius-lg); background: var(--surface-raised); }
+  .step__n { font-family: var(--font-display); font-size: 40px; line-height: 1; color: var(--text-script); }
+  .step__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 26px; color: var(--text-strong); }
+  .step__text { margin: 0 0 4px; color: var(--text-muted); }
 
-  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 48px; }
-  .reviews { display: grid; grid-template-columns: 1fr 2fr; gap: 64px; align-items: center; }
-  .reviews__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-  .work__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px;
-    margin-bottom: 36px; flex-wrap: wrap; }
+  .split { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
+  .split--flip { grid-template-columns: 1.1fr 1fr; }
+  .split__text { display: flex; flex-direction: column; gap: 28px; align-items: flex-start; }
+  .split__photo { max-width: 520px; width: 100%; justify-self: center; }
+  .specialties { list-style: none; margin: 0; padding: 0; width: 100%; columns: 2; column-gap: 32px; }
+  .specialties li { break-inside: avoid; padding: 12px 0; border-bottom: 1px solid var(--border-hairline);
+    font-family: var(--font-display); font-size: 20px; color: var(--text-strong); }
+
+  .letters { margin: 48px 0; columns: 3; column-gap: 40px; }
+  .letters > :global(*) { break-inside: avoid; margin-bottom: 44px; }
+  .center { display: flex; justify-content: center; }
+
+  .work__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 36px; flex-wrap: wrap; }
   .work__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
   .hiring { display: flex; flex-direction: column; align-items: center; gap: 24px; }
 
   @media (max-width: 900px) {
-    .split, .reviews { grid-template-columns: 1fr; }
-    .cards { grid-template-columns: 1fr; }
-    .reviews__grid { grid-template-columns: 1fr; gap: 32px; }
+    .steps { grid-template-columns: 1fr; }
+    .split, .split--flip { grid-template-columns: 1fr; }
+    .split--flip .split__photo { order: -1; }
+    .letters { columns: 1; }
     .work__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 1100px) and (min-width: 901px) { .letters { columns: 2; } }
+  @media (max-width: 560px) {
+    .specialties { columns: 1; }
+    .hero__content { padding-bottom: 72px; }
+    .hero__shade--left, .hero__shade--right, .hero[data-align='right'] .hero__shade--left { opacity: 1;
+      background: linear-gradient(0deg, rgba(59, 40, 25, .9) 0%, rgba(59, 40, 25, .65) 45%, rgba(59, 40, 25, 0) 80%); }
+    .hero__shade--right { display: none; }
+    .hero[data-align='right'] .hero__content { align-items: flex-start; text-align: left; }
+    .hero[data-align='right'] .hero__actions { justify-content: flex-start; }
   }
 </style>

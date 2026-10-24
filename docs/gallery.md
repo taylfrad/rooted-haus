@@ -21,8 +21,8 @@ The gallery is a mosaic: photos of different sizes that fit together like a phot
 ## Photos
 
 - Use the original photo from the phone or camera; the site makes smaller versions for each screen.
-- Photos are stored in the repo under `web/src/assets/gallery/`. The site adds the warm tone from the brand guide, so avoid heavy filters before uploading.
-- Photo uploads from the panel have **not been tested yet**. Pages CMS should save the file into that folder and write a path like `../../assets/gallery/balayage.jpg` into the entry. If the panel saves it somewhere else, the build will fail on the missing file; tell your web person and they can adjust the panel's media setting.
+- Photos are stored in the repo under `web/src/assets/photos/` (gallery photos in `rituals/`). The site adds the warm tone from the brand guide, so avoid heavy filters before uploading.
+- Photo uploads from the panel have **not been tested yet**. Pages CMS should save the file into that folder and write a path like `../../assets/photos/rituals/img-0142.jpg` into the entry. If the panel saves it somewhere else, the build will fail on the missing file; tell your web person and they can adjust the panel's media setting.
 
 ## Not built yet
 

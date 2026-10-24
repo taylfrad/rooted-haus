@@ -39,9 +39,10 @@ export const maps = {
 export const hoursLine = (h: { days: string; time?: string }) => (h.time ? `${h.days}: ${h.time}` : h.days);
 
 export const nav = [
-  { href: 'services/', label: 'Services' },
-  { href: 'team/', label: 'Meet the team' },
-  { href: 'gallery/', label: 'Gallery' },
-  { href: 'careers/', label: 'Careers' },
-  { href: 'contact/', label: 'Contact' },
+  { href: 'services/', label: 'The Rituals' },
+  { href: 'team/', label: 'Meet the Haus' },
+  { href: 'experience/', label: 'The Experience' },
+  { href: 'about/', label: 'Our Roots' },
+  { href: 'careers/', label: 'Plant Your Roots' },
+  { href: 'contact/', label: 'Connect' },
 ];

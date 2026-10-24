@@ -3,40 +3,55 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
 import PageHeader from '../components/PageHeader.astro';
-import SectionHeading from '../components/content/SectionHeading.astro';
 import PhotoFrame from '../components/content/PhotoFrame.astro';
-import Badge from '../components/content/Badge.astro';
 import BookButton from '../components/core/BookButton.astro';
+import { url } from '../lib/paths';
 
 const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.order);
 ---
 
-<BaseLayout title="About & team · The Rooted Haus" description="Meet the stylists behind The Rooted Haus.">
-  <PageHeader eyebrow="About the studio" script="wellness, beauty, community" title="More than hair" intro="The Rooted Haus is a holistic hair studio where scalp and hair health come first. We take our time, and we choose what goes on your head with care." bg="var(--surface-olive)" />
+<BaseLayout title="Meet the Haus · The Rooted Haus" description="Meet the stylists of The Rooted Haus, a holistic hair studio in Mandeville, Louisiana.">
+  <PageHeader
+    eyebrow="Meet the Haus"
+    script="our roots"
+    title="The hands and hearts of our foundation"
+    intro="Just as every living thing depends on its roots to grow and flourish, The Rooted Haus also depends on ours. Meet the hands and hearts of our foundation who help nurture and grow our Haus, bringing our vision of beauty and wellness to life."
+    bg="var(--surface-olive)"
+  />
   <Section bg="var(--surface-sage)">
-    <SectionHeading tone="sage" eyebrow="Meet the team" title="The people behind the chairs" />
-    <div class="team">
+    <ul class="team">
       {team.map((m) => (
-        <article class="member" data-reveal>
-          <div class="member__photo"><PhotoFrame shape="circle" label={m.data.name} /></div>
-          <h3 class="member__name">{m.data.name}</h3>
-          <p class="member__role">{m.data.role}</p>
-          <p class="member__bio">{m.data.bio}</p>
-          <div class="member__tags">{m.data.specialties.map((s) => <Badge tone="ivory">{s}</Badge>)}</div>
-        </article>
+        <li>
+          <a class="member" href={url(`team/${m.id}/`)}>
+            <div class="member__photo">
+              <PhotoFrame shape="circle" src={m.data.photo} alt={`${m.data.name}, ${m.data.role}`} label={m.data.name} sizes="240px" />
+            </div>
+            <span class="member__name">{m.data.name}</span>
+            <span class="member__role">{m.data.role}</span>
+            {m.data.experience && <span class="member__exp">{m.data.experience}</span>}
+            <span class="member__more">Read {m.data.name}’s story</span>
+          </a>
+        </li>
       ))}
-    </div>
-    <div class="cta"><BookButton variant="primary">Book with us</BookButton></div>
+    </ul>
+    <div class="cta"><BookButton>Book with us</BookButton></div>
   </Section>
 </BaseLayout>
 
 <style>
-  .team { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 48px; margin: 56px 0; }
-  .member { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; color: var(--rh-espresso); }
-  .member__photo { width: min(220px, 100%); margin-bottom: 12px; }
-  .member__name { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 28px; }
-  .member__role { margin: 0; font-size: 12px; font-weight: 500; letter-spacing: .24em; text-transform: uppercase; }
-  .member__bio { margin: 8px 0; max-width: 34ch; }
-  .member__tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .team { list-style: none; margin: 0 0 56px; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 56px 40px; }
+  .member { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; color: var(--rh-espresso); text-decoration: none; }
+  .member__photo { width: min(240px, 100%); margin-bottom: 14px; border-radius: 50%;
+    transition: transform var(--dur-base) var(--ease-soft), box-shadow var(--dur-base) var(--ease-soft); }
+  .member:hover .member__photo { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+  .member__name { font-family: var(--font-display); font-size: 30px; line-height: 1.1; }
+  .member__role { font-size: 12px; font-weight: 500; letter-spacing: .24em; text-transform: uppercase; }
+  .member__exp { font-size: 15px; }
+  .member__more { margin-top: 6px; font-size: 12px; font-weight: 500; letter-spacing: var(--ls-button); text-transform: uppercase;
+    text-decoration: underline; text-underline-offset: 6px; text-decoration-color: transparent; transition: text-decoration-color var(--dur-base); }
+  .member:hover .member__more { text-decoration-color: currentColor; }
+  .member:hover { color: var(--rh-espresso); }
   .cta { display: flex; justify-content: center; }
+  @media (max-width: 900px) { .team { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .team { grid-template-columns: 1fr; } }
 </style>

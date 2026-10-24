@@ -1,30 +1,56 @@
 ---
-// Dev-only helper: renders the 1200x630 share banner so it can be screenshotted into public/og.png
-// (see scripts/README.md). The route is not built for production.
+// Dev-only helpers (`pnpm dev`, never in the production build):
+//   /dev/og/      the 1200x630 share banner, screenshotted into public/og.png (see scripts/README.md)
+//   /dev/photos/  every stylist photo with its file name, for matching photos to team members
 import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import logo from '../../assets/logo-wordmark-chocolate.png';
 import '../../styles/global.css';
 
 export function getStaticPaths() {
-  return import.meta.env.DEV ? [{ params: { tool: 'og' } }] : [];
+  return import.meta.env.DEV ? [{ params: { tool: 'og' } }, { params: { tool: 'photos' } }] : [];
 }
+
+const { tool } = Astro.params;
+const stylistFiles = import.meta.glob<{ default: ImageMetadata }>('../../assets/photos/stylists/*.jpg', { eager: true });
+const stylists = Object.entries(stylistFiles).map(([path, mod]) => ({ name: path.split('/').pop()!, src: mod.default }));
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="robots" content="noindex" />
-    <title>OG banner</title>
+    <title>{tool === 'og' ? 'OG banner' : 'Stylist photos'}</title>
   </head>
   <body>
-    <div class="banner">
-      <div class="frame">
-        <Image src={logo} alt="" width={840} class="logo" />
-        <div class="rule"></div>
-        <p class="script">come as you are</p>
-        <p class="line">Mandeville, Louisiana &nbsp;·&nbsp; Book online</p>
+    {tool === 'og' && (
+      <div class="banner">
+        <div class="frame">
+          <Image src={logo} alt="" width={840} class="logo" />
+          <div class="rule"></div>
+          <p class="script">come as you are</p>
+          <p class="line">Mandeville, Louisiana &nbsp;·&nbsp; Book online</p>
+        </div>
       </div>
-    </div>
+    )}
+    {tool === 'photos' && (
+      <main class="sheet">
+        <h1>Stylist photos</h1>
+        <p>
+          To show a photo on someone’s page, put its file name in their file in <code>web/src/content/team/</code>:
+          <code>photo: ../../assets/photos/stylists/img-0013.jpg</code> (portrait) and
+          <code>extraPhoto: …</code> (second photo).
+        </p>
+        <ul>
+          {stylists.map((s) => (
+            <li>
+              <Image src={s.src} alt={s.name} width={320} />
+              <code>{s.name}</code>
+            </li>
+          ))}
+        </ul>
+      </main>
+    )}
   </body>
 </html>
 
@@ -38,4 +64,8 @@ export function getStaticPaths() {
   .rule { width: 96px; height: 1px; background: var(--rh-terracotta); }
   .script { margin: 0; font-family: var(--font-script); font-size: 76px; line-height: 1; color: var(--text-script); }
   .line { margin: 0; font-size: 20px; font-weight: 500; letter-spacing: .32em; text-transform: uppercase; color: var(--rh-chocolate); }
+  .sheet { padding: 32px; }
+  .sheet ul { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+  .sheet li { display: flex; flex-direction: column; gap: 6px; }
+  .sheet img { width: 100%; height: auto; border-radius: 14px; }
 </style>
