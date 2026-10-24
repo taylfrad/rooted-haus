@@ -89,7 +89,7 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
   .row { display: flex; gap: 18px; }
   .ic { flex: 0 0 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: var(--rh-sand); color: var(--rh-terracotta); }
   .actions { display: flex; flex-wrap: wrap; gap: 14px; }
-  .h { margin: 0 0 16px; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-display-s); color: var(--text-strong); }
+  .h { margin: 0 0 16px; font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 3.4vw, var(--fs-display-m)); color: var(--text-strong); }
   .lead { margin: 0; color: var(--text-muted); }
   .message { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
   .faq { max-width: var(--container-narrow); }

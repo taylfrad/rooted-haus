@@ -74,7 +74,7 @@ const categories = (await getCollection('services')).sort((a, b) => a.data.order
     text-transform: uppercase; transition: background var(--dur-base) var(--ease-soft), color var(--dur-base) var(--ease-soft); }
   .jump a:hover { background: var(--rh-chocolate); color: var(--rh-ivory); }
   .cat { margin-bottom: 64px; scroll-margin-top: 100px; max-width: var(--container-narrow); }
-  .cat__title { margin: 0 0 8px; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-display-m); color: var(--text-strong); }
+  .cat__title { margin: 0 0 8px; font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 3.4vw, var(--fs-display-m)); color: var(--text-strong); }
   .cat__blurb { margin: 0 0 24px; color: var(--text-muted); }
   .menu { list-style: none; margin: 0; padding: 0; }
   .menu__row { display: flex; justify-content: space-between; gap: 24px; padding: 22px 0;

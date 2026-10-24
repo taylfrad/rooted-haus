@@ -56,7 +56,7 @@ const overlay = path === url();
 <style>
   .header { position: sticky; top: 0; z-index: 20; background: rgba(243, 236, 226, .92);
     backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-hairline); }
-  .header__inner { max-width: 1280px; margin: 0 auto; padding: 14px var(--gutter); display: flex;
+  .header__inner { max-width: var(--container-max); margin: 0 auto; padding: 14px var(--gutter); display: flex;
     align-items: center; justify-content: space-between; gap: 24px; }
   .header__logo { display: flex; flex-shrink: 0; } /* the logo never shrinks; the menu collapses first */
   .header__logo :global(img) { height: 44px; width: auto; max-width: 100%; object-fit: contain; }

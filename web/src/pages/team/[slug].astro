@@ -78,7 +78,7 @@ const reviews = (await getCollection('reviews')).filter((r) => r.data.stylist ==
     color: var(--rh-chocolate); text-decoration: none; }
   .back:hover { text-decoration: underline; text-underline-offset: 6px; }
   .intro { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(32px, 6vw, 88px); align-items: start; }
-  .photos { position: relative; max-width: 460px; width: 100%; justify-self: center; }
+  .photos { position: relative; max-width: 460px; width: 100%; justify-self: start; } /* in line with the back link above */
   .photos__extra { position: absolute; width: 42%; right: -8%; bottom: -6%; border-radius: 50%; box-shadow: 0 0 0 8px var(--surface-page); }
   .text { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
   .role { font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
@@ -91,7 +91,7 @@ const reviews = (await getCollection('reviews')).filter((r) => r.data.stylist ==
   .quote__script { font-family: var(--font-script); font-size: var(--fs-script-s); color: var(--rh-caramel-soft); }
   .quote blockquote { margin: 0; font-family: var(--font-display); font-size: clamp(22px, 2.4vw, 30px); line-height: 1.45; text-wrap: pretty; }
   .quote figcaption { font-size: 12px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; }
-  .h2 { margin: 0 0 40px; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-display-m); color: var(--text-strong); }
+  .h2 { margin: 0 0 32px; font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 3.4vw, var(--fs-display-m)); color: var(--text-strong); }
   .reviews { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 48px; }
   .next { display: flex; flex-direction: column; align-items: center; gap: 16px; }
   .next__label { font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
@@ -99,4 +99,6 @@ const reviews = (await getCollection('reviews')).filter((r) => r.data.stylist ==
     .intro { grid-template-columns: 1fr; }
     .photos { max-width: 360px; margin-bottom: 24px; }
   }
+  /* Phones: the photo fills the width, so the circle tucks inside it instead of hanging off the screen edge. */
+  @media (max-width: 560px) { .photos__extra { right: 0; } }
 </style>

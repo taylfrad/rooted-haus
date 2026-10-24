@@ -50,7 +50,9 @@ const shapes = ['arch', 'rounded', 'circle', 'rounded'] as const;
   .rows { display: flex; flex-direction: column; gap: clamp(64px, 9vw, 120px); }
   .row { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
   .row--flip .row__photo { order: 2; }
-  .row__photo { max-width: 460px; width: 100%; justify-self: center; }
+  /* Photos sit on the outer content edge (left, or right on flipped rows) so every row shares the page grid. */
+  .row__photo { max-width: 460px; width: 100%; justify-self: start; }
+  .row--flip .row__photo { justify-self: end; }
   .row__text { display: flex; flex-direction: column; gap: 12px; max-width: 520px; }
   .row__n { font-family: var(--font-display); font-size: 40px; line-height: 1; color: var(--text-script); }
   .row__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 3.6vw, var(--fs-display-l)); line-height: var(--lh-tight); color: var(--text-strong); }
@@ -62,6 +64,6 @@ const shapes = ['arch', 'rounded', 'circle', 'rounded'] as const;
   @media (max-width: 900px) {
     .row { grid-template-columns: 1fr; }
     .row--flip .row__photo { order: 0; }
-    .row__photo { max-width: 380px; }
+    .row__photo, .row--flip .row__photo { max-width: 380px; justify-self: center; }
   }
 </style>

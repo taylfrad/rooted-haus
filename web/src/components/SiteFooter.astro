@@ -67,7 +67,7 @@ import { url } from '../lib/paths';
 
 <style>
   .footer { background: var(--surface-moody); color: var(--rh-ivory); }
-  .footer__grid { max-width: 1280px; margin: 0 auto; padding: 80px var(--gutter) 48px; display: grid;
+  .footer__grid { max-width: var(--container-max); margin: 0 auto; padding: 80px var(--gutter) 48px; display: grid;
     grid-template-columns: 0.95fr 1.35fr 1fr 0.8fr 1.1fr; gap: 40px; align-items: start; }
   .footer__brand { display: flex; flex-direction: column; gap: 18px; }
   .footer__mark { display: block; width: 112px; border-radius: 50%; }
@@ -92,7 +92,8 @@ import { url } from '../lib/paths';
   .footer__social a { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%;
     border: 1px solid var(--border-on-dark); color: var(--rh-ivory); }
   .footer__social a:hover { background: var(--rh-ivory); color: var(--rh-espresso); text-decoration: none; }
-  .footer__legal { max-width: 1280px; margin: 0 auto; padding: 20px var(--gutter) 32px; display: flex;
+  /* Sized to the content width (not padded) so the rule above it ends where the columns do. */
+  .footer__legal { width: min(var(--container-max), 100% - 2 * var(--gutter)); margin: 0 auto; padding: 20px 0 32px; display: flex;
     justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--border-on-dark);
     font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--text-on-dark-muted); }
 
