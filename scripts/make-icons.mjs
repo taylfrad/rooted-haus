@@ -77,3 +77,13 @@ writeFileSync(out('icon-512.png'), await tile(512, 0.86, 112));
 writeFileSync(out('icon-maskable-512.png'), await sharp(await tile(512, 0.6, 0)).flatten({ background: TERRACOTTA }).png().toBuffer());
 
 console.log('wrote favicon.ico, favicon-16x16.png, favicon-32x32.png, apple-touch-icon.png, icon-192.png, icon-512.png, icon-maskable-512.png');
+
+// Monogram for the site itself (footer, dark sections): the same emblem in sand on a transparent background.
+// The DS calls for the sand monogram on dark surfaces; it is 9.7:1 against espresso.
+const SAND = '#E8D4B9';
+const monogramSand = await sharp({ create: { width: info.width, height: info.height, channels: 3, background: SAND } })
+  .joinChannel(alpha, { raw: { width: info.width, height: info.height, channels: 1 } })
+  .png({ compressionLevel: 9 })
+  .toBuffer();
+writeFileSync(path.join(root, 'web/src/assets/monogram-sand.png'), monogramSand);
+console.log(`wrote web/src/assets/monogram-sand.png (${info.width}x${info.height})`);

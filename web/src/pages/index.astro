@@ -148,8 +148,8 @@ const recent = (await getCollection('gallery')).sort((a, b) => a.data.order - b.
       <Button variant="outline" href={url('gallery/')}>Full gallery</Button>
     </div>
     <div class="work__grid">
-      {recent.map((g, k) => (
-        <PhotoFrame src={g.data.image} alt={g.data.alt ?? g.data.label} label={g.data.label} shape={k % 2 ? 'rounded' : 'arch'} ratio="3 / 4" sizes="(min-width: 900px) 25vw, 50vw" />
+      {recent.map((g) => (
+        <PhotoFrame src={g.data.image} alt={g.data.alt ?? g.data.label} label={g.data.label} shape="soft" ratio="3 / 4" sizes="(min-width: 900px) 25vw, 50vw" />
       ))}
     </div>
   </Section>

@@ -1,7 +1,6 @@
 label: "Hand massage"
 tag: "scalp"
-shape: "rounded"
-size: "small"
+size: "wide"
 image: "../../assets/photos/rituals/img-0117.jpg"
 alt: "A slow hand and arm massage during a service."
 order: 8

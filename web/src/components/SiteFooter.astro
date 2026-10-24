@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import Button from './core/Button.astro';
+import monogram from '../assets/monogram-sand.png';
 import DirectionsMap from './DirectionsMap.astro';
 import { nav, site } from '../lib/site';
 import { url } from '../lib/paths';
@@ -9,7 +11,9 @@ import { url } from '../lib/paths';
 <footer class="footer" transition:persist>
   <div class="footer__grid">
     <div class="footer__brand">
-      <span class="footer__mark">rh</span>
+      <a class="footer__mark" href={url()} aria-label={`${site.name} home`}>
+        <Image src={monogram} alt="" width={112} densities={[1, 2]} />
+      </a>
       <span class="footer__script">come as you are</span>
     </div>
 
@@ -69,7 +73,8 @@ import { url } from '../lib/paths';
   .footer__grid { max-width: 1280px; margin: 0 auto; padding: 80px var(--gutter) 48px; display: grid;
     grid-template-columns: 0.95fr 1.35fr 1fr 0.8fr 1.1fr; gap: 40px; align-items: start; }
   .footer__brand { display: flex; flex-direction: column; gap: 18px; }
-  .footer__mark { font-family: var(--font-display); font-size: 64px; line-height: 1; color: var(--rh-sand); }
+  .footer__mark { display: block; width: 112px; border-radius: 50%; }
+  .footer__mark :global(img) { width: 100%; height: auto; }
   .footer__script { font-family: var(--font-script); font-size: 30px; line-height: 1.1; white-space: nowrap; color: var(--rh-caramel-soft); }
   .footer__col { display: flex; flex-direction: column; gap: 10px; font-size: 14px; color: var(--text-on-dark-muted); }
   .footer__col a { color: var(--text-on-dark-muted); text-decoration: none; }

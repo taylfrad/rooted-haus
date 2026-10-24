@@ -82,7 +82,6 @@ const gallery = defineCollection({
     z.object({
       label: z.string(),
       tag: z.string(),
-      shape: z.enum(['arch', 'circle', 'rounded', 'soft']).default('arch'),
       /** How much room the photo takes in the mosaic: small = 1 cell, wide = 2 across, tall = 2 down, large = 2 x 2. */
       size: z.enum(['small', 'wide', 'tall', 'large']).default('small'),
       /** Path relative to this file, e.g. ../../assets/photos/rituals/img-0142.jpg. Leave empty to show a placeholder. */

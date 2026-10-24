@@ -1,7 +1,6 @@
 label: "The salon"
 tag: "studio"
-shape: "rounded"
-size: "small"
+size: "wide"
 image: "../../assets/photos/rituals/img-0041.jpg"
 alt: "Stylists at work with clients across the salon floor."
 order: 12

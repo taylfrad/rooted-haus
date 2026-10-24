@@ -168,9 +168,4 @@ content:
         type: select
         options:
           values: [small, wide, tall, large]
-      - name: shape
-        label: Photo shape (circles only show on small and large photos)
-        type: select
-        options:
-          values: [arch, circle, rounded, soft]
       - { name: order, label: Order (1 is first), type: number }

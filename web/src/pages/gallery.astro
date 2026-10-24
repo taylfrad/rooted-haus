@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
 import PageHeader from '../components/PageHeader.astro';
@@ -10,9 +11,20 @@ import { site } from '../lib/site';
 const items = (await getCollection('gallery')).sort((a, b) => a.data.order - b.data.order);
 const tags = ['all', ...new Set(items.map((i) => i.data.tag))];
 
-// A circle only works in a square cell, so on wide or tall cells it becomes a rounded frame instead.
-type Shape = 'arch' | 'circle' | 'rounded' | 'soft';
-const shapeFor = (shape: Shape, size: string): Shape => (shape === 'circle' && (size === 'wide' || size === 'tall') ? 'rounded' : shape);
+// A larger copy of each photo for the lightbox (and for the plain link when JavaScript is off).
+// Every gallery photo is a square or rectangle (gently rounded corners); only the size varies.
+const tiles = await Promise.all(
+  items.map(async (entry) => {
+    const img = entry.data.image;
+    const full = img ? await getImage({ src: img, width: Math.min(1800, img.width), format: 'webp', quality: 80 }) : undefined;
+    return {
+      entry,
+      alt: entry.data.alt ?? entry.data.label,
+      full: full && { src: full.src, width: Number(full.attributes.width), height: Number(full.attributes.height) },
+    };
+  }),
+);
+
 // Image width hints: a cell spanning two columns needs a bigger file than a single one.
 const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-width: 1200px) 600px, 100vw' : '(min-width: 1200px) 300px, 50vw');
 ---
@@ -25,18 +37,22 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
     </div>
     <div class="mosaic-wrap">
       <div class="mosaic">
-        {items.map((i) => (
-          <div class={`tile tile--${i.data.size}`} data-tag={i.data.tag}>
-            <PhotoFrame
-              fill
-              shape={shapeFor(i.data.shape, i.data.size)}
-              label={i.data.label}
-              src={i.data.image}
-              alt={i.data.alt ?? i.data.label}
-              sizes={sizesFor(i.data.size)}
-            />
-          </div>
-        ))}
+        {tiles.map(({ entry: i, alt, full }) => {
+          const frame = (
+            <PhotoFrame fill shape="soft" label={i.data.label} src={i.data.image} alt={alt} sizes={sizesFor(i.data.size)} />
+          );
+          return (
+            <div class={`tile tile--${i.data.size}`} data-tag={i.data.tag}>
+              {full ? (
+                <a class="tile__link" href={full.src} data-pswp-width={full.width} data-pswp-height={full.height} aria-label={`View larger: ${alt}`}>
+                  {frame}
+                </a>
+              ) : (
+                frame
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
     <div class="cta">
@@ -47,7 +63,42 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
 </BaseLayout>
 
 <script>
+  import PhotoSwipeLightbox from 'photoswipe/lightbox';
+  import 'photoswipe/style.css';
+
+  let lightbox: PhotoSwipeLightbox | undefined;
+
   document.addEventListener('astro:page-load', () => {
+    // Lightbox: rebuilt on each visit to the page, and only over the photos the current filter shows.
+    lightbox?.destroy();
+    lightbox = undefined;
+    if (document.querySelector('.mosaic')) {
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      lightbox = new PhotoSwipeLightbox({
+        gallery: '.mosaic',
+        children: '.tile:not([hidden]) .tile__link',
+        pswpModule: () => import('photoswipe'),
+        showHideAnimationType: reduce ? 'none' : 'fade',
+        bgOpacity: 0.97,
+        padding: { top: 32, bottom: 72, left: 16, right: 16 },
+      });
+      // Caption: the photo's description, under the photo.
+      lightbox.on('uiRegister', () => {
+        lightbox!.pswp!.ui!.registerElement({
+          name: 'caption',
+          order: 9,
+          isButton: false,
+          appendTo: 'root',
+          onInit: (el, pswp) => {
+            pswp.on('change', () => {
+              el.textContent = pswp.currSlide?.data.element?.querySelector('img')?.alt ?? '';
+            });
+          },
+        });
+      });
+      lightbox.init();
+    }
+
     const chips = [...document.querySelectorAll<HTMLButtonElement>('[data-filter]')];
     const cells = [...document.querySelectorAll<HTMLElement>('[data-tag]')];
     chips.forEach((chip) =>
@@ -78,8 +129,19 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
   .tile--tall { grid-row: span 2; }
   .tile--large { grid-column: span 2; grid-row: span 2; }
   .tile[hidden] { display: none; }
-  @media (max-width: 900px) { .mosaic-wrap { --cols: 3; } }
+  .tile__link { display: block; height: 100%; cursor: zoom-in;
+    transition: transform var(--dur-base) var(--ease-soft), filter var(--dur-base) var(--ease-soft); }
+  .tile__link:hover { transform: translateY(-4px); filter: drop-shadow(0 18px 24px rgba(59, 40, 25, .28)); }
+  /* Tablets use 2 columns too: with 2-cell-wide and 2-cell-tall photos, 3 columns cannot pack without holes. */
+  @media (max-width: 900px) { .mosaic-wrap { --cols: 2; } }
   @media (max-width: 560px) { .mosaic-wrap { --cols: 2; --gap: 12px; } }
 
   .cta { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; margin-top: 56px; }
+</style>
+
+<style is:global>
+  /* PhotoSwipe in the brand colors */
+  .pswp { --pswp-bg: var(--rh-espresso); --pswp-icon-color: var(--rh-ivory); --pswp-icon-color-secondary: var(--rh-espresso); --pswp-icon-stroke-color: var(--rh-espresso); }
+  .pswp__caption { position: absolute; left: 0; right: 0; bottom: 20px; padding: 0 24px; text-align: center;
+    font-family: var(--font-sans); font-size: 14px; line-height: 1.5; color: var(--rh-ivory); pointer-events: none; }
 </style>
