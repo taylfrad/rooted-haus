@@ -12,7 +12,9 @@ const path = Astro.url.pathname;
 const overlay = path === url();
 ---
 
-<header class:list={['header', { 'header--overlay': overlay }]}>
+<!-- Its own layer in page changes, so it stays put while the page beneath fades (styles/global.css). "initial" keeps
+     the browser's crossfade, which blends identical pixels seamlessly; only Home's see-through header visibly changes. -->
+<header class:list={['header', { 'header--overlay': overlay }]} transition:name="site-header" transition:animate="initial">
   <div class="header__inner">
     <a href={url()} class="header__logo" aria-label={`${site.name} — ${site.tagline}`}>
       <Image src={logo} alt={`${site.name} — ${site.tagline}`} height={88} densities={[1, 2]} class="logo--dark" />

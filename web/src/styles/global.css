@@ -38,10 +38,19 @@ main:focus{outline:none}
   .js :is([data-reveal],[data-reveal] *):has(img) > :not(:has(img),img){opacity:0;translate:0 var(--rise-reveal)}
 }
 
-/* Page change (lib/page-transition.ts): the old page fades out, the new one fades in and settles up into place.
-   Astro turns these off for reduced motion. */
+/* Page change. The header is its own still layer (transition:name in SiteHeader); everything else is the root layer,
+   which fades out, then fades back in as the new page, already at the top. Nothing slides: a named <main> would be
+   animated from its old box to its new one, so a scrolled page flew thousands of pixels. The fades run one after the
+   other so the two pages never overlap, with a moment of page color (never white) between them. The arriving page's
+   heading rises in with the scroll reveals (PageHeader). Astro switches all of this off for reduced motion. */
+::view-transition{background:var(--surface-page)}
+::view-transition-old(root){animation:var(--dur-page-out) var(--ease-soft) both rh-page-out}
+::view-transition-new(root){animation:var(--dur-page) var(--ease-glide) var(--dur-page-out) both rh-page-in}
 @keyframes rh-page-out{to{opacity:0}}
-@keyframes rh-page-in{from{opacity:0;transform:translateY(var(--rise-page))}}
+@keyframes rh-page-in{from{opacity:0}}
+
+/* In-page links (the category buttons on The Rituals, the skip link) stop clear of the sticky header. */
+[id]{scroll-margin-top:96px}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important;scroll-behavior:auto !important}
 }

@@ -1,7 +1,6 @@
 ---
 import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
-import { settle } from '../lib/page-transition';
 import { isStaging, url } from '../lib/paths';
 import { site } from '../lib/site';
 import SiteHeader from '../components/SiteHeader.astro';
@@ -94,7 +93,8 @@ const jsonLd = {
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <SiteHeader />
-    <main id="main" tabindex="-1" transition:animate={settle}><slot /></main>
+    <!-- No transition:name here: the page change fades the whole page (styles/global.css), so nothing slides. -->
+    <main id="main" tabindex="-1"><slot /></main>
     <SiteFooter />
     <DirectionsDialog />
     <BackToTop />
@@ -103,6 +103,31 @@ const jsonLd = {
     <script>
       import { initReveal } from '../lib/motion';
       document.addEventListener('astro:page-load', initReveal);
+
+      // Every new page starts at the top. A clicked footer link keeps focus (the footer is kept between pages), and
+      // Astro refocuses it after the swap, which scrolls the new page down to the footer. Drop focus first, as a
+      // normal page load would.
+      document.addEventListener('astro:before-preparation', () => (document.activeElement as HTMLElement | null)?.blur?.());
+
+      // Links to a spot on the same page (the category buttons on The Rituals, the skip link) glide there instead of
+      // jumping. Only these links: smooth scrolling for the whole document would also animate Back and Forward.
+      // Runs before Astro's own link handling (capture), which then leaves the click alone.
+      document.addEventListener(
+        'click',
+        (e) => {
+          const link = (e.target as Element).closest<HTMLAnchorElement>('a[href^="#"]');
+          if (!link || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+          const target = document.getElementById(decodeURIComponent(link.hash.slice(1)));
+          if (!target) return;
+          e.preventDefault();
+          const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+          target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+          // Keyboard and screen-reader users continue from the target (the skip link lands on <main>).
+          if (target.tabIndex >= 0 || target.hasAttribute('tabindex')) target.focus({ preventScroll: true });
+          history.replaceState(history.state, '', link.hash);
+        },
+        { capture: true },
+      );
     </script>
   </body>
 </html>

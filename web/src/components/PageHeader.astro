@@ -21,7 +21,8 @@ const { eyebrow, script, title, intro, bg = 'var(--surface-terracotta)', image, 
 
 <header class:list={['ph', { 'on-olive': bg.includes('olive'), 'ph--photo': !!image }]} style={`background:${bg}`}>
   <Watermark side={image ? 'left' : 'right'} />
-  <div class="ph__inner">
+  <!-- data-reveal: on arrival the heading rises in like the scroll reveals; the photo stays still (photos never animate). -->
+  <div class="ph__inner" data-reveal>
     <div class="ph__text">
       <SectionHeading as="h1" tone="dark" align={image ? 'left' : 'center'} {eyebrow} {script} {title} {intro} />
     </div>

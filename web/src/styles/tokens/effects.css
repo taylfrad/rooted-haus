@@ -7,9 +7,9 @@
 --dur-fast:180ms;
 --dur-base:320ms;
 --dur-reveal:800ms;
---dur-page:420ms;
+--dur-page-out:140ms;
+--dur-page:320ms;
 --rise-reveal:16px;
---rise-page:8px;
 --photo-warmth:sepia(.12) saturate(.9);
 --overlay-moody:linear-gradient(180deg,rgba(59,40,25,0) 40%,rgba(59,40,25,.65) 100%);
 }
