@@ -12,11 +12,11 @@ interface Props {
   bg?: string;
   /** A photo beside the heading. Without one, the heading is centered. */
   image?: ImageMetadata;
-  imageAlt?: string;
+  alt?: string;
   /** Which part of the photo to keep in the arch crop (CSS object-position). */
   focus?: string;
 }
-const { eyebrow, script, title, intro, bg = 'var(--surface-terracotta)', image, imageAlt = '', focus } = Astro.props;
+const { eyebrow, script, title, intro, bg = 'var(--surface-terracotta)', image, alt = '', focus } = Astro.props;
 ---
 
 <header class:list={['ph', { 'on-olive': bg.includes('olive'), 'ph--photo': !!image }]} style={`background:${bg}`}>
@@ -27,7 +27,7 @@ const { eyebrow, script, title, intro, bg = 'var(--surface-terracotta)', image, 
     </div>
     {image && (
       <div class="ph__photo">
-        <PhotoFrame src={image} alt={imageAlt} shape="arch" ratio="4 / 5" focus={focus} sizes="(min-width: 900px) 34vw, 70vw" />
+        <PhotoFrame src={image} alt={alt} shape="arch" ratio="4 / 5" focus={focus} sizes="(min-width: 900px) 34vw, 70vw" />
       </div>
     )}
   </div>

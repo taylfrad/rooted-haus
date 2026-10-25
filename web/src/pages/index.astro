@@ -12,45 +12,25 @@ import BookButton from '../components/core/BookButton.astro';
 import DealBanner from '../components/DealBanner.astro';
 import Watermark from '../components/Watermark.astro';
 import { url } from '../lib/paths';
+import { site } from '../lib/site';
+import { getPage } from '../lib/pages';
+import { cropPosition } from '../lib/crop';
 
-import hero0156 from '../assets/photos/hero/img-0156.jpg';
-import hero0145 from '../assets/photos/hero/img-0145.jpg';
-import hero0161 from '../assets/photos/hero/img-0161.jpg';
-import hero0086 from '../assets/photos/hero/img-0086.jpg';
-import spLowTox from '../assets/photos/rituals/img-0213.jpg';
-import spBlonding from '../assets/photos/rituals/img-0142.jpg';
-import spDimensional from '../assets/photos/rituals/img-0127.jpg';
-import spLowMaintenance from '../assets/photos/rituals/img-9951.jpg';
-import spGrey from '../assets/photos/rituals/img-9956.jpg';
-import spCuts from '../assets/photos/rituals/img-0039.jpg';
-import spScalp from '../assets/photos/rituals/img-0098.jpg';
-import experiencePhoto from '../assets/photos/rituals/img-0168.jpg';
-
+// All words and photos come from the "Home page" entry in the panel (src/content/pages/home.yml).
+const home = await getPage('homePage');
 // Slides: photo, a script phrase, crop anchor, and which side the text sits on (the side away from the faces).
-const slides = [
-  { src: hero0156, alt: 'A guest relaxes with a magazine on a cream armchair in the salon lounge.', script: 'come as you are', pos: '62% 35%', align: 'left' },
-  { src: hero0145, alt: 'A smiling guest is handed a lavender drink in a gold-rimmed glass.', script: 'make yourself at home', pos: '40% 30%', align: 'right' },
-  { src: hero0161, alt: 'A stylist greets a guest with a hug among plants, candles and a tufted settee.', script: 'more than hair', pos: '52% 30%', align: 'left' },
-  { src: hero0086, alt: 'A guest rests under a stone eye mask while a scalp treatment is brushed on.', script: 'beauty with intention', pos: '40% 45%', align: 'right' },
-];
-
+const slides = home.hero.slides.map((s) => ({ ...s, position: cropPosition(s.focus) }));
 const heroWidths = [640, 960, 1280, 1920, 2400];
 
-const steps = [
-  { n: '01', title: 'Meet the Haus', text: 'Get to know the hands and hearts behind every chair.', href: url('team/'), cta: 'Meet the Haus' },
-  { n: '02', title: 'See our Rituals', text: 'Browse our services and pricing.', href: url('services/'), cta: 'See our Rituals' },
-  { n: '03', title: 'Book your Appointment', text: 'Choose a time that works for you, online.', book: true, cta: 'Get Rooted' },
+// The three steps always link to the team, the menu and booking; only their words are edited.
+const steps: { title: string; text: string; button: string; href?: string; book?: boolean }[] = [
+  { ...home.steps.meet, href: url('team/') },
+  { ...home.steps.rituals, href: url('services/') },
+  { ...home.steps.book, book: true },
 ];
 
-const specialties = [
-  { label: 'Low-tox hair appointments', src: spLowTox, alt: 'Amber dropper bottles of the salon’s scalp oil.' },
-  { label: 'Blonding', src: spBlonding, alt: 'A client’s finished blonde dimensional color.' },
-  { label: 'Dimensional color', src: spDimensional, alt: 'A stylist checks the blend of a soft blonde balayage.' },
-  { label: 'Low-maintenance color', src: spLowMaintenance, alt: 'A client watches in the mirror while her stylist paints in foils.' },
-  { label: 'Grey blending', src: spGrey, alt: 'Lightener painted onto sections of hair in foils.' },
-  { label: 'Precision cuts', src: spCuts, alt: 'A stylist runs her fingers through a client’s long brunette waves.' },
-  { label: 'Revitalizing scalp services', src: spScalp, alt: 'A client relaxes under a stone eye mask during a scalp treatment.' },
-];
+const specialties = home.specialties.items;
+const experience = home.experience;
 
 const reviews = (await getCollection('reviews')).filter((r) => r.data.featured);
 // One love letter is shown large (set "Feature this one large" in the panel); the rest sit beside it.
@@ -59,24 +39,24 @@ const others = reviews.filter((r) => r !== lead);
 const team = await getCollection('team');
 const stylistName = (slug?: string) => team.find((t) => t.id === slug)?.data.name;
 // Recent work skips any photo already shown higher on this page, so nothing repeats.
-const usedOnHome = new Set([...slides.map((s) => s.src.src), ...specialties.map((s) => s.src.src), experiencePhoto.src]);
+const usedOnHome = new Set([...slides.map((s) => s.image.src), ...specialties.map((s) => s.image?.src), experience.image?.src]);
 const recent = (await getCollection('gallery'))
   .sort((a, b) => a.data.order - b.data.order)
   .filter((g) => !g.data.image || !usedOnHome.has(g.data.image.src))
   .slice(0, 4);
 ---
 
-<BaseLayout>
-  <section class="hero" data-align="left" aria-roledescription="carousel" aria-label="Welcome to The Rooted Haus">
+<BaseLayout title={home.seo.title} description={home.seo.description}>
+  <section class="hero" data-align={slides[0].side} aria-roledescription="carousel" aria-label="Welcome to The Rooted Haus">
     <!-- First photo is in the page; the other three wait in a <template> and are added after the page has loaded,
          so they never compete with the first photo (the page's largest paint). Without JavaScript the first photo stays. -->
-    <div class="hero__slide" data-slide data-align={slides[0].align} data-active="true">
-      <Image src={slides[0].src} alt={slides[0].alt} widths={heroWidths} sizes="100vw" loading="eager" fetchpriority="high" class="hero__img" style={`object-position:${slides[0].pos}`} />
+    <div class="hero__slide" data-slide data-align={slides[0].side} data-active="true">
+      <Image src={slides[0].image} alt={slides[0].alt} widths={heroWidths} sizes="100vw" loading="eager" fetchpriority="high" class="hero__img" style={slides[0].position && `object-position:${slides[0].position}`} />
     </div>
     <template data-more-slides>
       {slides.slice(1).map((s) => (
-        <div class="hero__slide" data-slide data-align={s.align} data-active="false" aria-hidden="true">
-          <Image src={s.src} alt={s.alt} widths={heroWidths} sizes="100vw" class="hero__img" style={`object-position:${s.pos}`} />
+        <div class="hero__slide" data-slide data-align={s.side} data-active="false" aria-hidden="true">
+          <Image src={s.image} alt={s.alt} widths={heroWidths} sizes="100vw" class="hero__img" style={s.position && `object-position:${s.position}`} />
         </div>
       ))}
     </template>
@@ -84,14 +64,14 @@ const recent = (await getCollection('gallery'))
     <div class="hero__shade hero__shade--left" aria-hidden="true"></div>
     <div class="hero__shade hero__shade--right" aria-hidden="true"></div>
     <div class="hero__content">
-      <div class="hero__eyebrow"><span>Holistic hair studio · Mandeville</span></div>
+      <div class="hero__eyebrow"><span>{home.hero.eyebrow}</span></div>
       <div class="hero__scripts">
-        {slides.map((s, i) => <span class="hero__script" data-phrase data-active={i === 0}>{s.script}</span>)}
+        {slides.map((s, i) => <span class="hero__script" data-phrase data-active={i === 0}>{s.phrase}</span>)}
       </div>
-      <h1 class="hero__title">Healthy hair, rooted in wellness and faith.</h1>
+      <h1 class="hero__title">{home.hero.title}</h1>
       <div class="hero__actions">
-        <BookButton variant="ivory" size="lg">Get Rooted</BookButton>
-        <Button variant="outline" tone="dark" size="lg" href={url('services/')}>See our Rituals</Button>
+        <BookButton variant="ivory" size="lg">{site.bookLabel}</BookButton>
+        <Button variant="outline" tone="dark" size="lg" href={url('services/')}>{home.hero.ritualsButton}</Button>
       </div>
     </div>
     <div class="hero__dots">
@@ -102,35 +82,35 @@ const recent = (await getCollection('gallery'))
   <DealBanner />
 
   <Section>
-    <SectionHeading eyebrow="New guest?" script="start here" title="Your first visit, in three steps" />
+    <SectionHeading eyebrow={home.steps.eyebrow} script={home.steps.script} title={home.steps.title} />
     <ol class="steps">
-      {steps.map((s) => (
+      {steps.map((s, i) => (
         <li class="step">
-          <span class="step__n">{s.n}</span>
+          <span class="step__n">{String(i + 1).padStart(2, '0')}</span>
           <h3 class="step__title">{s.title}</h3>
           <p class="step__text">{s.text}</p>
-          {s.book ? <BookButton variant="text">{s.cta}</BookButton> : <Button variant="text" href={s.href}>{s.cta}</Button>}
+          {s.book ? <BookButton variant="text">{s.button}</BookButton> : <Button variant="text" href={s.href}>{s.button}</Button>}
         </li>
       ))}
     </ol>
   </Section>
 
   <Section bg="var(--surface-raised)">
-    <SectionHeading eyebrow="Our specialties" script="the rituals" title="Beautiful hair, low-tox and intentional" />
+    <SectionHeading eyebrow={home.specialties.eyebrow} script={home.specialties.script} title={home.specialties.title} />
     <ul class="specialties">
       {specialties.map((s) => (
         <li class="sp">
           <a class="sp__link" href={url('services/')}>
-            <PhotoFrame src={s.src} alt={s.alt} shape="rounded" ratio="4 / 5" sizes="(min-width: 900px) 22vw, 45vw" />
+            <PhotoFrame src={s.image} alt={s.alt} label={s.label} focus={s.focus} shape="rounded" ratio="4 / 5" sizes="(min-width: 900px) 22vw, 45vw" />
             <span class="sp__label">{s.label}</span>
           </a>
         </li>
       ))}
       <li class="sp sp--cta">
         <a class="sp__cta" href={url('services/')}>
-          <span class="sp__cta-script">the full menu</span>
-          <span class="sp__cta-title">See our Rituals</span>
-          <span class="sp__cta-text">Every service and price, in one place.</span>
+          {home.specialties.card.script && <span class="sp__cta-script">{home.specialties.card.script}</span>}
+          <span class="sp__cta-title">{home.specialties.card.title}</span>
+          {home.specialties.card.text && <span class="sp__cta-text">{home.specialties.card.text}</span>}
         </a>
       </li>
     </ul>
@@ -141,21 +121,21 @@ const recent = (await getCollection('gallery'))
       <div class="split__text">
         <SectionHeading
           align="left"
-          eyebrow="The Experience"
-          script="come as you are"
-          title="Make yourself at home"
-          intro="From the moment you step into the Rooted Haus, we want you to feel right at home. Settle into our cozy space, flip through a magazine, and help yourself to a thoughtfully curated selection of refreshments."
+          eyebrow={experience.eyebrow}
+          script={experience.script}
+          title={experience.title}
+          intro={experience.text}
         />
-        <Button variant="outline" href={url('experience/')}>See The Experience</Button>
+        <Button variant="outline" href={url('experience/')}>{experience.button}</Button>
       </div>
       <div class="split__photo">
-        <PhotoFrame src={experiencePhoto} alt="A stylist chats with a smiling client who holds a warm drink in the chair." shape="arch" ratio="4 / 5" focus="50% 30%" sizes="(min-width: 900px) 40vw, 90vw" />
+        <PhotoFrame src={experience.image} alt={experience.alt} shape="arch" ratio="4 / 5" focus={experience.focus} sizes="(min-width: 900px) 40vw, 90vw" />
       </div>
     </div>
   </Section>
 
   <Section bg="var(--surface-olive)">
-    <SectionHeading tone="dark" eyebrow="Success stories" script="love letters" title="From our clients" />
+    <SectionHeading tone="dark" eyebrow={home.reviews.eyebrow} script={home.reviews.script} title={home.reviews.title} />
     <div class="letters">
       {lead && (
         <div class="letters__lead">
@@ -172,8 +152,8 @@ const recent = (await getCollection('gallery'))
 
   <Section>
     <div class="work__head">
-      <SectionHeading align="left" eyebrow="Gallery" title="Recent work" />
-      <Button variant="outline" href={url('gallery/')}>Full gallery</Button>
+      <SectionHeading align="left" eyebrow={home.work.eyebrow} script={home.work.script} title={home.work.title} />
+      <Button variant="outline" href={url('gallery/')}>{home.work.button}</Button>
     </div>
     <div class="work__grid">
       {recent.map((g) => (
@@ -185,9 +165,9 @@ const recent = (await getCollection('gallery'))
   <section class="band">
     <Watermark side="right" />
     <div class="hiring" data-reveal>
-      <Badge tone="ivory">Now hiring</Badge>
-      <SectionHeading tone="dark" script="plant your roots" title="Come grow with us" intro="We’re always looking for wellness-minded stylists. Commission and booth rental opportunities." />
-      <Button variant="ivory" href={url('careers/')}>Plant your roots</Button>
+      {home.hiring.badge && <Badge tone="ivory">{home.hiring.badge}</Badge>}
+      <SectionHeading tone="dark" eyebrow={home.hiring.eyebrow} script={home.hiring.script} title={home.hiring.title} intro={home.hiring.text} />
+      <Button variant="ivory" href={url('careers/')}>{home.hiring.button}</Button>
     </div>
   </section>
 </BaseLayout>

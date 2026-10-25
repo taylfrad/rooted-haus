@@ -1,0 +1,17 @@
+seo:
+  title: "Connect · The Rooted Haus"
+  description: "Find The Rooted Haus in Mandeville, Louisiana: address, hours, directions and how to reach us."
+header:
+  eyebrow: "Connect"
+  script: "come as you are"
+  title: "Visit us"
+  intro: "We would love to meet you."
+  image: "../../assets/photos/hero/img-0156.jpg"
+  alt: "A guest relaxes with a magazine on a cream armchair in the salon lounge."
+  focus: "62% 40%"
+message:
+  title: "Send us a message"
+  text: "Questions about a service, a gift, or your first visit? We read every message."
+newsletter:
+  title: "Stay rooted"
+  text: "News, openings and product drops, a few times a year."

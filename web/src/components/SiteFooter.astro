@@ -14,7 +14,7 @@ import { url } from '../lib/paths';
       <a class="footer__mark" href={url()} aria-label={`${site.name} home`}>
         <Image src={monogram} alt="" width={112} densities={[1, 2]} />
       </a>
-      <span class="footer__script">come as you are</span>
+      <span class="footer__script">{site.footerScript}</span>
     </div>
 
     <div class="footer__col footer__visit">
@@ -47,7 +47,7 @@ import { url } from '../lib/paths';
 
     <div class="footer__col">
       <span class="footer__h">Stay rooted</span>
-      <span>News, openings and product drops.</span>
+      <span>{site.footerNewsletter}</span>
       <div><Button variant="outline" tone="dark" size="sm" href={url('contact/#newsletter')}>Join the list</Button></div>
       <div class="footer__social">
         <a href={site.instagram} aria-label="Instagram" rel="noopener" target="_blank">
@@ -61,7 +61,7 @@ import { url } from '../lib/paths';
   </div>
   <div class="footer__legal">
     <span>{site.name} · {site.tagline}</span>
-    <span>rootedhaus.com</span>
+    <span>{site.websiteName}</span>
   </div>
 </footer>
 

@@ -2,6 +2,7 @@
   "name": "The Rooted Haus",
   "tagline": "Holistic Hair Studio",
   "bookingUrl": "https://www.joinblvd.com/b/rosebeauty/widget#/visit-type",
+  "bookLabel": "Get Rooted",
   "addressLine1": "1685 North Causeway Blvd., Suite A",
   "addressCity": "Mandeville, LA 70471",
   "phone": "(985) 778-0109",
@@ -17,5 +18,8 @@
   "formEndpoint": "",
   "careersFormEndpoint": "",
   "formAccessKey": "",
-  "giftCardsUrl": ""
+  "giftCardsUrl": "",
+  "footerScript": "come as you are",
+  "footerNewsletter": "News, openings and product drops.",
+  "websiteName": "rootedhaus.com"
 }

@@ -2,11 +2,15 @@
 # Every save is a commit to this repo, which rebuilds and redeploys the site.
 # Photos uploaded in the panel are saved here, and the paths written into content files are relative to them.
 # (Untested against the live panel; see docs/gallery.md.)
+# Entries are grouped by page, in menu order: each "... page" entry holds that page's words and photos, and the
+# lists that appear on it (services, team, gallery...) follow it. Labels with commas are quoted (a comma ends an
+# unquoted value inside { }).
 media:
   input: web/src/assets/photos
   output: ../../assets/photos
 
 content:
+  # --- Whole site ---
   - name: settings
     label: Studio details
     type: file
@@ -16,8 +20,9 @@ content:
       - { name: name, label: Studio name, type: string }
       - { name: tagline, label: Tagline, type: string }
       - { name: bookingUrl, label: Booking link (Boulevard), type: string }
+      - { name: bookLabel, label: "Words on the main booking buttons (e.g. Get Rooted)", type: string }
       - { name: addressLine1, label: Street address, type: string }
-      - { name: addressCity, label: City, state and zip, type: string }
+      - { name: addressCity, label: "City, state and zip", type: string }
       - { name: phone, label: Phone, type: string }
       - { name: email, label: Email, type: string }
       - name: hours
@@ -29,10 +34,197 @@ content:
           - { name: time, label: Time (e.g. 9am to 5pm), type: string }
       - { name: instagram, label: Instagram link, type: string }
       - { name: facebook, label: Facebook link, type: string }
-      - { name: giftCardsUrl, label: Gift cards link, type: string }
+      - { name: giftCardsUrl, label: "Gift cards link (leave empty to hide the gift card buttons)", type: string }
+      - { name: footerScript, label: Handwritten line in the footer, type: string }
+      - { name: footerNewsletter, label: Newsletter line in the footer, type: string }
+      - { name: websiteName, label: Web address shown at the bottom of every page, type: string }
       - { name: formEndpoint, label: Contact form address (set up by your web person), type: string }
-      - { name: careersFormEndpoint, label: Job application form address (must accept resume uploads; leave empty to use the contact form address), type: string }
+      - { name: careersFormEndpoint, label: "Job application form address (must accept resume uploads; leave empty to use the contact form address)", type: string }
       - { name: formAccessKey, label: Form service access key (only if your form service gives you one), type: string }
+
+  - name: deals
+    label: Seasonal deals (banner on Home and The Rituals)
+    type: collection
+    path: web/src/content/deals
+    format: yaml
+    view:
+      fields: [title, start, end]
+    fields:
+      - { name: title, label: Deal title, type: string, required: true }
+      - { name: body, label: Details, type: text, required: true }
+      - { name: start, label: First day shown, type: date, required: true }
+      - { name: end, label: Last day shown, type: date, required: true }
+      - { name: ctaLabel, label: Button words, type: string }
+
+  # --- Home ---
+  - name: home
+    label: Home page
+    type: file
+    path: web/src/content/pages/home.yml
+    format: yaml
+    fields:
+      - name: seo
+        label: How the page appears in Google
+        type: object
+        fields:
+          - { name: title, label: Page title (browser tab and Google), type: string }
+          - { name: description, label: "Summary under the title in Google (about 150 characters)", type: text }
+      - name: hero
+        label: Top of the page (photo slideshow)
+        type: object
+        fields:
+          - { name: eyebrow, label: Small line above the heading, type: string }
+          - { name: title, label: Heading, type: string }
+          - { name: ritualsButton, label: Second button words (goes to The Rituals), type: string }
+          - name: slides
+            label: "Slides (the first one shows first; keep at least one)"
+            type: object
+            list: true
+            fields:
+              - { name: image, label: Photo, type: image, required: true }
+              - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+              - { name: phrase, label: Handwritten phrase shown with this photo, type: string }
+              - name: side
+                label: Which side the words sit on (the side away from faces)
+                type: select
+                options:
+                  values: [left, right]
+              - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
+      - name: steps
+        label: New guest steps
+        type: object
+        fields:
+          - { name: eyebrow, label: Small line above the heading, type: string }
+          - { name: script, label: Handwritten accent, type: string }
+          - { name: title, label: Heading, type: string }
+          - name: meet
+            label: Step 1 (goes to Meet the Haus)
+            type: object
+            fields:
+              - { name: title, label: Heading, type: string }
+              - { name: text, label: Text, type: text }
+              - { name: button, label: Link words, type: string }
+          - name: rituals
+            label: Step 2 (goes to The Rituals)
+            type: object
+            fields:
+              - { name: title, label: Heading, type: string }
+              - { name: text, label: Text, type: text }
+              - { name: button, label: Link words, type: string }
+          - name: book
+            label: Step 3 (opens booking)
+            type: object
+            fields:
+              - { name: title, label: Heading, type: string }
+              - { name: text, label: Text, type: text }
+              - { name: button, label: Link words, type: string }
+      - name: specialties
+        label: Specialties
+        type: object
+        fields:
+          - { name: eyebrow, label: Small line above the heading, type: string }
+          - { name: script, label: Handwritten accent, type: string }
+          - { name: title, label: Heading, type: string }
+          - name: items
+            label: Specialties (each links to The Rituals)
+            type: object
+            list: true
+            fields:
+              - { name: label, label: Name, type: string, required: true }
+              - { name: image, label: Photo, type: image }
+              - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+              - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
+          - name: card
+            label: Last card (links to The Rituals)
+            type: object
+            fields:
+              - { name: script, label: Handwritten accent, type: string }
+              - { name: title, label: Heading, type: string }
+              - { name: text, label: Text, type: string }
+      - name: experience
+        label: The Experience section
+        type: object
+        fields:
+          - { name: eyebrow, label: Small line above the heading, type: string }
+          - { name: script, label: Handwritten accent, type: string }
+          - { name: title, label: Heading, type: string }
+          - { name: text, label: Text, type: text }
+          - { name: button, label: Button words, type: string }
+          - { name: image, label: Photo, type: image }
+          - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
+      - name: reviews
+        label: "Love letters heading (the reviews themselves are under Love letters)"
+        type: object
+        fields:
+          - { name: eyebrow, label: Small line above the heading, type: string }
+          - { name: script, label: Handwritten accent, type: string }
+          - { name: title, label: Heading, type: string }
+      - name: work
+        label: "Recent work heading (photos come from the Gallery)"
+        type: object
+        fields:
+          - { name: eyebrow, label: Small line above the heading, type: string }
+          - { name: title, label: Heading, type: string }
+          - { name: button, label: Button words, type: string }
+      - name: hiring
+        label: Now hiring band
+        type: object
+        fields:
+          - { name: badge, label: Badge, type: string }
+          - { name: script, label: Handwritten accent, type: string }
+          - { name: title, label: Heading, type: string }
+          - { name: text, label: Text, type: text }
+          - { name: button, label: Button words, type: string }
+
+  - name: reviews
+    label: Love letters (reviews on Home and stylist pages)
+    type: collection
+    path: web/src/content/reviews
+    format: yaml
+    view:
+      fields: [name, featured]
+    fields:
+      - { name: quote, label: What they said, type: text, required: true }
+      - { name: name, label: Client name, type: string, required: true }
+      - { name: detail, label: Where it was posted (optional), type: string }
+      - { name: stylist, label: Stylist file name if the review is about them (e.g. ashley), type: string }
+      - { name: rating, label: Stars (1 to 5), type: number }
+      - { name: featured, label: Show on the Home page, type: boolean }
+      - { name: highlight, label: Feature this one large on Home (pick just one), type: boolean }
+
+  # --- The Rituals ---
+  - name: rituals-page
+    label: The Rituals page
+    type: file
+    path: web/src/content/pages/rituals.yml
+    format: yaml
+    fields:
+      - name: seo
+        label: How the page appears in Google
+        type: object
+        fields:
+          - { name: title, label: Page title (browser tab and Google), type: string }
+          - { name: description, label: "Summary under the title in Google (about 150 characters)", type: text }
+      - name: header
+        label: Top of the page
+        type: object
+        fields:
+          - { name: eyebrow, label: Small line above the heading, type: string }
+          - { name: script, label: Handwritten accent, type: string }
+          - { name: title, label: Heading, type: string }
+          - { name: intro, label: Intro line (optional), type: text }
+          - { name: image, label: Photo, type: image }
+          - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
+      - name: photos
+        label: "Photos beside the menu (shapes alternate: arch, rounded, arch)"
+        type: object
+        list: true
+        fields:
+          - { name: image, label: Photo, type: image }
+          - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
 
   - name: services
     label: Services & prices
@@ -55,22 +247,39 @@ content:
           - { name: duration, label: Time (e.g. 60 min), type: string }
           - { name: description, label: Description, type: text }
 
-  - name: deals
-    label: Seasonal deals
-    type: collection
-    path: web/src/content/deals
+  # --- Meet the Haus ---
+  - name: team-page
+    label: Meet the Haus page
+    type: file
+    path: web/src/content/pages/team.yml
     format: yaml
-    view:
-      fields: [title, start, end]
     fields:
-      - { name: title, label: Deal title, type: string, required: true }
-      - { name: body, label: Details, type: text, required: true }
-      - { name: start, label: First day shown, type: date, required: true }
-      - { name: end, label: Last day shown, type: date, required: true }
-      - { name: ctaLabel, label: Button words, type: string }
+      - name: seo
+        label: How the page appears in Google
+        type: object
+        fields:
+          - { name: title, label: Page title (browser tab and Google), type: string }
+          - { name: description, label: "Summary under the title in Google (about 150 characters)", type: text }
+      - name: header
+        label: Top of the page
+        type: object
+        fields:
+          - { name: eyebrow, label: Small line above the heading, type: string }
+          - { name: script, label: Handwritten accent, type: string }
+          - { name: title, label: Heading, type: string }
+          - { name: intro, label: Intro line (optional), type: text }
+          - { name: image, label: Photo, type: image }
+          - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
+      - name: mission
+        label: Mission
+        type: object
+        fields:
+          - { name: label, label: Small line above, type: string }
+          - { name: text, label: Mission statement, type: text }
 
   - name: team
-    label: Meet the Haus
+    label: Team members
     type: collection
     path: web/src/content/team
     format: yaml-frontmatter
@@ -82,13 +291,45 @@ content:
       - { name: order, label: Order (1 is first), type: number }
       - { name: experience, label: Short line under the name (e.g. 12 years behind the chair), type: string }
       - { name: photo, label: Portrait, type: image }
+      - { name: photoFocus, label: "Portrait crop in the circle (e.g. 50% 15%; a smaller second number shows more of the top)", type: string }
       - { name: extraPhoto, label: Second photo (shown on their own page), type: image }
       - { name: specialties, label: Specialties, type: string, list: true }
       - { name: quote, label: Quote in their own words, type: text }
       - { name: body, label: Bio, type: rich-text }
 
+  # --- The Experience ---
+  - name: experience-page
+    label: The Experience page
+    type: file
+    path: web/src/content/pages/experience.yml
+    format: yaml
+    fields:
+      - name: seo
+        label: How the page appears in Google
+        type: object
+        fields:
+          - { name: title, label: Page title (browser tab and Google), type: string }
+          - { name: description, label: "Summary under the title in Google (about 150 characters)", type: text }
+      - name: header
+        label: Top of the page
+        type: object
+        fields:
+          - { name: eyebrow, label: Small line above the heading, type: string }
+          - { name: script, label: Handwritten accent, type: string }
+          - { name: title, label: Heading, type: string }
+          - { name: intro, label: Intro line (optional), type: text }
+          - { name: image, label: Photo, type: image }
+          - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
+      - name: closing
+        label: Closing note at the bottom
+        type: object
+        fields:
+          - { name: script, label: Handwritten accent, type: string }
+          - { name: text, label: Text, type: text }
+
   - name: experience
-    label: The Experience
+    label: The Experience rows
     type: collection
     path: web/src/content/experience
     format: yaml
@@ -98,47 +339,89 @@ content:
       - { name: title, label: Heading, type: string, required: true }
       - { name: body, label: Text, type: text, required: true }
       - { name: image, label: Photo, type: image }
-      - { name: alt, label: Describe the photo, type: string }
+      - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
       - { name: order, label: Order (1 is first), type: number }
 
-  - name: careers
-    label: Plant Your Roots (careers)
+  # --- Gallery ---
+  - name: gallery-page
+    label: Gallery page
     type: file
-    path: web/src/content/careers.json
-    format: json
+    path: web/src/content/pages/gallery.yml
+    format: yaml
     fields:
-      - { name: title, label: Heading, type: string }
-      - { name: intro, label: Intro, type: text }
-      - { name: offer, label: Line under the intro, type: string }
-      - { name: perks, label: Perks of working in our salon, type: string, list: true }
-      - { name: commission, label: Commission stylists, type: string, list: true }
-      - { name: boothRentalPrice, label: Booth rental price, type: string }
-      - { name: boothRental, label: Booth rentals, type: string, list: true }
-      - { name: hourlyPrice, label: Hourly pay, type: string }
-      - { name: hourlyRoles, label: Hourly roles, type: string, list: true }
-      - name: stylistQuotes
-        label: What our stylists say
+      - name: seo
+        label: How the page appears in Google
         type: object
-        list: true
         fields:
-          - { name: quote, label: Quote, type: text }
-          - { name: name, label: Name, type: string }
+          - { name: title, label: Page title (browser tab and Google), type: string }
+          - { name: description, label: "Summary under the title in Google (about 150 characters)", type: text }
+      - name: header
+        label: Top of the page
+        type: object
+        fields:
+          - { name: eyebrow, label: Small line above the heading, type: string }
+          - { name: script, label: Handwritten accent, type: string }
+          - { name: title, label: Heading, type: string }
+          - { name: intro, label: Intro line (optional), type: text }
+          - { name: image, label: Photo, type: image }
+          - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
 
-  - name: reviews
-    label: Love letters (reviews on Home and stylist pages)
+  - name: gallery
+    label: Gallery photos
     type: collection
-    path: web/src/content/reviews
+    path: web/src/content/gallery
     format: yaml
     view:
-      fields: [name, featured]
+      fields: [label, tag]
     fields:
-      - { name: quote, label: What they said, type: text, required: true }
-      - { name: name, label: Client name, type: string, required: true }
-      - { name: detail, label: Where it was posted (optional), type: string }
-      - { name: stylist, label: Stylist file name if the review is about them (e.g. ashley), type: string }
-      - { name: rating, label: Stars (1 to 5), type: number }
-      - { name: featured, label: Show on the Home page, type: boolean }
-      - { name: highlight, label: Feature this one large on Home (pick just one), type: boolean }
+      - { name: label, label: Caption, type: string, required: true }
+      - { name: image, label: Photo, type: image }
+      - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+      - { name: tag, label: "Group (e.g. color, cut, scalp)", type: string, required: true }
+      - name: size
+        label: Size in the gallery
+        type: select
+        options:
+          values: [small, wide, tall, large]
+      - { name: order, label: Order (1 is first), type: number }
+
+  # --- Connect ---
+  - name: connect-page
+    label: Connect page
+    type: file
+    path: web/src/content/pages/connect.yml
+    format: yaml
+    fields:
+      - name: seo
+        label: How the page appears in Google
+        type: object
+        fields:
+          - { name: title, label: Page title (browser tab and Google), type: string }
+          - { name: description, label: "Summary under the title in Google (about 150 characters)", type: text }
+      - name: header
+        label: Top of the page
+        type: object
+        fields:
+          - { name: eyebrow, label: Small line above the heading, type: string }
+          - { name: script, label: Handwritten accent, type: string }
+          - { name: title, label: Heading, type: string }
+          - { name: intro, label: Intro line (optional), type: text }
+          - { name: image, label: Photo, type: image }
+          - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
+      - name: message
+        label: Message form
+        type: object
+        fields:
+          - { name: title, label: Heading, type: string }
+          - { name: text, label: Text, type: text }
+      - name: newsletter
+        label: Newsletter signup
+        type: object
+        fields:
+          - { name: title, label: Heading, type: string }
+          - { name: text, label: Text, type: text }
 
   - name: faq
     label: FAQ (shown on the Connect page)
@@ -152,21 +435,61 @@ content:
       - { name: answer, label: Answer, type: text, required: true }
       - { name: order, label: Order (1 is first), type: number }
 
-  - name: gallery
-    label: Gallery
-    type: collection
-    path: web/src/content/gallery
+  # --- Plant Your Roots ---
+  - name: careers
+    label: Plant Your Roots page (careers)
+    type: file
+    path: web/src/content/pages/careers.yml
     format: yaml
-    view:
-      fields: [label, tag]
     fields:
-      - { name: label, label: Caption, type: string, required: true }
-      - { name: image, label: Photo, type: image }
-      - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
-      - { name: tag, label: Group (e.g. color, cut, scalp), type: string, required: true }
-      - name: size
-        label: Size in the gallery
-        type: select
-        options:
-          values: [small, wide, tall, large]
-      - { name: order, label: Order (1 is first), type: number }
+      - name: seo
+        label: How the page appears in Google
+        type: object
+        fields:
+          - { name: title, label: Page title (browser tab and Google), type: string }
+          - { name: description, label: "Summary under the title in Google (about 150 characters)", type: text }
+      - name: header
+        label: Top of the page
+        type: object
+        fields:
+          - { name: eyebrow, label: Small line above the heading, type: string }
+          - { name: script, label: Handwritten accent, type: string }
+          - { name: title, label: Heading, type: string }
+          - { name: intro, label: Intro line (optional), type: text }
+          - { name: image, label: Photo, type: image }
+          - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
+      - { name: badge, label: Badge above the intro, type: string }
+      - { name: intro, label: Intro, type: text }
+      - { name: offer, label: Line under the intro, type: string }
+      - name: photo
+        label: Photo beside the intro
+        type: object
+        fields:
+          - { name: image, label: Photo, type: image }
+          - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
+      - { name: perksTitle, label: Perks heading, type: string }
+      - { name: perks, label: Perks, type: string, list: true }
+      - { name: commissionTitle, label: Commission heading, type: string }
+      - { name: commission, label: Commission stylists, type: string, list: true }
+      - { name: boothRentalTitle, label: Booth rental heading, type: string }
+      - { name: boothRentalPrice, label: Booth rental price, type: string }
+      - { name: boothRental, label: Booth rentals, type: string, list: true }
+      - { name: hourlyTitle, label: Hourly heading, type: string }
+      - { name: hourlyPrice, label: Hourly pay, type: string }
+      - { name: hourlyRoles, label: "Hourly roles (also offered as choices in the application form)", type: string, list: true }
+      - { name: quotesTitle, label: Stylist quotes heading, type: string }
+      - name: stylistQuotes
+        label: What our stylists say
+        type: object
+        list: true
+        fields:
+          - { name: quote, label: Quote, type: text }
+          - { name: name, label: Name, type: string }
+      - name: apply
+        label: Application form
+        type: object
+        fields:
+          - { name: title, label: Heading, type: string }
+          - { name: text, label: Text, type: text }

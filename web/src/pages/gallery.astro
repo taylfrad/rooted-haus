@@ -1,5 +1,4 @@
 ---
-import headerPhoto from '../assets/photos/hero/img-0086.jpg';
 import { getCollection } from 'astro:content';
 import { getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -8,6 +7,9 @@ import PageHeader from '../components/PageHeader.astro';
 import PhotoFrame from '../components/content/PhotoFrame.astro';
 import BookButton from '../components/core/BookButton.astro';
 import { site } from '../lib/site';
+import { getPage } from '../lib/pages';
+
+const page = await getPage('galleryPage');
 
 const items = (await getCollection('gallery')).sort((a, b) => a.data.order - b.data.order);
 const tags = ['all', ...new Set(items.map((i) => i.data.tag))];
@@ -30,8 +32,8 @@ const tiles = await Promise.all(
 const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-width: 1200px) 600px, 100vw' : '(min-width: 1200px) 300px, 50vw');
 ---
 
-<BaseLayout title="Gallery · The Rooted Haus" description="Recent work from The Rooted Haus.">
-  <PageHeader eyebrow="Gallery" script="our work" title="Recent work" intro="Healthy hair, finished with care." bg="var(--surface-chocolate)" image={headerPhoto} imageAlt="A guest rests under a stone eye mask while a scalp treatment is brushed on." focus="35% 45%" />
+<BaseLayout title={page.seo.title} description={page.seo.description}>
+  <PageHeader {...page.header} bg="var(--surface-chocolate)" />
   <Section>
     <div class="filters" role="group" aria-label="Filter gallery">
       {tags.map((t, i) => <button type="button" class="chip" data-filter={t} aria-pressed={i === 0}>{t}</button>)}

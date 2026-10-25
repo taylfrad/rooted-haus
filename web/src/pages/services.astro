@@ -1,5 +1,4 @@
 ---
-import headerPhoto from '../assets/photos/rituals/img-9963.jpg';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
@@ -9,21 +8,18 @@ import BookButton from '../components/core/BookButton.astro';
 import Button from '../components/core/Button.astro';
 import { site } from '../lib/site';
 import PhotoFrame from '../components/content/PhotoFrame.astro';
-import photoCut from '../assets/photos/rituals/img-0046.jpg';
-import photoColor from '../assets/photos/rituals/img-0127.jpg';
-import photoScalp from '../assets/photos/rituals/img-0098.jpg';
+import { getPage } from '../lib/pages';
 
-const photos = [
-  { src: photoCut, alt: 'A stylist in a newsboy cap curls a client’s long blonde hair.', shape: 'arch' },
-  { src: photoColor, alt: 'A stylist checks the blend of a client’s soft blonde balayage.', shape: 'rounded' },
-  { src: photoScalp, alt: 'A client relaxes under a stone eye mask while a scalp treatment is brushed on.', shape: 'arch' },
-] as const;
+// Header and side photos come from "The Rituals page" in the panel; the menu itself from "Services & prices".
+const page = await getPage('ritualsPage');
+// Shapes alternate down the column (arch, rounded, arch...) however many photos there are.
+const photos = page.photos.map((p, i) => ({ ...p, shape: i % 2 === 0 ? ('arch' as const) : ('rounded' as const) }));
 
 const categories = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
 ---
 
-<BaseLayout title="The Rituals: services & prices · The Rooted Haus" description="Haircuts, blonding, dimensional color, grey blending, scalp services and extensions at The Rooted Haus in Mandeville, Louisiana.">
-  <PageHeader eyebrow="Services & prices" script="the rituals" title="Our rituals" intro="Personalized hair care, rooted in wellness." image={headerPhoto} imageAlt="Color mixed by hand in a bowl at the station." focus="45% 50%" />
+<BaseLayout title={page.seo.title} description={page.seo.description}>
+  <PageHeader {...page.header} />
   <DealBanner />
   <Section bg="var(--surface-raised)">
     <div class="layout">
@@ -53,7 +49,7 @@ const categories = (await getCollection('services')).sort((a, b) => a.data.order
     ))}
     </div>
     <div class="photo-col">
-      {photos.map((p) => <PhotoFrame src={p.src} alt={p.alt} shape={p.shape} ratio="4 / 5" sizes="(min-width: 900px) 30vw, 33vw" />)}
+      {photos.map((p) => <PhotoFrame src={p.image} alt={p.alt} focus={p.focus} shape={p.shape} ratio="4 / 5" sizes="(min-width: 900px) 30vw, 33vw" />)}
     </div>
     </div>
     <div class="cta">

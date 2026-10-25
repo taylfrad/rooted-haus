@@ -11,54 +11,57 @@ import Badge from '../components/content/Badge.astro';
 import { Check } from '@lucide/astro';
 import { site } from '../lib/site';
 import { url } from '../lib/paths';
-import careers from '../content/careers.json';
-import headerPhoto from '../assets/photos/hero/img-9947.jpg';
-import teamPhoto from '../assets/photos/stylists/img-9934.jpg';
+import { getPage } from '../lib/pages';
+
+// Everything on this page comes from "Plant Your Roots page" in the panel (src/content/pages/careers.yml).
+const c = await getPage('careersPage');
+// The form's choices follow the page: both stylist paths, every hourly role, and an open option.
+const interests = ['Commission', 'Booth rental', ...c.hourlyRoles, 'Not sure yet'];
 ---
 
-<BaseLayout title="Plant Your Roots: careers · The Rooted Haus" description="Join The Rooted Haus in Mandeville: commission, booth rental and hourly opportunities in a calm, low-tox salon.">
-  <PageHeader eyebrow="Plant your roots" script="come grow with us" title={careers.title} bg="var(--surface-chocolate)" image={headerPhoto} imageAlt="A stylist in a wide-brim hat paints in foils for a smiling client." focus="58% 40%" />
+<BaseLayout title={c.seo.title} description={c.seo.description}>
+  <PageHeader {...c.header} bg="var(--surface-chocolate)" />
 
   <Section>
     <div class="split">
       <div class="split__text">
-        <Badge tone="terracotta">Now hiring</Badge>
-        <p class="lead">{careers.intro}</p>
-        <p class="offer">{careers.offer}</p>
+        {c.badge && <Badge tone="terracotta">{c.badge}</Badge>}
+        <p class="lead">{c.intro}</p>
+        {c.offer && <p class="offer">{c.offer}</p>}
         <Button variant="outline" href={url('team/')}>Meet the Haus</Button>
       </div>
       <div class="split__photo">
-        <PhotoFrame src={teamPhoto} alt="Sadie laughs as she spins in a salon chair." shape="rounded" ratio="4 / 5" focus="50% 30%" sizes="(min-width: 900px) 40vw, 90vw" />
+        <PhotoFrame src={c.photo.image} alt={c.photo.alt} shape="rounded" ratio="4 / 5" focus={c.photo.focus} sizes="(min-width: 900px) 40vw, 90vw" />
       </div>
     </div>
   </Section>
 
   <Section bg="var(--surface-raised)">
-    <h2 class="h2">Perks of working in our salon</h2>
-    <ul class="ticks ticks--cols">{careers.perks.map((p) => <li><Check size={18} stroke-width={1.5} />{p}</li>)}</ul>
+    <h2 class="h2">{c.perksTitle}</h2>
+    <ul class="ticks ticks--cols">{c.perks.map((p) => <li><Check size={18} stroke-width={1.5} />{p}</li>)}</ul>
 
     <div class="paths">
       <article class="path">
-        <h3 class="path__title">Commission stylists</h3>
-        <ul class="ticks">{careers.commission.map((p) => <li><Check size={18} stroke-width={1.5} />{p}</li>)}</ul>
+        <h3 class="path__title">{c.commissionTitle}</h3>
+        <ul class="ticks">{c.commission.map((p) => <li><Check size={18} stroke-width={1.5} />{p}</li>)}</ul>
       </article>
       <article class="path">
-        <h3 class="path__title">Booth rentals</h3>
-        <p class="path__price">{careers.boothRentalPrice}</p>
-        <ul class="ticks">{careers.boothRental.map((p) => <li><Check size={18} stroke-width={1.5} />{p}</li>)}</ul>
+        <h3 class="path__title">{c.boothRentalTitle}</h3>
+        {c.boothRentalPrice && <p class="path__price">{c.boothRentalPrice}</p>}
+        <ul class="ticks">{c.boothRental.map((p) => <li><Check size={18} stroke-width={1.5} />{p}</li>)}</ul>
       </article>
       <article class="path">
-        <h3 class="path__title">Hourly roles</h3>
-        <p class="path__price">{careers.hourlyPrice}</p>
-        <ul class="ticks">{careers.hourlyRoles.map((p) => <li><Check size={18} stroke-width={1.5} />{p}</li>)}</ul>
+        <h3 class="path__title">{c.hourlyTitle}</h3>
+        {c.hourlyPrice && <p class="path__price">{c.hourlyPrice}</p>}
+        <ul class="ticks">{c.hourlyRoles.map((p) => <li><Check size={18} stroke-width={1.5} />{p}</li>)}</ul>
       </article>
     </div>
   </Section>
 
   <Section bg="var(--surface-olive)">
-    <h2 class="h2 h2--dark">Here’s what our stylists have to say!</h2>
+    <h2 class="h2 h2--dark">{c.quotesTitle}</h2>
     <div class="quotes">
-      {careers.stylistQuotes.map((q) => (
+      {c.stylistQuotes.map((q) => (
         <figure class="quote">
           <blockquote>“{q.quote}”</blockquote>
           <figcaption>{q.name}</figcaption>
@@ -70,8 +73,8 @@ import teamPhoto from '../assets/photos/stylists/img-9934.jpg';
   <Section>
     <div class="apply">
       <div class="apply__intro">
-        <h2 class="h2">Apply to join the Haus</h2>
-        <p>Tell us about yourself and what you are looking for. A resume is welcome but not required.</p>
+        <h2 class="h2">{c.apply.title}</h2>
+        {c.apply.text && <p>{c.apply.text}</p>}
       </div>
       <ContactForm
         subject="Careers application"
@@ -83,7 +86,7 @@ import teamPhoto from '../assets/photos/stylists/img-9934.jpg';
         <Field label="Name" name="name" required />
         <Field label="Email" name="email" type="email" required />
         <Field label="Phone" name="phone" type="tel" />
-        <Field label="I'm interested in" name="interest" type="select" options={['Commission', 'Booth rental', 'Salon Assistant', 'Front Desk Coordinator', 'Not sure yet']} required />
+        <Field label="I'm interested in" name="interest" type="select" options={interests} required />
         <Field label="Tell us about yourself" name="message" type="textarea" required />
         <FileField label="Resume" name="resume" hint="Optional. PDF, DOC or DOCX, up to 5 MB. We use it only to consider your application." />
       </ContactForm>

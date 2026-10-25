@@ -1,4 +1,4 @@
-import { defineCollection } from 'astro:content';
+import { defineCollection, type SchemaContext } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
@@ -105,4 +105,104 @@ const experience = defineCollection({
     }),
 });
 
-export const collections = { services, deals, team, reviews, faq, gallery, experience };
+// --- Page text and photos ---
+// One file per page in src/content/pages/ (edited as "Home page", "The Rituals page"... in the panel). Each page is its own
+// collection so it gets its own fields; read one with getPage() from lib/pages.ts.
+// Photo paths are relative to that folder, e.g. ../../assets/photos/hero/img-0156.jpg.
+const onePage = (name: string) => glob({ pattern: `${name}.yml`, base: './src/content/pages' });
+
+/** The page's name and summary in Google results and link previews. */
+const seo = z.object({ title: z.string(), description: z.string() });
+/** Eyebrow, script accent and title, as SectionHeading shows them. */
+const heading = { eyebrow: z.string().optional(), script: z.string().optional(), title: z.string() };
+/** A photo, what it shows (for people who cannot see it), and which part to keep when cropped (CSS object-position). */
+const photo = (image: SchemaContext['image']) => ({ image: image().optional(), alt: z.string().default(''), focus: z.string().optional() });
+/** The colored band at the top of every inner page (PageHeader). */
+const pageHeader = (image: SchemaContext['image']) =>
+  z.object({ ...heading, eyebrow: z.string(), intro: z.string().optional(), ...photo(image) });
+const step = z.object({ title: z.string(), text: z.string(), button: z.string() });
+
+const homePage = defineCollection({
+  loader: onePage('home'),
+  schema: ({ image }) =>
+    z.object({
+      seo,
+      hero: z.object({
+        eyebrow: z.string(),
+        title: z.string(),
+        ritualsButton: z.string(),
+        /** The first slide is the one that loads first; `side` is where the text sits (away from faces). */
+        slides: z
+          .array(z.object({ ...photo(image), image: image(), phrase: z.string(), side: z.enum(['left', 'right']).default('left') }))
+          .min(1),
+      }),
+      steps: z.object({ ...heading, meet: step, rituals: step, book: step }),
+      specialties: z.object({
+        ...heading,
+        items: z.array(z.object({ label: z.string(), ...photo(image) })),
+        card: z.object({ script: z.string().optional(), title: z.string(), text: z.string().optional() }),
+      }),
+      experience: z.object({ ...heading, text: z.string(), button: z.string(), ...photo(image) }),
+      reviews: z.object(heading),
+      work: z.object({ ...heading, button: z.string() }),
+      hiring: z.object({ ...heading, badge: z.string().optional(), text: z.string().optional(), button: z.string() }),
+    }),
+});
+
+const ritualsPage = defineCollection({
+  loader: onePage('rituals'),
+  schema: ({ image }) => z.object({ seo, header: pageHeader(image), photos: z.array(z.object(photo(image))).default([]) }),
+});
+
+const teamPage = defineCollection({
+  loader: onePage('team'),
+  schema: ({ image }) => z.object({ seo, header: pageHeader(image), mission: z.object({ label: z.string().optional(), text: z.string() }) }),
+});
+
+const experiencePage = defineCollection({
+  loader: onePage('experience'),
+  schema: ({ image }) => z.object({ seo, header: pageHeader(image), closing: z.object({ script: z.string().optional(), text: z.string() }) }),
+});
+
+const galleryPage = defineCollection({
+  loader: onePage('gallery'),
+  schema: ({ image }) => z.object({ seo, header: pageHeader(image) }),
+});
+
+const textBlock = z.object({ title: z.string(), text: z.string().optional() });
+const connectPage = defineCollection({
+  loader: onePage('connect'),
+  schema: ({ image }) => z.object({ seo, header: pageHeader(image), message: textBlock, newsletter: textBlock }),
+});
+
+const careersPage = defineCollection({
+  loader: onePage('careers'),
+  schema: ({ image }) =>
+    z.object({
+      seo,
+      header: pageHeader(image),
+      badge: z.string().optional(),
+      intro: z.string(),
+      offer: z.string().optional(),
+      photo: z.object(photo(image)),
+      perksTitle: z.string(),
+      perks: z.array(z.string()).default([]),
+      commissionTitle: z.string(),
+      commission: z.array(z.string()).default([]),
+      boothRentalTitle: z.string(),
+      boothRentalPrice: z.string().optional(),
+      boothRental: z.array(z.string()).default([]),
+      hourlyTitle: z.string(),
+      hourlyPrice: z.string().optional(),
+      /** Also listed as choices in the application form's "I'm interested in" menu. */
+      hourlyRoles: z.array(z.string()).default([]),
+      quotesTitle: z.string(),
+      stylistQuotes: z.array(z.object({ quote: z.string(), name: z.string() })).default([]),
+      apply: textBlock,
+    }),
+});
+
+export const collections = {
+  services, deals, team, reviews, faq, gallery, experience,
+  homePage, ritualsPage, teamPage, experiencePage, galleryPage, connectPage, careersPage,
+};

@@ -1,0 +1,97 @@
+seo:
+  title: "The Rooted Haus · Holistic Hair Studio"
+  description: "A holistic hair studio in Mandeville, Louisiana, where scalp and hair health come first."
+hero:
+  eyebrow: "Holistic hair studio · Mandeville"
+  title: "Healthy hair, rooted in wellness and faith."
+  ritualsButton: "See our Rituals"
+  slides:
+    - image: "../../assets/photos/hero/img-0156.jpg"
+      alt: "A guest relaxes with a magazine on a cream armchair in the salon lounge."
+      phrase: "come as you are"
+      focus: "62% 35%"
+      side: left
+    - image: "../../assets/photos/hero/img-0145.jpg"
+      alt: "A smiling guest is handed a lavender drink in a gold-rimmed glass."
+      phrase: "make yourself at home"
+      focus: "40% 30%"
+      side: right
+    - image: "../../assets/photos/hero/img-0161.jpg"
+      alt: "A stylist greets a guest with a hug among plants, candles and a tufted settee."
+      phrase: "more than hair"
+      focus: "52% 30%"
+      side: left
+    - image: "../../assets/photos/hero/img-0086.jpg"
+      alt: "A guest rests under a stone eye mask while a scalp treatment is brushed on."
+      phrase: "beauty with intention"
+      focus: "40% 45%"
+      side: right
+steps:
+  eyebrow: "New guest?"
+  script: "start here"
+  title: "Your first visit, in three steps"
+  meet:
+    title: "Meet the Haus"
+    text: "Get to know the hands and hearts behind every chair."
+    button: "Meet the Haus"
+  rituals:
+    title: "See our Rituals"
+    text: "Browse our services and pricing."
+    button: "See our Rituals"
+  book:
+    title: "Book your Appointment"
+    text: "Choose a time that works for you, online."
+    button: "Get Rooted"
+specialties:
+  eyebrow: "Our specialties"
+  script: "the rituals"
+  title: "Beautiful hair, low-tox and intentional"
+  items:
+    - label: "Low-tox hair appointments"
+      image: "../../assets/photos/rituals/img-0213.jpg"
+      alt: "Amber dropper bottles of the salon’s scalp oil."
+    - label: "Blonding"
+      image: "../../assets/photos/rituals/img-0142.jpg"
+      alt: "A client’s finished blonde dimensional color."
+    - label: "Dimensional color"
+      image: "../../assets/photos/rituals/img-0127.jpg"
+      alt: "A stylist checks the blend of a soft blonde balayage."
+    - label: "Low-maintenance color"
+      image: "../../assets/photos/rituals/img-9951.jpg"
+      alt: "A client watches in the mirror while her stylist paints in foils."
+    - label: "Grey blending"
+      image: "../../assets/photos/rituals/img-9956.jpg"
+      alt: "Lightener painted onto sections of hair in foils."
+    - label: "Precision cuts"
+      image: "../../assets/photos/rituals/img-0039.jpg"
+      alt: "A stylist runs her fingers through a client’s long brunette waves."
+    - label: "Revitalizing scalp services"
+      image: "../../assets/photos/rituals/img-0098.jpg"
+      alt: "A client relaxes under a stone eye mask during a scalp treatment."
+  card:
+    script: "the full menu"
+    title: "See our Rituals"
+    text: "Every service and price, in one place."
+experience:
+  eyebrow: "The Experience"
+  script: "come as you are"
+  title: "Make yourself at home"
+  text: "From the moment you step into the Rooted Haus, we want you to feel right at home. Settle into our cozy space, flip through a magazine, and help yourself to a thoughtfully curated selection of refreshments."
+  button: "See The Experience"
+  image: "../../assets/photos/rituals/img-0168.jpg"
+  alt: "A stylist chats with a smiling client who holds a warm drink in the chair."
+  focus: "50% 30%"
+reviews:
+  eyebrow: "Success stories"
+  script: "love letters"
+  title: "From our clients"
+work:
+  eyebrow: "Gallery"
+  title: "Recent work"
+  button: "Full gallery"
+hiring:
+  badge: "Now hiring"
+  script: "plant your roots"
+  title: "Come grow with us"
+  text: "We’re always looking for wellness-minded stylists. Commission and booth rental opportunities."
+  button: "Plant your roots"

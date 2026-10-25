@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import { cropPosition } from '../../lib/crop';
 
 interface Props {
   src?: ImageMetadata;
@@ -12,7 +13,7 @@ interface Props {
   fill?: boolean;
   /** Hint to the browser for picking an image size. */
   sizes?: string;
-  /** Which part of the photo to keep when cropping (CSS object-position), e.g. "50% 20%" keeps the upper middle. */
+  /** Which part of the photo to keep when cropping, as typed in the panel (see lib/crop.ts), e.g. "50% 20%" keeps the upper middle. */
   focus?: string;
 }
 const {
@@ -25,10 +26,11 @@ const {
   sizes = '(min-width: 900px) 40vw, 90vw',
   focus,
 } = Astro.props;
+const position = cropPosition(focus);
 ---
 
 <div class:list={['pf', `pf--${shape}`, { 'pf--fill': fill }]} style={`--ratio:${shape === 'circle' ? '1 / 1' : ratio}`}>
-  {src ? <Image src={src} alt={alt} widths={[400, 800, 1200, 1600]} sizes={sizes} class="pf__img" style={focus ? `object-position:${focus}` : undefined} /> : <span class="pf__label">{label}</span>}
+  {src ? <Image src={src} alt={alt} widths={[400, 800, 1200, 1600]} sizes={sizes} class="pf__img" style={position && `object-position:${position}`} /> : <span class="pf__label">{label}</span>}
 </div>
 
 <style>

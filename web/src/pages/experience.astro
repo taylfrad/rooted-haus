@@ -1,5 +1,4 @@
 ---
-import headerPhoto from '../assets/photos/rituals/img-0117.jpg';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
@@ -8,14 +7,18 @@ import PhotoFrame from '../components/content/PhotoFrame.astro';
 import BookButton from '../components/core/BookButton.astro';
 import Button from '../components/core/Button.astro';
 import { url } from '../lib/paths';
+import { site } from '../lib/site';
+import { getPage } from '../lib/pages';
+
+const page = await getPage('experiencePage');
 
 const items = (await getCollection('experience')).sort((a, b) => a.data.order - b.data.order);
 // Photo shapes alternate down the page so the rows don't feel repetitive.
 const shapes = ['arch', 'rounded', 'circle', 'rounded'] as const;
 ---
 
-<BaseLayout title="The Experience · The Rooted Haus" description="What to expect at The Rooted Haus: a cozy space, curated low-tox refreshments, and an appointment that is entirely yours.">
-  <PageHeader eyebrow="New guests welcome!" script="the experience" title="Make yourself at home" bg="var(--surface-chocolate)" image={headerPhoto} imageAlt="A slow hand and arm massage during a service." focus="50% 45%" />
+<BaseLayout title={page.seo.title} description={page.seo.description}>
+  <PageHeader {...page.header} bg="var(--surface-chocolate)" />
 
   <Section>
     <div class="rows">
@@ -36,10 +39,10 @@ const shapes = ['arch', 'rounded', 'circle', 'rounded'] as const;
 
   <Section bg="var(--surface-sand)" center>
     <div class="closing">
-      <span class="closing__script">unhurried · intentional · yours</span>
-      <p class="closing__line">Above all, we want your experience to feel unhurried, intentional, and entirely your own.</p>
+      {page.closing.script && <span class="closing__script">{page.closing.script}</span>}
+      <p class="closing__line">{page.closing.text}</p>
       <div class="closing__actions">
-        <BookButton size="lg">Get Rooted</BookButton>
+        <BookButton size="lg">{site.bookLabel}</BookButton>
         <Button variant="outline" size="lg" href={url('services/')}>See our Rituals</Button>
       </div>
     </div>

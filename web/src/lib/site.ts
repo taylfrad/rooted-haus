@@ -8,6 +8,8 @@ export const site = {
   name: settings.name,
   tagline: settings.tagline,
   bookingUrl: settings.bookingUrl,
+  /** Words on the main booking buttons (header, hero, Connect...). Falls back if left empty in the panel. */
+  bookLabel: settings.bookLabel || 'Get Rooted',
   address: { line1: settings.addressLine1, city: settings.addressCity },
   phone: settings.phone,
   email: settings.email,
@@ -20,6 +22,10 @@ export const site = {
   /** Some form services (Web3Forms) need a public access key sent with every submission. */
   formAccessKey: settings.formAccessKey,
   giftCardsUrl: settings.giftCardsUrl,
+  footerScript: settings.footerScript,
+  footerNewsletter: settings.footerNewsletter,
+  /** Shown at the bottom of every page; plain text, not a link. */
+  websiteName: settings.websiteName,
 };
 
 // Map links are built from the address, so editing it in the panel updates every one of them.

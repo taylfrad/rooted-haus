@@ -1,0 +1,18 @@
+seo:
+  title: "The Rituals: services & prices · The Rooted Haus"
+  description: "Haircuts, blonding, dimensional color, grey blending, scalp services and extensions at The Rooted Haus in Mandeville, Louisiana."
+header:
+  eyebrow: "Services & prices"
+  script: "the rituals"
+  title: "Our rituals"
+  intro: "Personalized hair care, rooted in wellness."
+  image: "../../assets/photos/rituals/img-9963.jpg"
+  alt: "Color mixed by hand in a bowl at the station."
+  focus: "45% 50%"
+photos:
+  - image: "../../assets/photos/rituals/img-0046.jpg"
+    alt: "A stylist in a newsboy cap curls a client’s long blonde hair."
+  - image: "../../assets/photos/rituals/img-0127.jpg"
+    alt: "A stylist checks the blend of a client’s soft blonde balayage."
+  - image: "../../assets/photos/rituals/img-0098.jpg"
+    alt: "A client relaxes under a stone eye mask while a scalp treatment is brushed on."

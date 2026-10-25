@@ -1,5 +1,4 @@
 ---
-import headerPhoto from '../assets/photos/hero/img-0156.jpg';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
@@ -10,13 +9,16 @@ import Field from '../components/forms/Field.astro';
 import BookButton from '../components/core/BookButton.astro';
 import { MapPin, Clock, Phone, ChevronDown } from '@lucide/astro';
 import { site, hoursLine } from '../lib/site';
+import { getPage } from '../lib/pages';
+
+const page = await getPage('connectPage');
 
 // FAQ lives here (no separate page). The section only appears once there are questions in the panel.
 const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.order);
 ---
 
-<BaseLayout title="Connect · The Rooted Haus" description="Find The Rooted Haus in Mandeville, Louisiana: address, hours, directions and how to reach us.">
-  <PageHeader eyebrow="Connect" script="come as you are" title="Visit us" intro="We would love to meet you." image={headerPhoto} imageAlt="A guest relaxes with a magazine on a cream armchair in the salon lounge." focus="62% 40%" />
+<BaseLayout title={page.seo.title} description={page.seo.description}>
+  <PageHeader {...page.header} />
 
   <Section>
     <div class="visit connect-visit">
@@ -35,7 +37,7 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
           <div><strong>Call</strong><br /><a href={`tel:${site.phone.replace(/[^\d+]/g, '')}`}>{site.phone}</a></div>
         </div>
         <div class="actions">
-          <BookButton>Get Rooted</BookButton>
+          <BookButton>{site.bookLabel}</BookButton>
         </div>
       </div>
     </div>
@@ -44,8 +46,8 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
   <Section bg="var(--surface-raised)">
     <div class="message" id="message">
       <div>
-        <h2 class="h">Send us a message</h2>
-        <p class="lead">Questions about a service, a gift, or your first visit? We read every message.</p>
+        <h2 class="h">{page.message.title}</h2>
+        {page.message.text && <p class="lead">{page.message.text}</p>}
       </div>
       <ContactForm subject="Website message">
         <Field label="Name" name="name" required />
@@ -74,8 +76,8 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
 
   <Section bg="var(--surface-sand)" center>
     <div class="news" id="newsletter">
-      <h2 class="h">Stay rooted</h2>
-      <p>News, openings and product drops, a few times a year.</p>
+      <h2 class="h">{page.newsletter.title}</h2>
+      {page.newsletter.text && <p>{page.newsletter.text}</p>}
       <ContactForm subject="Newsletter signup" submitLabel="Join the list">
         <Field label="Email" name="email" type="email" required />
       </ContactForm>

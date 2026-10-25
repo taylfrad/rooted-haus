@@ -24,7 +24,8 @@ Any other host needs `SITE_URL` set (and `BASE_PATH` only when served under a su
 | `web/` | The Astro site |
 | `web/src/styles/tokens/` | Design tokens, copied from the design system project (see `docs/brand-rules.md`) |
 | `web/src/content/` | Editable content (YAML/JSON), managed through the Pages CMS panel (`.pages.yml`) |
-| `docs/` | Brand rules, content checklist for the owner, launch runbook |
+| `web/src/content/pages/` | Each page's own words and photos (one file per page) |
+| `docs/` | Brand rules, the owner's editing guide, content checklist, launch runbook |
 
 ## Brand rules in one breath
 
