@@ -47,8 +47,9 @@ import { url } from '../lib/paths';
 
     <div class="footer__col">
       <span class="footer__h">Stay rooted</span>
-      <span>{site.footerNewsletter}</span>
-      <div><Button variant="outline" tone="dark" size="sm" href={url('contact/#newsletter')}>Join the list</Button></div>
+      {/* The signup line and button appear with the newsletter form on Connect (once a form address is set). */}
+      {site.formsReady && <span>{site.footerNewsletter}</span>}
+      {site.formsReady && <div><Button variant="outline" tone="dark" size="sm" href={url('contact/#newsletter')}>Join the list</Button></div>}
       <div class="footer__social">
         <a href={site.instagram} aria-label="Instagram" rel="noopener" target="_blank">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r=".6" fill="currentColor" /></svg>

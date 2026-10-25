@@ -38,8 +38,8 @@ content:
       - { name: footerScript, label: Handwritten line in the footer, type: string }
       - { name: footerNewsletter, label: Newsletter line in the footer, type: string }
       - { name: websiteName, label: Web address shown at the bottom of every page, type: string }
-      - { name: formEndpoint, label: Contact form address (set up by your web person), type: string }
-      - { name: careersFormEndpoint, label: "Job application form address (must accept resume uploads; leave empty to use the contact form address)", type: string }
+      - { name: formEndpoint, label: "Contact form address (set up by your web person; the message, newsletter and application forms stay hidden until it is filled in)", type: string }
+      - { name: careersFormEndpoint, label: "Job application form address (only for a service that accepts resume uploads; it turns on the resume box. Leave empty to send applications through the contact form address, without a resume box)", type: string }
       - { name: formAccessKey, label: Form service access key (only if your form service gives you one), type: string }
 
   - name: deals

@@ -5,8 +5,13 @@ The site has no server of its own, so contact, newsletter and job application fo
 | Setting in the panel | Used by |
 |---|---|
 | Contact form address | Contact message, newsletter signup, and (unless the next one is filled in) job applications |
-| Job application form address | Careers page. **Must belong to a service that accepts file uploads.** |
+| Job application form address | Careers page, with the resume box. **Must belong to a service that accepts file uploads.** |
 | Form service access key | Only for services that issue one (Web3Forms does). Sent with every submission. |
+
+**Nothing half-working is shown.** Until the contact form address is set, the message form and newsletter signup on
+Connect are hidden, the footer drops its newsletter line and "Join the list" button, and the careers page asks
+applicants to call (or email, if an email is set in Studio details). Everything appears on its own once the address
+is saved. The resume box appears only when the job application address is set.
 
 ## Resume upload (Careers page)
 
@@ -20,7 +25,7 @@ Which services accept uploads (from vendor help pages and comparison sites; plan
 | Formspree | No. Paid plans only | Up to 25 MB per file on paid plans. Free plan is 50 submissions a month. |
 | Netlify Forms | Yes | Only if the site is hosted on Netlify; request size limit of about 8 MB. Needs the form marked up for Netlify, which would be a small change here. |
 
-Recommended path: use a free service for the contact and newsletter forms, and decide on the careers upload when the host is chosen. If the host ends up being Netlify, uploads cost nothing extra. If not, a paid Web3Forms or Formspree plan for one form is the simplest fix. Until the job application address is set, the form falls back to the contact address, and a form service without upload support will drop or reject the file.
+Recommended path: use a free service for the contact and newsletter forms, and decide on the careers upload when the host is chosen. If the host ends up being Netlify, uploads cost nothing extra. If not, a paid Web3Forms or Formspree plan for one form is the simplest fix. Until the job application address is set, applications go through the contact address without the resume box, so no file can be dropped by a service that does not accept uploads.
 
 ## Privacy
 

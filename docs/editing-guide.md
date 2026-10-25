@@ -20,7 +20,7 @@ lists that appear on that page sit right after it.
 | **Meet the Haus page** and **Team members** | The top of the page and the mission; then each person's name, role, photos, specialties, quote and bio. A new team member gets their own page automatically. |
 | **The Experience page** and **The Experience rows** | The top of the page and the closing note; then each row of photo and text. |
 | **Gallery page** and **Gallery photos** | The top of the page; then each photo, its caption, its group (the filter buttons) and its size in the grid. |
-| **Connect page** and **FAQ** | The top of the page and the headings for the message and newsletter forms; then questions and answers (the FAQ section appears once there is at least one). |
+| **Connect page** and **FAQ** | The top of the page and the headings for the message and newsletter forms (the forms appear once your web person has set up the form address in Studio details); then questions and answers (the FAQ section appears once there is at least one). |
 | **Plant Your Roots page** | Everything on the careers page. The hourly roles you list also become choices in the application form. |
 
 Every page also has **How the page appears in Google**: the title in the browser tab and in search results, and the

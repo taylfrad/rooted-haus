@@ -17,6 +17,9 @@ import { getPage } from '../lib/pages';
 const c = await getPage('careersPage');
 // The form's choices follow the page: both stylist paths, every hourly role, and an open option.
 const interests = ['Commission', 'Booth rental', ...c.hourlyRoles, 'Not sure yet'];
+// Until a form address is set in the panel, applicants are asked to call (or email, if one is set) instead.
+const applyOnline = site.careersFormEndpoint !== '';
+const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
 ---
 
 <BaseLayout title={c.seo.title} description={c.seo.description}>
@@ -71,6 +74,7 @@ const interests = ['Commission', 'Booth rental', ...c.hourlyRoles, 'Not sure yet
   </Section>
 
   <Section>
+    {applyOnline ? (
     <div class="apply">
       <div class="apply__intro">
         <h2 class="h2">{c.apply.title}</h2>
@@ -88,9 +92,17 @@ const interests = ['Commission', 'Booth rental', ...c.hourlyRoles, 'Not sure yet
         <Field label="Phone" name="phone" type="tel" />
         <Field label="I'm interested in" name="interest" type="select" options={interests} required />
         <Field label="Tell us about yourself" name="message" type="textarea" required />
-        <FileField label="Resume" name="resume" hint="Optional. PDF, DOC or DOCX, up to 5 MB. We use it only to consider your application." />
+        {site.uploadsReady && <FileField label="Resume" name="resume" hint="Optional. PDF, DOC or DOCX, up to 5 MB. We use it only to consider your application." />}
       </ContactForm>
     </div>
+    ) : (
+    <div class="apply apply--offline">
+      <h2 class="h2">{c.apply.title}</h2>
+      <p class="apply__call">
+        To apply, call us at <a href={tel}>{site.phone}</a>{site.email && <> or email <a href={`mailto:${site.email}`}>{site.email}</a></>}.
+      </p>
+    </div>
+    )}
   </Section>
 </BaseLayout>
 
@@ -117,6 +129,8 @@ const interests = ['Commission', 'Booth rental', ...c.hourlyRoles, 'Not sure yet
   .quote figcaption { font-size: 12px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; }
   .apply { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
   .apply__intro p { margin: 0; }
+  .apply--offline { display: block; }
+  .apply__call { margin: 0; font-size: var(--fs-body-l); }
   @media (max-width: 900px) {
     .split, .apply { grid-template-columns: 1fr; }
     .paths { grid-template-columns: 1fr; }
