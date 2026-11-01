@@ -28,7 +28,7 @@ short summary underneath it. Keep the summary to about 150 characters.
 
 ## Photos
 
-- **Top of each page:** the photo is always shown whole. A landscape photo (wider than tall) runs across the full screen with the heading below it; a portrait photo sits beside the heading. Landscape looks best here. Leave the photo empty for a heading with no photo. On Meet the Haus the photos are slimmer, so they are trimmed top and bottom; use crop position to keep faces in view.
+- **Top of each page:** the photo is always shown whole. A landscape photo (wider than tall) runs across the full screen with the heading below it; a portrait photo sits beside the heading. Landscape looks best here. Leave the photo empty for a heading with no photo. On Meet the Haus the group photos sit beside the words instead, also shown whole.
 - **Describe the photo** in a sentence, as if to someone who cannot see it ("A stylist curls a client's long blonde
   hair"). Screen readers read it aloud, and Google uses it too.
 - **Other photos: crop position** decides which part of a photo stays in view when it is trimmed to fit its frame. Leave it empty to

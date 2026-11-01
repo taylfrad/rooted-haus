@@ -276,16 +276,14 @@ content:
           - { name: script, label: Handwritten accent, type: string }
           - { name: title, label: Heading, type: string }
           - { name: intro, label: Intro line (optional), type: text }
-          - { name: image, label: "Photo (a landscape one runs across the screen)", type: image }
+          - { name: image, label: "Photo (shown whole, beside the heading)", type: image }
           - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
-          - { name: focus, label: "Crop position (this photo is trimmed top and bottom; e.g. 50% 20% keeps the upper part)", type: string }
       - name: band
-        label: Full-width photo between the mission and the team
+        label: Photo beside the mission
         type: object
         fields:
-          - { name: image, label: Photo (a landscape one), type: image }
+          - { name: image, label: "Photo (shown whole, beside the mission)", type: image }
           - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
-          - { name: focus, label: "Crop position (this photo is trimmed top and bottom; e.g. 50% 20% keeps the upper part)", type: string }
       - name: mission
         label: Mission
         type: object
@@ -306,7 +304,7 @@ content:
       - { name: order, label: Order (1 is first), type: number }
       - { name: experience, label: Short line under the name (e.g. 12 years behind the chair), type: string }
       - { name: photo, label: Portrait (shown on the Meet the Haus page), type: image }
-      - { name: photoFocus, label: "Portrait crop in the circle (e.g. 50% 15%; a smaller second number shows more of the top)", type: string }
+      - { name: photoFocus, label: "Portrait crop (e.g. 50% 15%; a smaller second number shows more of the top)", type: string }
       - { name: extraPhoto, label: Second photo (shown beside their bio on their own page), type: image }
       - { name: specialties, label: Specialties, type: string, list: true }
       - { name: quote, label: Quote in their own words, type: text }

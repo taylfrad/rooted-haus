@@ -4,32 +4,36 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
 import PageHeader from '../components/PageHeader.astro';
 import PhotoFrame from '../components/content/PhotoFrame.astro';
-import WidePhoto from '../components/content/WidePhoto.astro';
 import BookButton from '../components/core/BookButton.astro';
 import { url } from '../lib/paths';
 import { getPage } from '../lib/pages';
 
 const page = await getPage('teamPage');
+const bandPhoto = page.band?.image;
 
 const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.order);
 ---
 
 <BaseLayout title={page.seo.title} description={page.seo.description}>
-  <PageHeader {...page.header} bg="var(--surface-olive)" short />
+  <PageHeader {...page.header} bg="var(--surface-olive)" beside />
   <Section>
-    <div class="mission">
-      {page.mission.label && <span class="mission__label">{page.mission.label}</span>}
-      <p class="mission__text">{page.mission.text}</p>
+    <div class:list={['story', { 'story--photo': bandPhoto }]}>
+      {bandPhoto && (
+        <PhotoFrame src={bandPhoto} alt={page.band?.alt} shape="rounded" ratio={`${bandPhoto.width} / ${bandPhoto.height}`} sizes="(min-width: 900px) 55vw, 90vw" />
+      )}
+      <div class="mission">
+        {page.mission.label && <span class="mission__label">{page.mission.label}</span>}
+        <p class="mission__text">{page.mission.text}</p>
+      </div>
     </div>
   </Section>
-  {page.band?.image && <WidePhoto src={page.band.image} alt={page.band.alt} focus={page.band.focus} short />}
   <Section bg="var(--surface-olive)">
     <ul class="team">
       {team.map((m) => (
         <li>
           <a class="member" href={url(`team/${m.id}/`)}>
             <div class="member__photo">
-              <PhotoFrame shape="circle" focus={m.data.photoFocus} src={m.data.photo} alt={`${m.data.name}, ${m.data.role}`} label={m.data.name} sizes="240px" />
+              <PhotoFrame shape="arch" ratio="4 / 5" focus={m.data.photoFocus} src={m.data.photo} alt={`${m.data.name}, ${m.data.role}`} label={m.data.name} sizes="(min-width: 900px) 320px, 45vw" />
             </div>
             <span class="member__name">{m.data.name}</span>
             <span class="member__role">{m.data.role}</span>
@@ -44,12 +48,15 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
 </BaseLayout>
 
 <style>
+  /* Group photos are always shown whole: a crop that suits one screen width cuts through faces at another. */
+  .story--photo { display: grid; grid-template-columns: 1.25fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: center; }
   .mission { max-width: 860px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .story--photo .mission { margin: 0; text-align: left; align-items: flex-start; }
   .mission__label { font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
-  .mission__text { margin: 0; font-family: var(--font-display); font-size: clamp(24px, 3vw, 34px); line-height: 1.4; color: var(--text-strong); text-wrap: balance; }
+  .mission__text { margin: 0; font-family: var(--font-display); font-size: clamp(22px, 2.4vw, 30px); line-height: 1.4; color: var(--text-strong); text-wrap: balance; }
   .team { list-style: none; margin: 0 0 56px; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 56px 40px; }
   .member { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; color: var(--rh-ivory); text-decoration: none; }
-  .member__photo { width: min(240px, 100%); margin-bottom: 14px; border-radius: 50%;
+  .member__photo { width: min(320px, 100%); margin-bottom: 14px; border-radius: var(--radius-arch);
     transition: transform var(--dur-base) var(--ease-soft), box-shadow var(--dur-base) var(--ease-soft); }
   .member:hover .member__photo { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
   .member__name { font-family: var(--font-display); font-size: 30px; line-height: 1.1; }
@@ -60,6 +67,11 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
   .member:hover .member__more { text-decoration-color: currentColor; }
   .member:hover { color: var(--rh-ivory); }
   .cta { display: flex; justify-content: center; }
-  @media (max-width: 900px) { .team { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 520px) { .team { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) {
+    .story--photo { grid-template-columns: 1fr; }
+    .team { grid-template-columns: repeat(2, 1fr); gap: 40px 20px; }
+    .member__name { font-size: 24px; }
+    .member__exp { font-size: 14px; line-height: 1.4; }
+    .member__more { letter-spacing: .12em; font-size: 11px; }
+  }
 </style>

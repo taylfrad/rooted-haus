@@ -124,7 +124,7 @@ const heading = { eyebrow: z.string().optional(), script: z.string().optional(),
 const photo = (image: SchemaContext['image']) => ({ image: image().optional(), alt: z.string().default(''), focus: z.string().optional() });
 /** The colored band at the top of every inner page (PageHeader). */
 const pageHeader = (image: SchemaContext['image']) =>
-  z.object({ ...heading, eyebrow: z.string(), intro: z.string().optional(), image: image().optional(), alt: z.string().default(''), focus: z.string().optional() });
+  z.object({ ...heading, eyebrow: z.string(), intro: z.string().optional(), image: image().optional(), alt: z.string().default('') });
 const step = (image: SchemaContext['image']) => z.object({ title: z.string(), text: z.string(), button: z.string(), ...photo(image) });
 
 const homePage = defineCollection({
@@ -161,7 +161,7 @@ const ritualsPage = defineCollection({
 
 const teamPage = defineCollection({
   loader: onePage('team'),
-  schema: ({ image }) => z.object({ seo, header: pageHeader(image), mission: z.object({ label: z.string().optional(), text: z.string() }), band: z.object(photo(image)).optional() }),
+  schema: ({ image }) => z.object({ seo, header: pageHeader(image), mission: z.object({ label: z.string().optional(), text: z.string() }), band: z.object({ image: image().optional(), alt: z.string().default('') }).optional() }),
 });
 
 const experiencePage = defineCollection({
