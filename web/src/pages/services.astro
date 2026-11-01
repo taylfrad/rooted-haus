@@ -9,6 +9,7 @@ import Button from '../components/core/Button.astro';
 import { site } from '../lib/site';
 import PhotoFrame from '../components/content/PhotoFrame.astro';
 import { getPage } from '../lib/pages';
+import Sprig from '../components/Sprig.astro';
 
 // Header and side photos come from "The Rituals page" in the panel; the menu itself from "Services & prices".
 const page = await getPage('ritualsPage');
@@ -49,12 +50,13 @@ const categories = (await getCollection('services')).sort((a, b) => a.data.order
     ))}
     </div>
     <div class="photo-col">
-      {photos.map((p) => <PhotoFrame src={p.image} alt={p.alt} focus={p.focus} shape={p.shape} ratio="4 / 5" sizes="(min-width: 900px) 30vw, 33vw" />)}
+      {photos.map((p) => <PhotoFrame framed="light" src={p.image} alt={p.alt} focus={p.focus} shape={p.shape} ratio="4 / 5" sizes="(min-width: 900px) 30vw, 33vw" />)}
     </div>
     </div>
     <div class="cta">
       <BookButton size="lg">Book an appointment</BookButton>
       {site.giftCardsUrl && <Button variant="outline" size="lg" href={site.giftCardsUrl} target="_blank" rel="noopener">Give a gift card</Button>}
+      <Sprig side="end" />
     </div>
   </Section>
 </BaseLayout>
@@ -81,5 +83,5 @@ const categories = (await getCollection('services')).sort((a, b) => a.data.order
   .menu__meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; white-space: nowrap; }
   .menu__price { font-family: var(--font-display); font-size: 20px; color: var(--text-strong); }
   .menu__dur { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted); }
-  .cta { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 14px; }
+  .cta { margin-top: 8px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
 </style>

@@ -15,6 +15,8 @@ interface Props {
   sizes?: string;
   /** Which part of the photo to keep when cropping, as typed in the panel (see lib/crop.ts), e.g. "50% 20%" keeps the upper middle. */
   focus?: string;
+  /** A fine line just outside the photo, following its shape, for the section it sits on. */
+  framed?: 'light' | 'dark';
 }
 const {
   src,
@@ -25,17 +27,20 @@ const {
   fill = false,
   sizes = '(min-width: 900px) 40vw, 90vw',
   focus,
+  framed,
 } = Astro.props;
 const position = cropPosition(focus);
 ---
 
-<div class:list={['pf', `pf--${shape}`, { 'pf--fill': fill }]} style={`--ratio:${shape === 'circle' ? '1 / 1' : ratio}`}>
+<div class:list={['pf', `pf--${shape}`, { 'pf--fill': fill }, framed && `pf--framed pf--framed-${framed}`]} style={`--ratio:${shape === 'circle' ? '1 / 1' : ratio}`}>
   {src ? <Image src={src} alt={alt} widths={[400, 800, 1200, 1600]} sizes={sizes} class="pf__img" style={position && `object-position:${position}`} /> : <span class="pf__label">{label}</span>}
 </div>
 
 <style>
   .pf { position: relative; overflow: hidden; aspect-ratio: var(--ratio);
     background: linear-gradient(160deg, var(--rh-sand), var(--rh-caramel-soft)); }
+  .pf--framed { outline: 1px solid var(--rh-chocolate-50); outline-offset: 8px; }
+  .pf--framed-dark { outline-color: var(--border-on-dark); }
   .pf--fill { aspect-ratio: auto; width: 100%; height: 100%; }
   .pf--arch { border-radius: var(--radius-arch); }
   .pf--circle { border-radius: 50%; }

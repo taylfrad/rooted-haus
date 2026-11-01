@@ -9,6 +9,8 @@ import Button from '../components/core/Button.astro';
 import { url } from '../lib/paths';
 import { site } from '../lib/site';
 import { getPage } from '../lib/pages';
+import Sprig from '../components/Sprig.astro';
+import Flanked from '../components/Flanked.astro';
 
 const page = await getPage('experiencePage');
 
@@ -26,16 +28,17 @@ const shapes = ['arch', 'rounded', 'arch', 'rounded'] as const;
         <article class:list={['row', { 'row--flip': i % 2 === 1, 'row--large': it.data.wide || it.data.image2 }]} data-reveal>
           <div class:list={['row__photo', { 'row__photo--two': it.data.image2 }]}>
             {it.data.wide && it.data.image ? (
-              <PhotoFrame src={it.data.image} alt={it.data.alt ?? ''} shape="rounded" ratio={`${it.data.image.width} / ${it.data.image.height}`} sizes="(min-width: 900px) 55vw, 90vw" />
+              <PhotoFrame framed="dark" src={it.data.image} alt={it.data.alt ?? ''} shape="rounded" ratio={`${it.data.image.width} / ${it.data.image.height}`} sizes="(min-width: 900px) 55vw, 90vw" />
             ) : (
-              <PhotoFrame src={it.data.image} alt={it.data.alt ?? ''} label={it.data.title} shape={shapes[i % shapes.length]} ratio="4 / 5" sizes={it.data.image2 ? '(min-width: 900px) 28vw, 45vw' : '(min-width: 900px) 40vw, 90vw'} />
+              <PhotoFrame framed="dark" src={it.data.image} alt={it.data.alt ?? ''} label={it.data.title} shape={shapes[i % shapes.length]} ratio="4 / 5" sizes={it.data.image2 ? '(min-width: 900px) 28vw, 45vw' : '(min-width: 900px) 40vw, 90vw'} />
             )}
-            {it.data.image2 && <PhotoFrame src={it.data.image2} alt={it.data.alt2 ?? ''} shape="arch" ratio="4 / 5" sizes="(min-width: 900px) 28vw, 45vw" />}
+            {it.data.image2 && <PhotoFrame framed="dark" src={it.data.image2} alt={it.data.alt2 ?? ''} shape="arch" ratio="4 / 5" sizes="(min-width: 900px) 28vw, 45vw" />}
           </div>
           <div class="row__text">
             <span class="row__n">{String(i + 1).padStart(2, '0')}</span>
             <h2 class="row__title">{it.data.title}</h2>
             <p class="row__body">{it.data.body}</p>
+            <Sprig tone="dark" side={i % 2 === 1 ? 'start' : 'end'} leaves={i % 2 === 0} />
           </div>
         </article>
       ))}
@@ -43,6 +46,7 @@ const shapes = ['arch', 'rounded', 'arch', 'rounded'] as const;
   </Section>
 
   <Section bg="var(--surface-chocolate)" center>
+    <Flanked>
     <div class="closing">
       {page.closing.script && <span class="closing__script">{page.closing.script}</span>}
       <p class="closing__line">{page.closing.text}</p>
@@ -51,11 +55,13 @@ const shapes = ['arch', 'rounded', 'arch', 'rounded'] as const;
         <Button variant="outline" tone="dark" size="lg" href={url('services/')}>See our Rituals</Button>
       </div>
     </div>
+    </Flanked>
   </Section>
 </BaseLayout>
 
 <style>
-  .rows { display: flex; flex-direction: column; gap: clamp(64px, 9vw, 120px); }
+  /* Pulled up toward the heading: both sections are the same color, so their padding would add up to a big empty band. */
+  .rows { display: flex; flex-direction: column; gap: clamp(72px, 9vw, 128px); margin-top: calc(var(--section-y) * -.5); }
   .row { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
   .row--flip .row__photo { order: 2; }
   /* Photos sit on the outer content edge (left, or right on flipped rows) so every row shares the page grid. */
@@ -63,10 +69,11 @@ const shapes = ['arch', 'rounded', 'arch', 'rounded'] as const;
   .row--large { grid-template-columns: 1.5fr 1fr; }
   .row--large.row--flip { grid-template-columns: 1fr 1.5fr; }
   .row--large .row__photo { max-width: none; }
-  .row__photo--two { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: end; }
+  .row__photo--two { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: end; }
   .row--flip .row__photo { justify-self: end; }
   .row__text { display: flex; flex-direction: column; gap: 12px; max-width: 520px; }
-  .row__n { font-family: var(--font-display); font-size: 40px; line-height: 1; color: var(--rh-caramel-soft); }
+  .row__n { display: flex; align-items: center; gap: 16px; font-family: var(--font-display); font-size: 40px; line-height: 1; color: var(--rh-caramel-soft); }
+  .row__n::after { content: ''; width: 56px; height: 1px; background: var(--rh-sand); }
   .row__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 3.6vw, var(--fs-display-l)); line-height: var(--lh-tight); color: var(--rh-ivory); }
   .row__body { margin: 0; font-size: var(--fs-body-l); color: var(--rh-ivory); }
   .closing { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 20px; }
@@ -75,6 +82,7 @@ const shapes = ['arch', 'rounded', 'arch', 'rounded'] as const;
   .closing__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 8px; }
   @media (max-width: 900px) {
     .row, .row--large, .row--large.row--flip { grid-template-columns: 1fr; }
+    .closing__script { font-size: 40px; line-height: 1.15; text-wrap: balance; }
     .row--flip .row__photo { order: 0; }
     .row__photo, .row--flip .row__photo { max-width: 380px; justify-self: center; }
     .row--large .row__photo, .row--large.row--flip .row__photo { max-width: none; justify-self: stretch; }

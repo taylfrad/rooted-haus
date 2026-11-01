@@ -8,6 +8,7 @@ Accessibility adjustments to the original tokens (measured against WCAG AA): mut
 - **Type.** Gilda Display for headlines (stand-in for Cassy Vogue), Montserrat for body and spaced capitals (stand-in for Gotham Pro), La Belle Aurore script (the owner's choice) for 2 to 5 lowercase words, at most one per screen area. Headlines in sentence case.
 - **Shape.** Pill buttons and inputs, 28px cards, arch / circle / rounded photos. Never sharp rectangles. Flat color cards without borders; interactive cards lift 4px on hover.
 - **Motion.** Fade and 16px rise over 900ms with `cubic-bezier(.22,.61,.36,1)`, 150ms stagger; hero slides cross-fade 1.2s. No bounces, zooms or parallax. Respect reduced-motion.
+- **Logo and frond.** The RH monogram sits whole above page headings, and the frond from the logo (`Sprig`) takes its own space in the layout. Nothing is ever placed on top of either.
 - **Icons.** Lucide, stroke 1.5, small and functional, often inside a 44px sand circle.
 - **Voice.** "We", warm and a little poetic, more detail than punch. Buttons are 2 to 4 verbs ("Book an appointment"). No emoji, no hype words.
 - **Photography.** Warm, natural light, slight sepia (`--photo-warmth`); never cool or black and white.

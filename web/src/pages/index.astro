@@ -15,6 +15,8 @@ import Watermark from '../components/Watermark.astro';
 import { url } from '../lib/paths';
 import { site } from '../lib/site';
 import { getPage } from '../lib/pages';
+import Sprig from '../components/Sprig.astro';
+import Flanked from '../components/Flanked.astro';
 import { cropPosition } from '../lib/crop';
 
 // All words and photos come from the "Home page" entry in the panel (src/content/pages/home.yml).
@@ -131,9 +133,10 @@ const recent = (await getCollection('gallery'))
           intro={experience.text}
         />
         <Button variant="outline" href={url('experience/')}>{experience.button}</Button>
+        <Sprig side="end" leaves />
       </div>
       <div class="split__photo">
-        <PhotoFrame src={experience.image} alt={experience.alt} shape="arch" ratio="4 / 5" focus={experience.focus} sizes="(min-width: 900px) 40vw, 90vw" />
+        <PhotoFrame framed="light" src={experience.image} alt={experience.alt} shape="arch" ratio="4 / 5" focus={experience.focus} sizes="(min-width: 900px) 40vw, 90vw" />
       </div>
     </div>
   </Section>
@@ -167,12 +170,14 @@ const recent = (await getCollection('gallery'))
   </Section>
 
   <section class="band">
-    <Watermark side="right" />
+    <Flanked>
     <div class="hiring" data-reveal>
+      <Watermark />
       {home.hiring.badge && <Badge tone="ivory">{home.hiring.badge}</Badge>}
       <SectionHeading tone="dark" eyebrow={home.hiring.eyebrow} script={home.hiring.script} title={home.hiring.title} intro={home.hiring.text} />
       <Button variant="ivory" href={url('careers/')}>{home.hiring.button}</Button>
     </div>
+    </Flanked>
   </section>
 </BaseLayout>
 
@@ -298,8 +303,9 @@ const recent = (await getCollection('gallery'))
   .hero__eyebrow { display: inline-flex; padding: 7px 16px; border-radius: var(--radius-pill);
     background: rgba(59, 40, 25, .78); backdrop-filter: blur(4px); font-size: 12px; font-weight: 500;
     letter-spacing: .32em; text-transform: uppercase; color: var(--rh-ivory); }
-  .hero__scripts { display: grid; }
-  .hero__script { grid-area: 1 / 1; font-family: var(--font-script); font-size: clamp(48px, 6.5vw, 88px);
+  /* Wider than the rest of the text, but capped so a long phrase wraps instead of running across a face. */
+  .hero__content > .hero__scripts { display: grid; max-width: 640px; align-items: end; }
+  .hero__script { grid-area: 1 / 1; font-family: var(--font-script); font-size: clamp(50px, 7vw, 96px); text-wrap: balance;
     line-height: 1; color: var(--rh-caramel-soft); opacity: 0; transition: opacity 1.2s var(--ease-soft);
     text-shadow: 0 2px 16px rgba(59, 40, 25, .7); }
   .hero__script[data-active='true'] { opacity: 1; }
@@ -316,7 +322,8 @@ const recent = (await getCollection('gallery'))
   .step { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 0 28px 32px; border-radius: var(--radius-lg); background: var(--surface-sand); overflow: hidden; }
   .step__photo { align-self: stretch; margin: 0 -28px 14px; }
   .step__photo :global(.pf) { border-radius: 0; }
-  .step__n { font-family: var(--font-display); font-size: 52px; line-height: 1; color: var(--rh-terracotta); }
+  .step__n { font-family: var(--font-display); font-size: 52px; line-height: 1; color: var(--rh-terracotta); display: flex; align-items: center; gap: 16px; }
+  .step__n::after { content: ''; width: 56px; height: 1px; background: var(--rh-terracotta); }
   .step__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 26px; color: var(--text-strong); }
   .step__text { margin: 0 0 4px; color: var(--text-muted); }
   .step > :global(.btn) { margin-top: auto; } /* links share one line across the row, however long the text above */
@@ -376,7 +383,7 @@ const recent = (await getCollection('gallery'))
   /* Short screens (laptops with a small window, phones turned sideways): tighten the text so it fits. */
   @media (max-height: 640px) {
     .hero__content { gap: 10px; padding-bottom: 56px; }
-    .hero__script { font-size: clamp(36px, 10vh, 64px); }
+    .hero__script { font-size: min(clamp(44px, 9vh, 76px), 13vw); }
     .hero__title { font-size: clamp(22px, 5.5vh, 34px); }
     .hero__actions { margin-top: 2px; gap: 10px; }
     .hero__actions :global(.btn--lg) { padding: 12px 26px; font-size: 12px; }

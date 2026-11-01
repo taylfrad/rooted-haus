@@ -7,6 +7,7 @@ import PhotoFrame from '../components/content/PhotoFrame.astro';
 import BookButton from '../components/core/BookButton.astro';
 import { url } from '../lib/paths';
 import { getPage } from '../lib/pages';
+import Sprig from '../components/Sprig.astro';
 
 const page = await getPage('teamPage');
 const bandPhoto = page.band?.image;
@@ -19,11 +20,12 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
   <Section>
     <div class:list={['story', { 'story--photo': bandPhoto }]}>
       {bandPhoto && (
-        <PhotoFrame src={bandPhoto} alt={page.band?.alt} shape="rounded" ratio={`${bandPhoto.width} / ${bandPhoto.height}`} sizes="(min-width: 900px) 55vw, 90vw" />
+        <PhotoFrame framed="light" src={bandPhoto} alt={page.band?.alt} shape="rounded" ratio={`${bandPhoto.width} / ${bandPhoto.height}`} sizes="(min-width: 900px) 55vw, 90vw" />
       )}
       <div class="mission">
         {page.mission.label && <span class="mission__label">{page.mission.label}</span>}
         <p class="mission__text">{page.mission.text}</p>
+        {bandPhoto && <Sprig side="end" leaves />}
       </div>
     </div>
   </Section>
@@ -33,7 +35,7 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
         <li>
           <a class="member" href={url(`team/${m.id}/`)}>
             <div class="member__photo">
-              <PhotoFrame shape="arch" ratio="4 / 5" focus={m.data.photoFocus} src={m.data.photo} alt={`${m.data.name}, ${m.data.role}`} label={m.data.name} sizes="(min-width: 900px) 320px, 45vw" />
+              <PhotoFrame framed="dark" shape="arch" ratio="4 / 5" focus={m.data.photoFocus} src={m.data.photo} alt={`${m.data.name}, ${m.data.role}`} label={m.data.name} sizes="(min-width: 900px) 320px, 45vw" />
             </div>
             <span class="member__name">{m.data.name}</span>
             <span class="member__role">{m.data.role}</span>
@@ -56,7 +58,7 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
   .mission__text { margin: 0; font-family: var(--font-display); font-size: clamp(22px, 2.4vw, 30px); line-height: 1.4; color: var(--text-strong); text-wrap: balance; }
   .team { list-style: none; margin: 0 0 56px; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 56px 40px; }
   .member { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; color: var(--rh-ivory); text-decoration: none; }
-  .member__photo { width: min(320px, 100%); margin-bottom: 14px; border-radius: var(--radius-arch);
+  .member__photo { width: min(320px, 100%); margin-bottom: 22px; border-radius: var(--radius-arch);
     transition: transform var(--dur-base) var(--ease-soft), box-shadow var(--dur-base) var(--ease-soft); }
   .member:hover .member__photo { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
   .member__name { font-family: var(--font-display); font-size: 30px; line-height: 1.1; }

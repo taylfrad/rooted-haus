@@ -12,6 +12,7 @@ import { Check } from '@lucide/astro';
 import { site } from '../lib/site';
 import { url } from '../lib/paths';
 import { getPage } from '../lib/pages';
+import Sprig from '../components/Sprig.astro';
 
 // Everything on this page comes from "Plant Your Roots page" in the panel (src/content/pages/careers.yml).
 const c = await getPage('careersPage');
@@ -32,14 +33,15 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
         <p class="lead">{c.intro}</p>
         {c.offer && <p class="offer">{c.offer}</p>}
         <Button variant="outline" href={url('team/')}>Meet the Haus</Button>
+        <Sprig side="end" />
       </div>
       <div class="split__photo">
-        <PhotoFrame src={c.photo.image} alt={c.photo.alt} shape="rounded" ratio="4 / 5" focus={c.photo.focus} sizes="(min-width: 900px) 40vw, 90vw" />
+        <PhotoFrame framed="light" src={c.photo.image} alt={c.photo.alt} shape="rounded" ratio="4 / 5" focus={c.photo.focus} sizes="(min-width: 900px) 40vw, 90vw" />
       </div>
     </div>
     {c.photos.length > 0 && (
       <div class="pair">
-        {c.photos.map((p) => <PhotoFrame src={p.image} alt={p.alt} focus={p.focus} shape="rounded" ratio="4 / 5" sizes="(min-width: 900px) 46vw, 90vw" />)}
+        {c.photos.map((p) => <PhotoFrame framed="light" src={p.image} alt={p.alt} focus={p.focus} shape="rounded" ratio="4 / 5" sizes="(min-width: 900px) 46vw, 90vw" />)}
       </div>
     )}
   </Section>
@@ -115,7 +117,7 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
   .split { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
   .split__text { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; }
   .split__photo { width: 100%; }
-  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: clamp(48px, 6vw, 80px); }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; margin-top: clamp(48px, 6vw, 80px); }
   .lead { margin: 0; font-size: var(--fs-body-l); }
   .offer { margin: 0; font-family: var(--font-display); font-size: 24px; color: var(--text-strong); }
   .h2 { margin: 0 0 32px; font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 3.4vw, var(--fs-display-m)); color: var(--text-strong); }

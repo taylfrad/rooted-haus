@@ -10,6 +10,7 @@ import BookButton from '../components/core/BookButton.astro';
 import { MapPin, Clock, Phone, ChevronDown } from '@lucide/astro';
 import { site, hoursLine } from '../lib/site';
 import { getPage } from '../lib/pages';
+import Sprig from '../components/Sprig.astro';
 
 const page = await getPage('connectPage');
 
@@ -39,6 +40,7 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
         <div class="actions">
           <BookButton>{site.bookLabel}</BookButton>
         </div>
+        <Sprig side="end" leaves />
       </div>
     </div>
   </Section>

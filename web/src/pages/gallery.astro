@@ -8,6 +8,7 @@ import PhotoFrame from '../components/content/PhotoFrame.astro';
 import BookButton from '../components/core/BookButton.astro';
 import { site } from '../lib/site';
 import { getPage } from '../lib/pages';
+import Sprig from '../components/Sprig.astro';
 
 const page = await getPage('galleryPage');
 
@@ -61,6 +62,7 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
     <div class="cta">
       <BookButton>Book an appointment</BookButton>
       <a href={site.instagram} target="_blank" rel="noopener">Follow us on Instagram</a>
+      <Sprig side="end" />
     </div>
   </Section>
 </BaseLayout>

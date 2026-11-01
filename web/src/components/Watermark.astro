@@ -1,26 +1,18 @@
 ---
-// The RH monogram as a faint decorative watermark for dark sections (design system: sand monogram at 10–14%).
-// Place inside a parent with position: relative and overflow: hidden.
+// The RH monogram (design system: sand monogram). Sits in the flow above a heading, whole, with nothing on top of it.
 import { Image } from 'astro:assets';
 import monogram from '../assets/monogram-sand.png';
 
 interface Props {
-  /** Corner it sits in. */
-  side?: 'left' | 'right';
+  /** Line it up with a centered heading or a left-aligned one. */
+  align?: 'left' | 'center';
 }
-const { side = 'right' } = Astro.props;
+const { align = 'center' } = Astro.props;
 ---
 
-<Image src={monogram} alt="" aria-hidden="true" width={640} class:list={['wm', `wm--${side}`]} loading="lazy" />
+<Image src={monogram} alt="" aria-hidden="true" width={640} class:list={['wm', `wm--${align}`]} loading="lazy" />
 
 <style>
-  /* Sized from the section's height so the whole mark fits any band, centered top to bottom, with only a
-     small tuck (8% of its own width) past the side edge. */
-  .wm { position: absolute; z-index: 0; top: 50%; height: min(86%, 520px); width: auto; opacity: .12; pointer-events: none; user-select: none; }
-  .wm--right { right: 0; translate: 8% -50%; }
-  .wm--left { left: 0; translate: -8% -50%; }
-  /* Stacked layouts put a photo in the lower half, so the mark moves to the top right, behind the text. */
-  @media (max-width: 900px) {
-    .wm, .wm--left { top: 24px; left: auto; right: 0; height: auto; width: min(240px, 62vw); translate: 8% 0; }
-  }
+  .wm { display: block; height: clamp(110px, 12vw, 170px); width: auto; opacity: .55; margin: 0 auto var(--space-5); pointer-events: none; user-select: none; }
+  .wm--left { margin-left: 0; }
 </style>

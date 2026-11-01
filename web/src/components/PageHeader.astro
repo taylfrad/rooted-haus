@@ -26,15 +26,15 @@ const side = !!image && !wide;
 <header class:list={['ph', { 'on-olive': bg.includes('olive'), 'ph--side': side, 'ph--beside': landscape && beside }]} style={`background:${bg}`}>
   {wide && <WidePhoto src={image} {alt} eager />}
   <div class="ph__band">
-  <Watermark side={side ? 'left' : 'right'} />
   <!-- data-reveal: on arrival the heading rises in like the scroll reveals; the photo stays still (photos never animate). -->
   <div class="ph__inner" data-reveal>
     <div class="ph__text">
+      <Watermark align={side ? 'left' : 'center'} />
       <SectionHeading as="h1" tone="dark" align={side ? 'left' : 'center'} {eyebrow} {script} {title} {intro} />
     </div>
     {side && (
       <div class="ph__photo">
-        <PhotoFrame src={image} {alt} shape="rounded" ratio={`${image.width} / ${image.height}`} sizes={landscape ? '(min-width: 900px) 55vw, 90vw' : '(min-width: 900px) 480px, 90vw'} />
+        <PhotoFrame src={image} {alt} framed="dark" shape="rounded" ratio={`${image.width} / ${image.height}`} sizes={landscape ? '(min-width: 900px) 55vw, 90vw' : '(min-width: 900px) 480px, 90vw'} />
       </div>
     )}
   </div>
