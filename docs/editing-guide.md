@@ -28,9 +28,10 @@ short summary underneath it. Keep the summary to about 150 characters.
 
 ## Photos
 
+- **Top of each page:** the photo is always shown whole. A landscape photo (wider than tall) runs across the full screen with the heading below it; a portrait photo sits beside the heading. Landscape looks best here.
 - **Describe the photo** in a sentence, as if to someone who cannot see it ("A stylist curls a client's long blonde
   hair"). Screen readers read it aloud, and Google uses it too.
-- **Crop position** decides which part of a photo stays in view when it is trimmed to fit its frame. Leave it empty to
+- **Other photos: crop position** decides which part of a photo stays in view when it is trimmed to fit its frame. Leave it empty to
   keep the center. To move it, type two numbers: across, then down. `50% 20%` keeps the upper middle (good for faces),
   `50% 80%` the lower middle.
 - On the Home slideshow, pick **which side the words sit on**: the side of the photo without faces.

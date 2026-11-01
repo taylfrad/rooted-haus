@@ -6,9 +6,8 @@ header:
   script: "come as you are"
   title: "Visit us"
   intro: "We would love to meet you."
-  image: "../../assets/photos/hero/img-0156.jpg"
-  alt: "A guest relaxes with a magazine on a cream armchair in the salon lounge."
-  focus: "62% 40%"
+  image: "../../assets/photos/services/stylists-with-clients.jpg"
+  alt: "Stylists stand with their clients in a row of salon chairs, all smiling toward the mirrors."
 message:
   title: "Send us a message"
   text: "Questions about a service, a gift, or your first visit? We read every message."

@@ -14,18 +14,23 @@ const page = await getPage('experiencePage');
 
 const items = (await getCollection('experience')).sort((a, b) => a.data.order - b.data.order);
 // Photo shapes alternate down the page so the rows don't feel repetitive.
-const shapes = ['arch', 'rounded', 'circle', 'rounded'] as const;
+const shapes = ['arch', 'rounded', 'arch', 'rounded'] as const;
 ---
 
 <BaseLayout title={page.seo.title} description={page.seo.description}>
-  <PageHeader {...page.header} bg="var(--surface-chocolate)" />
+  <PageHeader {...page.header} />
 
-  <Section>
+  <Section bg="var(--surface-terracotta)">
     <div class="rows">
       {items.map((it, i) => (
-        <article class:list={['row', { 'row--flip': i % 2 === 1 }]} data-reveal>
-          <div class="row__photo">
-            <PhotoFrame src={it.data.image} alt={it.data.alt ?? ''} label={it.data.title} shape={shapes[i % shapes.length]} ratio="4 / 5" sizes="(min-width: 900px) 40vw, 90vw" />
+        <article class:list={['row', { 'row--flip': i % 2 === 1, 'row--large': it.data.wide || it.data.image2 }]} data-reveal>
+          <div class:list={['row__photo', { 'row__photo--two': it.data.image2 }]}>
+            {it.data.wide && it.data.image ? (
+              <PhotoFrame src={it.data.image} alt={it.data.alt ?? ''} shape="rounded" ratio={`${it.data.image.width} / ${it.data.image.height}`} sizes="(min-width: 900px) 55vw, 90vw" />
+            ) : (
+              <PhotoFrame src={it.data.image} alt={it.data.alt ?? ''} label={it.data.title} shape={shapes[i % shapes.length]} ratio="4 / 5" sizes={it.data.image2 ? '(min-width: 900px) 28vw, 45vw' : '(min-width: 900px) 40vw, 90vw'} />
+            )}
+            {it.data.image2 && <PhotoFrame src={it.data.image2} alt={it.data.alt2 ?? ''} shape="arch" ratio="4 / 5" sizes="(min-width: 900px) 28vw, 45vw" />}
           </div>
           <div class="row__text">
             <span class="row__n">{String(i + 1).padStart(2, '0')}</span>
@@ -37,13 +42,13 @@ const shapes = ['arch', 'rounded', 'circle', 'rounded'] as const;
     </div>
   </Section>
 
-  <Section bg="var(--surface-sand)" center>
+  <Section bg="var(--surface-chocolate)" center>
     <div class="closing">
       {page.closing.script && <span class="closing__script">{page.closing.script}</span>}
       <p class="closing__line">{page.closing.text}</p>
       <div class="closing__actions">
-        <BookButton size="lg">{site.bookLabel}</BookButton>
-        <Button variant="outline" size="lg" href={url('services/')}>See our Rituals</Button>
+        <BookButton variant="ivory" size="lg">{site.bookLabel}</BookButton>
+        <Button variant="outline" tone="dark" size="lg" href={url('services/')}>See our Rituals</Button>
       </div>
     </div>
   </Section>
@@ -55,18 +60,23 @@ const shapes = ['arch', 'rounded', 'circle', 'rounded'] as const;
   .row--flip .row__photo { order: 2; }
   /* Photos sit on the outer content edge (left, or right on flipped rows) so every row shares the page grid. */
   .row__photo { max-width: 460px; width: 100%; justify-self: start; }
+  .row--large { grid-template-columns: 1.5fr 1fr; }
+  .row--large.row--flip { grid-template-columns: 1fr 1.5fr; }
+  .row--large .row__photo { max-width: none; }
+  .row__photo--two { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: end; }
   .row--flip .row__photo { justify-self: end; }
   .row__text { display: flex; flex-direction: column; gap: 12px; max-width: 520px; }
-  .row__n { font-family: var(--font-display); font-size: 40px; line-height: 1; color: var(--text-script); }
-  .row__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 3.6vw, var(--fs-display-l)); line-height: var(--lh-tight); color: var(--text-strong); }
-  .row__body { margin: 0; font-size: var(--fs-body-l); }
+  .row__n { font-family: var(--font-display); font-size: 40px; line-height: 1; color: var(--rh-caramel-soft); }
+  .row__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 3.6vw, var(--fs-display-l)); line-height: var(--lh-tight); color: var(--rh-ivory); }
+  .row__body { margin: 0; font-size: var(--fs-body-l); color: var(--rh-ivory); }
   .closing { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 20px; }
-  .closing__script { font-family: var(--font-script); font-size: var(--fs-script-s); color: var(--text-script); }
-  .closing__line { margin: 0; font-family: var(--font-display); font-size: clamp(24px, 2.8vw, 34px); line-height: 1.35; color: var(--text-strong); text-wrap: balance; }
+  .closing__script { font-family: var(--font-script); font-size: var(--fs-script-s); color: var(--rh-caramel-soft); }
+  .closing__line { margin: 0; font-family: var(--font-display); font-size: clamp(24px, 2.8vw, 34px); line-height: 1.35; color: var(--rh-ivory); text-wrap: balance; }
   .closing__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 8px; }
   @media (max-width: 900px) {
-    .row { grid-template-columns: 1fr; }
+    .row, .row--large, .row--large.row--flip { grid-template-columns: 1fr; }
     .row--flip .row__photo { order: 0; }
     .row__photo, .row--flip .row__photo { max-width: 380px; justify-self: center; }
+    .row--large .row__photo, .row--large.row--flip .row__photo { max-width: none; justify-self: stretch; }
   }
 </style>

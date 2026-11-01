@@ -1,5 +1,5 @@
 // Makes web-ready copies of the photo shoot.
-// Reads the full-size originals in photos-originals/{hero,stylists,rituals}/ (gitignored, hundreds of MB)
+// Reads the full-size originals in photos-originals/<folder>/ (gitignored, hundreds of MB; folders starting with _ are skipped)
 // and writes resized JPEGs to web/src/assets/photos/<same folder>/, which are committed.
 // Astro then builds responsive sizes from these for each screen.
 // Run from the repo root: node scripts/import-photos.mjs
@@ -17,7 +17,7 @@ const MAX_EDGE = 2400; // big enough for a full-width hero on a large retina scr
 const QUALITY = 80;
 
 let total = 0;
-for (const folder of readdirSync(SRC, { withFileTypes: true }).filter((d) => d.isDirectory())) {
+for (const folder of readdirSync(SRC, { withFileTypes: true }).filter((d) => d.isDirectory() && !d.name.startsWith('_'))) {
   const outDir = path.join(OUT, folder.name);
   mkdirSync(outDir, { recursive: true });
   for (const file of readdirSync(path.join(SRC, folder.name)).filter((f) => /\.(jpe?g|png|heic|webp)$/i.test(f))) {

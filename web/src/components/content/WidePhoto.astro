@@ -1,0 +1,27 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src: ImageMetadata;
+  alt?: string;
+  /** The first thing on the page: load it right away instead of waiting for the visitor to scroll. */
+  eager?: boolean;
+}
+const { src, alt = '', eager = false } = Astro.props;
+---
+
+<!-- A landscape photo edge to edge across the screen, shown whole: its height follows its own shape, so nothing is cropped. -->
+<Image
+  src={src}
+  alt={alt}
+  widths={[640, 960, 1280, 1920, 2400]}
+  sizes="100vw"
+  class="wide"
+  loading={eager ? 'eager' : 'lazy'}
+  fetchpriority={eager ? 'high' : undefined}
+/>
+
+<style>
+  .wide { display: block; width: 100%; height: auto; filter: var(--photo-warmth); }
+</style>

@@ -2,6 +2,7 @@
 import type { ImageMetadata } from 'astro';
 import SectionHeading from './content/SectionHeading.astro';
 import PhotoFrame from './content/PhotoFrame.astro';
+import WidePhoto from './content/WidePhoto.astro';
 import Watermark from './Watermark.astro';
 
 interface Props {
@@ -10,40 +11,41 @@ interface Props {
   title: string;
   intro?: string;
   bg?: string;
-  /** A photo beside the heading. Without one, the heading is centered. */
+  /** A landscape photo runs whole across the screen above the heading; a portrait one sits whole beside it. */
   image?: ImageMetadata;
   alt?: string;
-  /** Which part of the photo to keep in the arch crop (CSS object-position). */
-  focus?: string;
 }
-const { eyebrow, script, title, intro, bg = 'var(--surface-terracotta)', image, alt = '', focus } = Astro.props;
+const { eyebrow, script, title, intro, bg = 'var(--surface-terracotta)', image, alt = '' } = Astro.props;
+const wide = !!image && image.width >= image.height;
+const side = !!image && !wide;
 ---
 
-<header class:list={['ph', { 'on-olive': bg.includes('olive'), 'ph--photo': !!image }]} style={`background:${bg}`}>
-  <Watermark side={image ? 'left' : 'right'} />
+<header class:list={['ph', { 'on-olive': bg.includes('olive'), 'ph--side': side }]} style={`background:${bg}`}>
+  {wide && <WidePhoto src={image} {alt} eager />}
+  <div class="ph__band">
+  <Watermark side={side ? 'left' : 'right'} />
   <!-- data-reveal: on arrival the heading rises in like the scroll reveals; the photo stays still (photos never animate). -->
   <div class="ph__inner" data-reveal>
     <div class="ph__text">
-      <SectionHeading as="h1" tone="dark" align={image ? 'left' : 'center'} {eyebrow} {script} {title} {intro} />
+      <SectionHeading as="h1" tone="dark" align={side ? 'left' : 'center'} {eyebrow} {script} {title} {intro} />
     </div>
-    {image && (
+    {side && (
       <div class="ph__photo">
-        <PhotoFrame src={image} alt={alt} shape="arch" ratio="4 / 5" focus={focus} sizes="(min-width: 900px) 34vw, 70vw" />
+        <PhotoFrame src={image} {alt} shape="rounded" ratio={`${image.width} / ${image.height}`} sizes="(min-width: 900px) 480px, 90vw" />
       </div>
     )}
+  </div>
   </div>
 </header>
 
 <style>
-  .ph { position: relative; overflow: hidden; padding: clamp(56px, 8vw, 104px) var(--gutter); }
+  .ph__band { position: relative; overflow: hidden; padding: clamp(56px, 8vw, 104px) var(--gutter); }
   .ph__inner { position: relative; z-index: 1; max-width: var(--container-max); margin: 0 auto; }
-  .ph--photo { padding-top: clamp(48px, 6vw, 80px); padding-bottom: clamp(48px, 6vw, 80px); }
-  .ph--photo .ph__inner { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
-  .ph__photo { width: 100%; max-width: 330px; justify-self: end; }
+  .ph--side .ph__band { padding-top: clamp(48px, 6vw, 80px); padding-bottom: clamp(48px, 6vw, 80px); }
+  .ph--side .ph__inner { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
+  .ph__photo { width: 100%; max-width: 480px; justify-self: end; }
   @media (max-width: 900px) {
-    .ph--photo .ph__inner { grid-template-columns: 1fr; }
-    /* Phones: a short, wide crop under the text instead of a tall arch, so headers stay compact. */
+    .ph--side .ph__inner { grid-template-columns: 1fr; }
     .ph__photo { max-width: none; justify-self: stretch; }
-    .ph__photo :global(.pf) { aspect-ratio: 16 / 9; border-radius: var(--radius-lg); }
   }
 </style>

@@ -104,6 +104,9 @@ content:
               - { name: title, label: Heading, type: string }
               - { name: text, label: Text, type: text }
               - { name: button, label: Link words, type: string }
+              - { name: image, label: Photo, type: image }
+              - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+              - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
           - name: rituals
             label: Step 2 (goes to The Rituals)
             type: object
@@ -111,6 +114,9 @@ content:
               - { name: title, label: Heading, type: string }
               - { name: text, label: Text, type: text }
               - { name: button, label: Link words, type: string }
+              - { name: image, label: Photo, type: image }
+              - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+              - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
           - name: book
             label: Step 3 (opens booking)
             type: object
@@ -118,6 +124,9 @@ content:
               - { name: title, label: Heading, type: string }
               - { name: text, label: Text, type: text }
               - { name: button, label: Link words, type: string }
+              - { name: image, label: Photo, type: image }
+              - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+              - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
       - name: specialties
         label: Specialties
         type: object
@@ -214,9 +223,8 @@ content:
           - { name: script, label: Handwritten accent, type: string }
           - { name: title, label: Heading, type: string }
           - { name: intro, label: Intro line (optional), type: text }
-          - { name: image, label: Photo, type: image }
+          - { name: image, label: "Photo (shown whole: a landscape photo runs across the screen, a portrait one sits beside the heading)", type: image }
           - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
-          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
       - name: photos
         label: "Photos beside the menu (shapes alternate: arch, rounded, arch)"
         type: object
@@ -268,9 +276,14 @@ content:
           - { name: script, label: Handwritten accent, type: string }
           - { name: title, label: Heading, type: string }
           - { name: intro, label: Intro line (optional), type: text }
-          - { name: image, label: Photo, type: image }
+          - { name: image, label: "Photo (shown whole: a landscape photo runs across the screen, a portrait one sits beside the heading)", type: image }
           - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
-          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
+      - name: band
+        label: Full-width photo between the mission and the team
+        type: object
+        fields:
+          - { name: image, label: Photo (a landscape one; shown whole), type: image }
+          - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
       - name: mission
         label: Mission
         type: object
@@ -290,9 +303,9 @@ content:
       - { name: role, label: Role, type: string, required: true }
       - { name: order, label: Order (1 is first), type: number }
       - { name: experience, label: Short line under the name (e.g. 12 years behind the chair), type: string }
-      - { name: photo, label: Portrait, type: image }
+      - { name: photo, label: Portrait (shown on the Meet the Haus page), type: image }
       - { name: photoFocus, label: "Portrait crop in the circle (e.g. 50% 15%; a smaller second number shows more of the top)", type: string }
-      - { name: extraPhoto, label: Second photo (shown on their own page), type: image }
+      - { name: extraPhoto, label: Second photo (shown beside their bio on their own page), type: image }
       - { name: specialties, label: Specialties, type: string, list: true }
       - { name: quote, label: Quote in their own words, type: text }
       - { name: body, label: Bio, type: rich-text }
@@ -318,9 +331,8 @@ content:
           - { name: script, label: Handwritten accent, type: string }
           - { name: title, label: Heading, type: string }
           - { name: intro, label: Intro line (optional), type: text }
-          - { name: image, label: Photo, type: image }
+          - { name: image, label: "Photo (shown whole: a landscape photo runs across the screen, a portrait one sits beside the heading)", type: image }
           - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
-          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
       - name: closing
         label: Closing note at the bottom
         type: object
@@ -340,6 +352,9 @@ content:
       - { name: body, label: Text, type: text, required: true }
       - { name: image, label: Photo, type: image }
       - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+      - { name: wide, label: Show the whole photo large (for a landscape photo), type: boolean }
+      - { name: image2, label: Second photo beside the first (optional), type: image }
+      - { name: alt2, label: Describe the second photo, type: string }
       - { name: order, label: Order (1 is first), type: number }
 
   # --- Gallery ---
@@ -363,9 +378,8 @@ content:
           - { name: script, label: Handwritten accent, type: string }
           - { name: title, label: Heading, type: string }
           - { name: intro, label: Intro line (optional), type: text }
-          - { name: image, label: Photo, type: image }
+          - { name: image, label: "Photo (shown whole: a landscape photo runs across the screen, a portrait one sits beside the heading)", type: image }
           - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
-          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
 
   - name: gallery
     label: Gallery photos
@@ -407,9 +421,8 @@ content:
           - { name: script, label: Handwritten accent, type: string }
           - { name: title, label: Heading, type: string }
           - { name: intro, label: Intro line (optional), type: text }
-          - { name: image, label: Photo, type: image }
+          - { name: image, label: "Photo (shown whole: a landscape photo runs across the screen, a portrait one sits beside the heading)", type: image }
           - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
-          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
       - name: message
         label: Message form
         type: object
@@ -456,15 +469,22 @@ content:
           - { name: script, label: Handwritten accent, type: string }
           - { name: title, label: Heading, type: string }
           - { name: intro, label: Intro line (optional), type: text }
-          - { name: image, label: Photo, type: image }
+          - { name: image, label: "Photo (shown whole: a landscape photo runs across the screen, a portrait one sits beside the heading)", type: image }
           - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
-          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
       - { name: badge, label: Badge above the intro, type: string }
       - { name: intro, label: Intro, type: text }
       - { name: offer, label: Line under the intro, type: string }
       - name: photo
         label: Photo beside the intro
         type: object
+        fields:
+          - { name: image, label: Photo, type: image }
+          - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
+      - name: photos
+        label: Large photos side by side under the intro
+        type: object
+        list: true
         fields:
           - { name: image, label: Photo, type: image }
           - { name: alt, label: Describe the photo (for people who cannot see it), type: string }

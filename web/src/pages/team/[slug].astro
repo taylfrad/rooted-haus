@@ -18,6 +18,9 @@ export async function getStaticPaths() {
 const { member, next } = Astro.props;
 const { Content } = await render(member);
 const m = member.data;
+// Beside the bio: the second photo (the portrait is on the team page), or the portrait if there is no second one.
+const photo = m.extraPhoto ?? m.photo;
+const photoFocus = m.extraPhoto ? '50% 20%' : m.photoFocus;
 const reviews = (await getCollection('reviews')).filter((r) => r.data.stylist === member.id);
 ---
 
@@ -26,14 +29,7 @@ const reviews = (await getCollection('reviews')).filter((r) => r.data.stylist ==
     <a class="back" href={url('team/')}>← Meet the Haus</a>
     <div class="intro">
       <div class="photos">
-        <div class="photos__main">
-          <PhotoFrame shape="arch" ratio="4 / 5" focus={m.photoFocus} src={m.photo} alt={`${m.name}, ${m.role}`} label={m.name} sizes="(min-width: 900px) 34vw, 80vw" />
-        </div>
-        {m.extraPhoto ? (
-          <div class="photos__extra">
-            <PhotoFrame shape="circle" focus="50% 20%" src={m.extraPhoto} alt={`${m.name} at The Rooted Haus`} label={m.name} sizes="200px" />
-          </div>
-        ) : null}
+        <PhotoFrame shape="arch" ratio="4 / 5" focus={photoFocus} src={photo} alt={`${m.name} at The Rooted Haus`} label={m.name} sizes="(min-width: 900px) 40vw, 90vw" />
       </div>
       <div class="text">
         <span class="role">{m.role}</span>
@@ -78,8 +74,7 @@ const reviews = (await getCollection('reviews')).filter((r) => r.data.stylist ==
     color: var(--rh-chocolate); text-decoration: none; }
   .back:hover { text-decoration: underline; text-underline-offset: 6px; }
   .intro { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(32px, 6vw, 88px); align-items: start; }
-  .photos { position: relative; max-width: 460px; width: 100%; justify-self: start; } /* in line with the back link above */
-  .photos__extra { position: absolute; width: 42%; right: -8%; bottom: -6%; border-radius: 50%; box-shadow: 0 0 0 8px var(--surface-page); }
+  .photos { width: 100%; justify-self: start; } /* in line with the back link above */
   .text { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
   .role { font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
   .name { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(40px, 5vw, var(--fs-display-xl)); line-height: 1; color: var(--text-strong); }
@@ -97,8 +92,6 @@ const reviews = (await getCollection('reviews')).filter((r) => r.data.stylist ==
   .next__label { font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
   @media (max-width: 900px) {
     .intro { grid-template-columns: 1fr; }
-    .photos { max-width: 360px; margin-bottom: 24px; }
+    .photos { max-width: 420px; margin-bottom: 24px; }
   }
-  /* Phones: the photo fills the width, so the circle tucks inside it instead of hanging off the screen edge. */
-  @media (max-width: 560px) { .photos__extra { right: 0; } }
 </style>

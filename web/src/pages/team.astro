@@ -4,6 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
 import PageHeader from '../components/PageHeader.astro';
 import PhotoFrame from '../components/content/PhotoFrame.astro';
+import WidePhoto from '../components/content/WidePhoto.astro';
 import BookButton from '../components/core/BookButton.astro';
 import { url } from '../lib/paths';
 import { getPage } from '../lib/pages';
@@ -21,7 +22,8 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
       <p class="mission__text">{page.mission.text}</p>
     </div>
   </Section>
-  <Section bg="var(--surface-sage)">
+  {page.band?.image && <WidePhoto src={page.band.image} alt={page.band.alt} />}
+  <Section bg="var(--surface-olive)">
     <ul class="team">
       {team.map((m) => (
         <li>
@@ -37,7 +39,7 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
         </li>
       ))}
     </ul>
-    <div class="cta"><BookButton>Book with us</BookButton></div>
+    <div class="cta"><BookButton variant="ivory">Book with us</BookButton></div>
   </Section>
 </BaseLayout>
 
@@ -46,7 +48,7 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
   .mission__label { font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
   .mission__text { margin: 0; font-family: var(--font-display); font-size: clamp(24px, 3vw, 34px); line-height: 1.4; color: var(--text-strong); text-wrap: balance; }
   .team { list-style: none; margin: 0 0 56px; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 56px 40px; }
-  .member { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; color: var(--rh-espresso); text-decoration: none; }
+  .member { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; color: var(--rh-ivory); text-decoration: none; }
   .member__photo { width: min(240px, 100%); margin-bottom: 14px; border-radius: 50%;
     transition: transform var(--dur-base) var(--ease-soft), box-shadow var(--dur-base) var(--ease-soft); }
   .member:hover .member__photo { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
@@ -56,7 +58,7 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
   .member__more { margin-top: 6px; font-size: 12px; font-weight: 500; letter-spacing: var(--ls-button); text-transform: uppercase;
     text-decoration: underline; text-underline-offset: 6px; text-decoration-color: transparent; transition: text-decoration-color var(--dur-base); }
   .member:hover .member__more { text-decoration-color: currentColor; }
-  .member:hover { color: var(--rh-espresso); }
+  .member:hover { color: var(--rh-ivory); }
   .cta { display: flex; justify-content: center; }
   @media (max-width: 900px) { .team { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 520px) { .team { grid-template-columns: 1fr; } }

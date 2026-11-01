@@ -86,7 +86,7 @@ const gallery = defineCollection({
       tag: z.string(),
       /** How much room the photo takes in the mosaic: small = 1 cell, wide = 2 across, tall = 2 down, large = 2 x 2. */
       size: z.enum(['small', 'wide', 'tall', 'large']).default('small'),
-      /** Path relative to this file, e.g. ../../assets/photos/rituals/img-0142.jpg. Leave empty to show a placeholder. */
+      /** Path relative to this file, e.g. ../../assets/photos/services/img-0142.jpg. Leave empty to show a placeholder. */
       image: image().optional(),
       alt: z.string().optional(),
       order: z.number().default(0),
@@ -101,6 +101,11 @@ const experience = defineCollection({
       body: z.string(),
       image: image().optional(),
       alt: z.string().optional(),
+      /** Show the whole photo at its own shape, for landscape photos. */
+      wide: z.boolean().default(false),
+      /** A second photo beside the first. */
+      image2: image().optional(),
+      alt2: z.string().optional(),
       order: z.number().default(0),
     }),
 });
@@ -108,7 +113,7 @@ const experience = defineCollection({
 // --- Page text and photos ---
 // One file per page in src/content/pages/ (edited as "Home page", "The Rituals page"... in the panel). Each page is its own
 // collection so it gets its own fields; read one with getPage() from lib/pages.ts.
-// Photo paths are relative to that folder, e.g. ../../assets/photos/hero/img-0156.jpg.
+// Photo paths are relative to that folder, e.g. ../../assets/photos/salon/img-0156.jpg.
 const onePage = (name: string) => glob({ pattern: `${name}.yml`, base: './src/content/pages' });
 
 /** The page's name and summary in Google results and link previews. */
@@ -119,8 +124,8 @@ const heading = { eyebrow: z.string().optional(), script: z.string().optional(),
 const photo = (image: SchemaContext['image']) => ({ image: image().optional(), alt: z.string().default(''), focus: z.string().optional() });
 /** The colored band at the top of every inner page (PageHeader). */
 const pageHeader = (image: SchemaContext['image']) =>
-  z.object({ ...heading, eyebrow: z.string(), intro: z.string().optional(), ...photo(image) });
-const step = z.object({ title: z.string(), text: z.string(), button: z.string() });
+  z.object({ ...heading, eyebrow: z.string(), intro: z.string().optional(), image: image().optional(), alt: z.string().default('') });
+const step = (image: SchemaContext['image']) => z.object({ title: z.string(), text: z.string(), button: z.string(), ...photo(image) });
 
 const homePage = defineCollection({
   loader: onePage('home'),
@@ -136,7 +141,7 @@ const homePage = defineCollection({
           .array(z.object({ ...photo(image), image: image(), phrase: z.string(), side: z.enum(['left', 'right']).default('left') }))
           .min(1),
       }),
-      steps: z.object({ ...heading, meet: step, rituals: step, book: step }),
+      steps: z.object({ ...heading, meet: step(image), rituals: step(image), book: step(image) }),
       specialties: z.object({
         ...heading,
         items: z.array(z.object({ label: z.string(), ...photo(image) })),
@@ -156,7 +161,7 @@ const ritualsPage = defineCollection({
 
 const teamPage = defineCollection({
   loader: onePage('team'),
-  schema: ({ image }) => z.object({ seo, header: pageHeader(image), mission: z.object({ label: z.string().optional(), text: z.string() }) }),
+  schema: ({ image }) => z.object({ seo, header: pageHeader(image), mission: z.object({ label: z.string().optional(), text: z.string() }), band: z.object(photo(image)).optional() }),
 });
 
 const experiencePage = defineCollection({
@@ -185,6 +190,8 @@ const careersPage = defineCollection({
       intro: z.string(),
       offer: z.string().optional(),
       photo: z.object(photo(image)),
+      /** Shown large, side by side, under the intro. */
+      photos: z.array(z.object(photo(image))).default([]),
       perksTitle: z.string(),
       perks: z.array(z.string()).default([]),
       commissionTitle: z.string(),
