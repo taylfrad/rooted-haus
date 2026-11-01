@@ -39,11 +39,13 @@ const lead = reviews.find((r) => r.data.highlight) ?? reviews[0];
 const others = reviews.filter((r) => r !== lead);
 const team = await getCollection('team');
 const stylistName = (slug?: string) => team.find((t) => t.id === slug)?.data.name;
-// Recent work skips any photo already shown higher on this page, so nothing repeats.
+// Recent work is hair work only, and skips any photo already shown higher on this page, so nothing repeats.
+// Square side-by-side before/afters are left out too: this section's tall frames would cut them in half.
 const usedOnHome = new Set([...slides.map((s) => s.image.src), ...steps.map((s) => s.image?.src), ...specialties.map((s) => s.image?.src), experience.image?.src]);
 const recent = (await getCollection('gallery'))
   .sort((a, b) => a.data.order - b.data.order)
-  .filter((g) => !g.data.image || !usedOnHome.has(g.data.image.src))
+  .filter((g) => ['color', 'styling', 'results'].includes(g.data.tag))
+  .filter((g) => !g.data.image || (!usedOnHome.has(g.data.image.src) && g.data.image.width !== g.data.image.height))
   .slice(0, 4);
 ---
 
