@@ -11,17 +11,21 @@ interface Props {
   title: string;
   intro?: string;
   bg?: string;
+  /** Slimmer landscape photo, trimmed top and bottom instead of shown whole. */
+  short?: boolean;
+  /** Which part of the photo to keep when `short` trims it. */
+  focus?: string;
   /** A landscape photo runs whole across the screen above the heading; a portrait one sits whole beside it. */
   image?: ImageMetadata;
   alt?: string;
 }
-const { eyebrow, script, title, intro, bg = 'var(--surface-terracotta)', image, alt = '' } = Astro.props;
+const { eyebrow, script, title, intro, bg = 'var(--surface-terracotta)', image, alt = '', short = false, focus } = Astro.props;
 const wide = !!image && image.width >= image.height;
 const side = !!image && !wide;
 ---
 
 <header class:list={['ph', { 'on-olive': bg.includes('olive'), 'ph--side': side }]} style={`background:${bg}`}>
-  {wide && <WidePhoto src={image} {alt} eager />}
+  {wide && <WidePhoto src={image} {alt} {short} {focus} eager />}
   <div class="ph__band">
   <Watermark side={side ? 'left' : 'right'} />
   <!-- data-reveal: on arrival the heading rises in like the scroll reveals; the photo stays still (photos never animate). -->

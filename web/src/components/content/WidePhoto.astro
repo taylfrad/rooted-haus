@@ -1,27 +1,35 @@
 ---
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import { cropPosition } from '../../lib/crop';
 
 interface Props {
   src: ImageMetadata;
   alt?: string;
   /** The first thing on the page: load it right away instead of waiting for the visitor to scroll. */
   eager?: boolean;
+  /** Cap the height for a slimmer banner. The top and bottom of the photo are trimmed to fit. */
+  short?: boolean;
+  /** Which part of the photo to keep when `short` trims it. */
+  focus?: string;
 }
-const { src, alt = '', eager = false } = Astro.props;
+const { src, alt = '', eager = false, short = false, focus } = Astro.props;
+const position = short ? cropPosition(focus) : undefined;
 ---
 
-<!-- A landscape photo edge to edge across the screen, shown whole: its height follows its own shape, so nothing is cropped. -->
+<!-- A landscape photo edge to edge across the screen. Shown whole (its height follows its own shape) unless `short` is set. -->
 <Image
   src={src}
   alt={alt}
   widths={[640, 960, 1280, 1920, 2400]}
   sizes="100vw"
-  class="wide"
+  class:list={['wide', { 'wide--short': short }]}
+  style={position && `object-position:${position}`}
   loading={eager ? 'eager' : 'lazy'}
   fetchpriority={eager ? 'high' : undefined}
 />
 
 <style>
   .wide { display: block; width: 100%; height: auto; filter: var(--photo-warmth); }
+  .wide--short { max-height: min(60vh, 560px); object-fit: cover; }
 </style>

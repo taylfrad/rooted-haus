@@ -276,14 +276,16 @@ content:
           - { name: script, label: Handwritten accent, type: string }
           - { name: title, label: Heading, type: string }
           - { name: intro, label: Intro line (optional), type: text }
-          - { name: image, label: "Photo (shown whole: a landscape photo runs across the screen, a portrait one sits beside the heading)", type: image }
+          - { name: image, label: "Photo (a landscape one runs across the screen)", type: image }
           - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+          - { name: focus, label: "Crop position (this photo is trimmed top and bottom; e.g. 50% 20% keeps the upper part)", type: string }
       - name: band
         label: Full-width photo between the mission and the team
         type: object
         fields:
-          - { name: image, label: Photo (a landscape one; shown whole), type: image }
+          - { name: image, label: Photo (a landscape one), type: image }
           - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+          - { name: focus, label: "Crop position (this photo is trimmed top and bottom; e.g. 50% 20% keeps the upper part)", type: string }
       - name: mission
         label: Mission
         type: object

@@ -124,7 +124,7 @@ const heading = { eyebrow: z.string().optional(), script: z.string().optional(),
 const photo = (image: SchemaContext['image']) => ({ image: image().optional(), alt: z.string().default(''), focus: z.string().optional() });
 /** The colored band at the top of every inner page (PageHeader). */
 const pageHeader = (image: SchemaContext['image']) =>
-  z.object({ ...heading, eyebrow: z.string(), intro: z.string().optional(), image: image().optional(), alt: z.string().default('') });
+  z.object({ ...heading, eyebrow: z.string(), intro: z.string().optional(), image: image().optional(), alt: z.string().default(''), focus: z.string().optional() });
 const step = (image: SchemaContext['image']) => z.object({ title: z.string(), text: z.string(), button: z.string(), ...photo(image) });
 
 const homePage = defineCollection({

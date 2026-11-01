@@ -15,14 +15,14 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
 ---
 
 <BaseLayout title={page.seo.title} description={page.seo.description}>
-  <PageHeader {...page.header} bg="var(--surface-olive)" />
+  <PageHeader {...page.header} bg="var(--surface-olive)" short />
   <Section>
     <div class="mission">
       {page.mission.label && <span class="mission__label">{page.mission.label}</span>}
       <p class="mission__text">{page.mission.text}</p>
     </div>
   </Section>
-  {page.band?.image && <WidePhoto src={page.band.image} alt={page.band.alt} />}
+  {page.band?.image && <WidePhoto src={page.band.image} alt={page.band.alt} focus={page.band.focus} short />}
   <Section bg="var(--surface-olive)">
     <ul class="team">
       {team.map((m) => (
