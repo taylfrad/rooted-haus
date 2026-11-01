@@ -29,4 +29,4 @@ Any other host needs `SITE_URL` set (and `BASE_PATH` only when served under a su
 
 ## Brand rules in one breath
 
-Never pure black or white. Pill buttons. Arch, circle and rounded photos. Gilda Display headlines, Montserrat body, Sacramento script accents. Gentle fade-ins only: no bounces, zooms or parallax.
+Never pure black or white. Pill buttons. Arch, circle and rounded photos. Gilda Display headlines, Montserrat body, La Belle Aurore script accents. Gentle fade-ins only: no bounces, zooms or parallax.

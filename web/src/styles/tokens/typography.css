@@ -1,7 +1,7 @@
 :root{
 --font-display:"Gilda Display","Cassy Vogue",Georgia,serif;
 --font-sans:"Montserrat Variable","Montserrat","Gotham Pro","Gotham",system-ui,sans-serif;
---font-script:"Sacramento","Brush Script MT",cursive;
+--font-script:"La Belle Aurore","Brush Script MT",cursive;
 --font-body:var(--font-sans);
 
 --fs-display-xl:64px;
@@ -14,9 +14,9 @@
 --fs-body-s:14px;
 --fs-eyebrow:12px;
 --fs-micro:11px;
---fs-script-l:72px;
---fs-script-m:48px;
---fs-script-s:34px;
+--fs-script-l:80px;
+--fs-script-m:56px;
+--fs-script-s:42px;
 
 --lh-tight:1.1;
 --lh-snug:1.25;
