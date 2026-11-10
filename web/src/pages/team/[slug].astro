@@ -8,7 +8,7 @@ import Badge from '../../components/content/Badge.astro';
 import Button from '../../components/core/Button.astro';
 import BookButton from '../../components/core/BookButton.astro';
 import { url } from '../../lib/paths';
-import Flanked from '../../components/Flanked.astro';
+import Emblem from '../../components/Emblem.astro';
 
 // One page per team file: team/shelby.md -> /team/shelby/
 export async function getStaticPaths() {
@@ -45,13 +45,13 @@ const reviews = (await getCollection('reviews')).filter((r) => r.data.stylist ==
 
   {m.quote && (
     <Section bg="var(--surface-olive)" center>
-      <Flanked>
+      <Emblem layout="behind">
       <figure class="quote">
         <span class="quote__script">in her words</span>
         <blockquote>“{m.quote}”</blockquote>
         <figcaption>{m.name}</figcaption>
       </figure>
-      </Flanked>
+      </Emblem>
     </Section>
   )}
 

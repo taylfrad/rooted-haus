@@ -11,11 +11,10 @@ import Badge from '../components/content/Badge.astro';
 import Button from '../components/core/Button.astro';
 import BookButton from '../components/core/BookButton.astro';
 import DealBanner from '../components/DealBanner.astro';
-import Watermark from '../components/Watermark.astro';
 import { url } from '../lib/paths';
 import { site } from '../lib/site';
 import { getPage } from '../lib/pages';
-import Flanked from '../components/Flanked.astro';
+import Emblem from '../components/Emblem.astro';
 import { cropPosition } from '../lib/crop';
 
 // All words and photos come from the "Home page" entry in the panel (src/content/pages/home.yml).
@@ -168,14 +167,13 @@ const recent = (await getCollection('gallery'))
   </Section>
 
   <section class="band">
-    <Flanked>
+    <Emblem>
     <div class="hiring" data-reveal>
-      <Watermark />
       {home.hiring.badge && <Badge tone="ivory">{home.hiring.badge}</Badge>}
       <SectionHeading tone="dark" eyebrow={home.hiring.eyebrow} script={home.hiring.script} title={home.hiring.title} intro={home.hiring.text} />
       <Button variant="ivory" href={url('careers/')}>{home.hiring.button}</Button>
     </div>
-    </Flanked>
+    </Emblem>
   </section>
 </BaseLayout>
 

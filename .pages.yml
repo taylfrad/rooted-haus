@@ -450,6 +450,12 @@ content:
         fields:
           - { name: title, label: Heading, type: string }
           - { name: text, label: Text, type: text }
+      - name: closing
+        label: Closing words at the bottom (with the booking button)
+        type: object
+        fields:
+          - { name: script, label: Handwritten accent, type: string }
+          - { name: text, label: Text, type: string }
 
   - name: faq
     label: FAQ (shown on the Connect page)

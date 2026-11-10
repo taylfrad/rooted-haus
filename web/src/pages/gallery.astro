@@ -35,7 +35,7 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
 
 <BaseLayout title={page.seo.title} description={page.seo.description}>
   <PageHeader {...page.header} bg="var(--surface-chocolate)" />
-  <Section mark="start">
+  <Section>
     <div class="filters" role="group" aria-label="Filter gallery">
       {tags.map((t, i) => <button type="button" class="pill" data-filter={t} aria-pressed={i === 0}>{t}</button>)}
     </div>

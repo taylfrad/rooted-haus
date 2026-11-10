@@ -1,0 +1,45 @@
+---
+// A page's closing words with the RH monogram, on desktop only (phones show just the words).
+//   beside: the whole monogram stands next to the words, on one side (the hiring band on Home, the closing note on
+//           The Experience, the last words on Connect). Alternate the side from one page to the next.
+//   behind: the monogram sits centered behind the words, softly blurred so they stay easy to read (a stylist's quote).
+import monogram from '../assets/monogram-sand.png';
+
+interface Props {
+  /** The section it sits on. */
+  tone?: 'light' | 'dark';
+  layout?: 'beside' | 'behind';
+  /** Which side the monogram stands on, for `beside`. */
+  side?: 'start' | 'end';
+}
+const { tone = 'dark', layout = 'beside', side = 'end' } = Astro.props;
+---
+
+<div class:list={['emblem', `emblem--${tone}`, `emblem--${layout}`, `emblem--${side}`]}>
+  <span class="emblem__mark" style={`--mark:url(${monogram.src})`} aria-hidden="true"></span>
+  <div class="emblem__words"><slot /></div>
+</div>
+
+<style>
+  .emblem__mark { display: none; aspect-ratio: 640 / 579; pointer-events: none; background: var(--rh-sand);
+    -webkit-mask: var(--mark) center / contain no-repeat; mask: var(--mark) center / contain no-repeat; }
+  .emblem--light .emblem__mark { background: var(--rh-chocolate); }
+
+  @media (min-width: 900px) {
+    .emblem__mark { display: block; }
+
+    .emblem--beside { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: clamp(40px, 6vw, 96px);
+      max-width: 1040px; margin: 0 auto; }
+    .emblem--beside.emblem--start { grid-template-columns: auto minmax(0, 1fr); }
+    .emblem--beside .emblem__mark { width: clamp(220px, 24vw, 340px); opacity: .5; }
+    .emblem--beside.emblem--light .emblem__mark { opacity: .35; }
+    .emblem--beside.emblem--end .emblem__mark { order: 1; }
+
+    .emblem--behind { position: relative; }
+    .emblem--behind .emblem__words { position: relative; z-index: 1; }
+    /* As tall as the words plus some of the section's padding, so it never spills into the next section. */
+    .emblem--behind .emblem__mark { position: absolute; left: 50%; top: 50%; translate: -50% -50%;
+      height: min(560px, 100% + var(--section-y)); max-width: 92vw; opacity: .14; filter: blur(10px); }
+    .emblem--behind.emblem--light .emblem__mark { opacity: .1; }
+  }
+</style>

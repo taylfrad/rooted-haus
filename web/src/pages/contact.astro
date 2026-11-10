@@ -4,14 +4,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
 import PageHeader from '../components/PageHeader.astro';
 import DirectionsMap from '../components/DirectionsMap.astro';
+import Emblem from '../components/Emblem.astro';
 import ContactForm from '../components/forms/ContactForm.astro';
 import Field from '../components/forms/Field.astro';
 import BookButton from '../components/core/BookButton.astro';
 import { MapPin, Clock, Phone, ChevronDown } from '@lucide/astro';
-import { site, hoursLine } from '../lib/site';
+import { maps, site } from '../lib/site';
 import { getPage } from '../lib/pages';
 
 const page = await getPage('connectPage');
+const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
 
 // FAQ lives here (no separate page). The section only appears once there are questions in the panel.
 const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.order);
@@ -21,26 +23,34 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
   <PageHeader {...page.header} />
 
   <Section mark="start">
-    <div class="visit connect-visit">
-      <DirectionsMap />
-      <div class="info">
-        <div class="row">
-          <span class="ic"><MapPin size={20} stroke-width={1.5} /></span>
-          <div><strong>Find us</strong><br />{site.address.line1}<br />{site.address.city}</div>
-        </div>
-        <div class="row">
-          <span class="ic"><Clock size={20} stroke-width={1.5} /></span>
-          <div><strong>Hours</strong>{site.hours.map((h) => <><br />{hoursLine(h)}</>)}</div>
-        </div>
-        <div class="row">
-          <span class="ic"><Phone size={20} stroke-width={1.5} /></span>
-          <div><strong>Call</strong><br /><a href={`tel:${site.phone.replace(/[^\d+]/g, '')}`}>{site.phone}</a></div>
-        </div>
-        <div class="actions">
-          <BookButton>{site.bookLabel}</BookButton>
-        </div>
-      </div>
-    </div>
+    <!-- The three things people come here for, side by side; then the map, wide, beneath them. -->
+    <ul class="ways">
+      <li class="way">
+        <span class="ic"><MapPin size={20} stroke-width={1.5} /></span>
+        <h2 class="way__label">Find us</h2>
+        <p class="way__main">{site.address.line1}<br />{site.address.city}</p>
+        <a class="way__link caps-link" href={maps.google} target="_blank" rel="noopener" data-directions-open aria-haspopup="dialog">Get directions</a>
+      </li>
+      <li class="way">
+        <span class="ic"><Clock size={20} stroke-width={1.5} /></span>
+        <h2 class="way__label">Hours</h2>
+        <dl class="hours">
+          {site.hours.map((h) => (
+            <div class="hours__row">
+              <dt>{h.days}</dt>
+              {h.time && <dd>{h.time}</dd>}
+            </div>
+          ))}
+        </dl>
+      </li>
+      <li class="way">
+        <span class="ic"><Phone size={20} stroke-width={1.5} /></span>
+        <h2 class="way__label">Call or book</h2>
+        <a class="way__main way__phone" href={tel}>{site.phone}</a>
+        <div class="way__action"><BookButton>{site.bookLabel}</BookButton></div>
+      </li>
+    </ul>
+    <div class="map"><DirectionsMap /></div>
   </Section>
 
   {/* The message form and newsletter signup appear once a form address is set in the panel (docs/forms.md). */}
@@ -88,14 +98,39 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
     </div>
   </Section>
   )}
+
+  {page.closing && (
+    <Section bg="var(--surface-olive)" center>
+      <Emblem>
+        <div class="closing">
+          {page.closing.script && <span class="closing__script">{page.closing.script}</span>}
+          <p class="closing__line">{page.closing.text}</p>
+          <BookButton variant="ivory" size="lg">{site.bookLabel}</BookButton>
+        </div>
+      </Emblem>
+    </Section>
+  )}
 </BaseLayout>
 
 <style>
-  .visit { display: grid; grid-template-columns: 1.3fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: center; }
-  .info { display: flex; flex-direction: column; gap: 26px; }
-  .row { display: flex; gap: 18px; }
-  .ic { flex: 0 0 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: var(--rh-sand); color: var(--rh-terracotta); }
-  .actions { display: flex; flex-wrap: wrap; gap: 14px; }
+  .ways { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .way { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: 36px 32px; border-radius: var(--radius-lg); background: var(--surface-sand); }
+  .ic { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: var(--rh-ivory); color: var(--rh-terracotta); }
+  .way__label { margin: 4px 0 0; font-family: var(--font-sans); font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
+  .way__main { margin: 0; font-family: var(--font-display); font-size: var(--fs-title); line-height: 1.35; color: var(--text-strong); }
+  .way__phone { font-size: var(--fs-display-s); text-decoration: none; font-variant-numeric: tabular-nums; }
+  .way__phone:hover { color: var(--text-accent); }
+  /* The link and the button sit on the bottom edge of their cards, so the three cards end on one line. */
+  .way__link, .way__action { margin-top: auto; }
+  .way__link { color: var(--rh-chocolate); }
+  .hours { margin: 0; align-self: stretch; display: flex; flex-direction: column; }
+  .hours__row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 9px 0; border-bottom: 1px solid var(--border-hairline); font-size: 15px; }
+  .hours__row:first-child { border-top: 1px solid var(--border-hairline); }
+  .hours dd { margin: 0; color: var(--text-strong); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  /* A wide, shallow map: it shows the surrounding streets without pushing the rest of the page down. */
+  .map { margin-top: 24px; }
+  .map :global(.dm) { aspect-ratio: 21 / 8; min-height: 320px; }
+
   .h { margin-bottom: 16px; }
   .lead { margin: 0; color: var(--text-muted); }
   .message { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
@@ -110,10 +145,13 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
   .faq__item p { margin: 0 0 22px; max-width: 60ch; }
   .news { max-width: 480px; margin: 0 auto; text-align: left; }
   .news .h, .news p { text-align: center; }
-  @media (max-width: 900px) { .visit, .message { grid-template-columns: 1fr; } }
-</style>
 
-<style is:global>
-  /* This page already has the big map, so the footer map is hidden here. */
-  body:has(.connect-visit) .footer__visit .dm { display: none; }
+  .closing { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .closing__script { font-family: var(--font-script); font-size: var(--fs-script-s); line-height: 1.1; color: var(--rh-caramel-soft); }
+  .closing__line { margin: 0 0 8px; font-family: var(--font-display); font-size: clamp(24px, 2.8vw, 34px); line-height: 1.35; color: var(--rh-ivory); text-wrap: balance; }
+
+  @media (max-width: 900px) {
+    .ways, .message { grid-template-columns: 1fr; }
+    .map :global(.dm) { aspect-ratio: auto; }
+  }
 </style>

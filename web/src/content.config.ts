@@ -189,7 +189,15 @@ const galleryPage = defineCollection({
 const textBlock = z.object({ title: z.string(), text: z.string().optional() });
 const connectPage = defineCollection({
   loader: onePage('connect'),
-  schema: ({ image }) => z.object({ seo, header: pageHeader(image), message: textBlock, newsletter: textBlock }),
+  schema: ({ image }) =>
+    z.object({
+      seo,
+      header: pageHeader(image),
+      message: textBlock,
+      newsletter: textBlock,
+      /** The last words on the page, over the large monogram, with the booking button. */
+      closing: z.object({ script: z.string().optional(), text: z.string() }).optional(),
+    }),
 });
 
 const careersPage = defineCollection({

@@ -10,7 +10,7 @@ import Button from '../components/core/Button.astro';
 import { url } from '../lib/paths';
 import { site } from '../lib/site';
 import { getPage } from '../lib/pages';
-import Flanked from '../components/Flanked.astro';
+import Emblem from '../components/Emblem.astro';
 
 const page = await getPage('experiencePage');
 
@@ -63,7 +63,7 @@ const shapes = ['arch', 'rounded'] as const;
   </Section>
 
   <Section bg="var(--surface-chocolate)" center>
-    <Flanked>
+    <Emblem side="start">
     <div class="closing">
       {page.closing.script && <span class="closing__script">{page.closing.script}</span>}
       <p class="closing__line">{page.closing.text}</p>
@@ -72,7 +72,7 @@ const shapes = ['arch', 'rounded'] as const;
         <Button variant="outline" tone="dark" size="lg" href={url('services/')}>See our Rituals</Button>
       </div>
     </div>
-    </Flanked>
+    </Emblem>
   </Section>
 </BaseLayout>
 
