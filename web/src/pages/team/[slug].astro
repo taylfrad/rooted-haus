@@ -30,7 +30,7 @@ const reviews = (await getCollection('reviews')).filter((r) => r.data.stylist ==
     <a class="back caps-link" href={url('team/')}>← Meet the Haus</a>
     <div class="intro">
       <div class="photos" transition:name={`portrait-${member.id}`}>
-        <PhotoFrame framed="light" shape="arch" ratio="4 / 5" focus={photoFocus} src={photo} alt={`${m.name} at The Rooted Haus`} label={m.name} sizes="(min-width: 900px) 40vw, 90vw" />
+        <PhotoFrame eager framed="light" shape="arch" ratio="4 / 5" focus={photoFocus} src={photo} alt={`${m.name} at The Rooted Haus`} label={m.name} sizes="(min-width: 900px) 40vw, 90vw" />
       </div>
       <div class="text">
         <span class="role">{m.role}</span>

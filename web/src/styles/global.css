@@ -61,6 +61,12 @@ main:focus{outline:none}
 @media (prefers-reduced-motion:no-preference){
   .js [data-reveal]:not(:has(img)),
   .js :is([data-reveal],[data-reveal] *):has(img) > :not(:has(img),img){opacity:0;translate:0 var(--rise-reveal)}
+  /* lib/motion.ts adds .is-revealing when a block comes into view, then swaps it for .is-revealed once it has
+     arrived. Only .is-revealing carries a transition, so afterwards the block's own hover transitions apply again.
+     The doubled class outranks the hidden-state rule above. Opacity and translate run on the compositor. */
+  html.js .is-revealing.is-revealing,html.js .is-revealed.is-revealed{opacity:1;translate:none}
+  html.js .is-revealing.is-revealing{transition:opacity var(--dur-reveal) var(--ease-glide) var(--reveal-delay,0ms),
+    translate var(--dur-reveal) var(--ease-glide) var(--reveal-delay,0ms)}
 }
 
 /* Page change. The header is its own still layer (transition:name in SiteHeader); everything else is the root layer,

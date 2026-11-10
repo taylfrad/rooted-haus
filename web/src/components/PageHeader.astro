@@ -13,7 +13,8 @@ interface Props {
   bg?: string;
   /** Put a landscape photo beside the heading, still whole, instead of across the screen. */
   beside?: boolean;
-  /** A landscape photo runs whole across the screen above the heading; a portrait one sits whole beside it. */
+  /** A landscape photo runs whole across the screen with the heading set over its lower left corner (on phones the
+      heading sits in a band below it instead); a portrait one sits whole beside the heading. */
   image?: ImageMetadata;
   alt?: string;
 }
@@ -23,7 +24,7 @@ const wide = landscape && !beside;
 const side = !!image && !wide;
 ---
 
-<header class:list={['ph', { 'on-olive': bg.includes('olive'), 'ph--side': side, 'ph--beside': landscape && beside }]} style={`background:${bg}`}>
+<header class:list={['ph', { 'on-olive': bg.includes('olive'), 'ph--side': side, 'ph--beside': landscape && beside, 'ph--over': wide }]} style={`background:${bg}`}>
   {wide && <WidePhoto src={image} {alt} eager />}
   <div class="ph__band">
   <!-- data-reveal: on arrival the heading rises in like the scroll reveals; the photo stays still (photos never animate). -->
@@ -34,7 +35,7 @@ const side = !!image && !wide;
     </div>
     {side && (
       <div class="ph__photo">
-        <PhotoFrame src={image} {alt} framed="dark" shape="rounded" ratio={`${image.width} / ${image.height}`} sizes={landscape ? '(min-width: 900px) 55vw, 90vw' : '(min-width: 900px) 480px, 90vw'} />
+        <PhotoFrame eager src={image} {alt} framed="dark" shape="rounded" ratio={`${image.width} / ${image.height}`} sizes={landscape ? '(min-width: 900px) 55vw, 90vw' : '(min-width: 900px) 480px, 90vw'} />
       </div>
     )}
   </div>
@@ -52,5 +53,24 @@ const side = !!image && !wide;
   @media (max-width: 900px) {
     .ph--side .ph__inner, .ph--beside .ph__inner { grid-template-columns: 1fr; }
     .ph__photo { max-width: none; justify-self: stretch; }
+  }
+
+  /* Wide screens, landscape photo: the photo stays whole and the heading is set over its lower left corner on a soft
+     espresso shade, as on the home page. The words sit at the bottom of the photo or the bottom of the first screen,
+     whichever comes first, so they are always in view on arrival. Narrower screens keep the band below the photo,
+     where the photo is too short to hold the words. */
+  @media (min-width: 1000px) {
+    .ph--over { --header-h: 117px; position: relative; }
+    .ph--over .ph__band { position: absolute; inset: 0 0 auto 0; height: min(100%, 100svh - var(--header-h)); box-sizing: border-box;
+      z-index: 1; display: flex; align-items: flex-end; padding: 0 var(--gutter) clamp(36px, 6vh, 64px); }
+    /* The shade runs the full height of the photo down its left side, so it has no edge where the first screen ends. */
+    .ph--over::after { content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(90deg, rgba(59, 40, 25, .86) 0%, rgba(59, 40, 25, .68) 28%, rgba(59, 40, 25, .28) 50%, rgba(59, 40, 25, 0) 68%); }
+    .ph--over .ph__inner { width: 100%; }
+    .ph--over .ph__text { max-width: 620px; text-shadow: 0 1px 18px rgba(59, 40, 25, .45); }
+    /* The heading and monogram are centered in the band; over the photo they line up on the left. */
+    .ph--over .ph__text :global(.sh) { align-items: flex-start; text-align: left; }
+    .ph--over .ph__text :global(.sh__rule:first-child) { display: none; }
+    .ph--over .ph__text :global(.wm) { height: 104px; margin-left: 0; margin-bottom: var(--space-4); opacity: .85; }
   }
 </style>

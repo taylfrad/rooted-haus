@@ -263,7 +263,19 @@ const recent = (await getCollection('gallery'))
       if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < Math.abs(e.clientY - startY)) return;
       go(current + (dx < 0 ? 1 : -1));
     });
-    start();
+
+    // Scrolled past, or in a background tab, nobody sees the cross-fade: stop the timer until the hero is back.
+    let onScreen = true;
+    const resume = () => {
+      if (!hero.isConnected) return document.removeEventListener('visibilitychange', resume); // left the home page
+      window.clearInterval(timer);
+      if (onScreen && !document.hidden) start();
+    };
+    new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      resume();
+    }).observe(hero);
+    document.addEventListener('visibilitychange', resume);
   }
 </script>
 
