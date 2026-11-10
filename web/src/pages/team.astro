@@ -3,11 +3,11 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
 import PageHeader from '../components/PageHeader.astro';
+import Seal from '../components/Seal.astro';
 import PhotoFrame from '../components/content/PhotoFrame.astro';
 import BookButton from '../components/core/BookButton.astro';
 import { url } from '../lib/paths';
 import { getPage } from '../lib/pages';
-import Sprig from '../components/Sprig.astro';
 
 const page = await getPage('teamPage');
 const bandPhoto = page.band?.image;
@@ -17,7 +17,7 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
 
 <BaseLayout title={page.seo.title} description={page.seo.description}>
   <PageHeader {...page.header} bg="var(--surface-olive)" beside />
-  <Section>
+  <Section mark="end">
     <div class:list={['story', { 'story--photo': bandPhoto }]}>
       {bandPhoto && (
         <PhotoFrame framed="light" src={bandPhoto} alt={page.band?.alt} shape="rounded" ratio={`${bandPhoto.width} / ${bandPhoto.height}`} sizes="(min-width: 900px) 55vw, 90vw" />
@@ -25,7 +25,6 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
       <div class="mission">
         {page.mission.label && <span class="mission__label">{page.mission.label}</span>}
         <p class="mission__text">{page.mission.text}</p>
-        {bandPhoto && <Sprig side="end" leaves />}
       </div>
     </div>
   </Section>
@@ -33,18 +32,19 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
     <ul class="team">
       {team.map((m) => (
         <li>
-          <a class="member" href={url(`team/${m.id}/`)}>
-            <div class="member__photo">
+          <a class="member lift-host" href={url(`team/${m.id}/`)}>
+            <div class="member__photo lift" transition:name={`portrait-${m.id}`}>
               <PhotoFrame framed="dark" shape="arch" ratio="4 / 5" focus={m.data.photoFocus} src={m.data.photo} alt={`${m.data.name}, ${m.data.role}`} label={m.data.name} sizes="(min-width: 900px) 320px, 45vw" />
             </div>
             <span class="member__name">{m.data.name}</span>
             <span class="member__role">{m.data.role}</span>
             {m.data.experience && <span class="member__exp">{m.data.experience}</span>}
-            <span class="member__more">Read {m.data.name}’s story</span>
+            <span class="member__more caps-link">Read {m.data.name}’s story</span>
           </a>
         </li>
       ))}
     </ul>
+    <Seal tone="dark" />
     <div class="cta"><BookButton variant="ivory">Book with us</BookButton></div>
   </Section>
 </BaseLayout>
@@ -56,17 +56,13 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
   .story--photo .mission { margin: 0; text-align: left; align-items: flex-start; }
   .mission__label { font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
   .mission__text { margin: 0; font-family: var(--font-display); font-size: clamp(22px, 2.4vw, 30px); line-height: 1.4; color: var(--text-strong); text-wrap: balance; }
-  .team { list-style: none; margin: 0 0 56px; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 56px 40px; }
+  .team { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 56px 40px; }
   .member { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; color: var(--rh-ivory); text-decoration: none; }
-  .member__photo { width: min(320px, 100%); margin-bottom: 22px; border-radius: var(--radius-arch);
-    transition: transform var(--dur-base) var(--ease-soft), box-shadow var(--dur-base) var(--ease-soft); }
-  .member:hover .member__photo { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+  .member__photo { width: min(320px, 100%); margin-bottom: 22px; border-radius: var(--radius-arch); }
   .member__name { font-family: var(--font-display); font-size: 30px; line-height: 1.1; }
   .member__role { font-size: 12px; font-weight: 500; letter-spacing: .24em; text-transform: uppercase; }
   .member__exp { font-size: 15px; }
-  .member__more { margin-top: 6px; font-size: 12px; font-weight: 500; letter-spacing: var(--ls-button); text-transform: uppercase;
-    text-decoration: underline; text-underline-offset: 6px; text-decoration-color: transparent; transition: text-decoration-color var(--dur-base); }
-  .member:hover .member__more { text-decoration-color: currentColor; }
+  .member__more { margin-top: 6px; }
   .member:hover { color: var(--rh-ivory); }
   .cta { display: flex; justify-content: center; }
   @media (max-width: 900px) {

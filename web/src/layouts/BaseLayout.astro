@@ -7,6 +7,11 @@ import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import DirectionsDialog from '../components/DirectionsDialog.astro';
 import BackToTop from '../components/BackToTop.astro';
+// The three font files every page uses (Latin letters). Preloading them means text is drawn in its real font from
+// the first paint, instead of appearing in a fallback and shifting when the font arrives.
+import fontBody from '@fontsource-variable/montserrat/files/montserrat-latin-wght-normal.woff2?url';
+import fontDisplay from '@fontsource/gilda-display/files/gilda-display-latin-400-normal.woff2?url';
+import fontScript from '@fontsource/la-belle-aurore/files/la-belle-aurore-latin-400-normal.woff2?url';
 
 interface Props {
   title?: string;
@@ -57,6 +62,7 @@ const jsonLd = {
     <meta name="description" content={description} />
     <meta name="theme-color" content="#F2E4D1" />
     <link rel="canonical" href={canonical} />
+    {[fontBody, fontDisplay, fontScript].map((href) => <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />)}
     {(isStaging || noindex) && <meta name="robots" content="noindex, nofollow" />}
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
@@ -101,8 +107,11 @@ const jsonLd = {
     <!-- TODO: add the Boulevard self-booking overlay <script> here once the snippet is copied from
          the owner's Boulevard dashboard (Settings > Online booking > Self-booking overlay). -->
     <script>
-      import { initReveal } from '../lib/motion';
-      document.addEventListener('astro:page-load', initReveal);
+      import { initPhotoFade, initReveal } from '../lib/motion';
+      document.addEventListener('astro:page-load', () => {
+        initPhotoFade();
+        initReveal();
+      });
 
       // Every new page starts at the top. A clicked footer link keeps focus (the footer is kept between pages), and
       // Astro refocuses it after the swap, which scrolls the new page down to the footer. Drop focus first, as a

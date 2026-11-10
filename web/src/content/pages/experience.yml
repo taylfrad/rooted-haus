@@ -1,10 +1,16 @@
 seo:
   title: "The Experience · The Rooted Haus"
-  description: "What to expect at The Rooted Haus: a cozy space, curated low-tox refreshments, and an appointment that is entirely yours."
+  description: "What to expect at The Rooted Haus: a warm welcome, low-tox color and scalp care, and the little extras that make an appointment entirely yours."
 header:
   eyebrow: "New guests welcome!"
   script: "the experience"
   title: "Make yourself at home"
+  image: "../../assets/photos/scalp/scalp-massage.jpg"
+  alt: "A guest rests under a stone eye mask while her scalp is massaged in soft steam."
+opening:
+  eyebrow: "What makes us different?"
+  title: "A more intentional approach to beauty"
+  text: "We believe what we put on our bodies, surround ourselves with, and invite into our everyday lives matters. At the Rooted Haus we have thoughtfully curated every detail of your experience to reflect our commitment to holistic wellness, intentional living, and genuine hospitality."
 closing:
   script: "unhurried · intentional · yours"
-  text: "Above all, we want your experience to feel unhurried, intentional, and entirely your own."
+  text: "Beauty with intention. Wellness at heart. Above all, we want your experience to feel unhurried, intentional, and entirely your own."

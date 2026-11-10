@@ -1,111 +1,131 @@
 ---
 import { Image } from 'astro:assets';
+import { Navigation } from '@lucide/astro';
 import Button from './core/Button.astro';
+import BookButton from './core/BookButton.astro';
 import monogram from '../assets/monogram-sand.png';
-import DirectionsMap from './DirectionsMap.astro';
-import { nav, site } from '../lib/site';
+import { maps, nav, site } from '../lib/site';
 import { url } from '../lib/paths';
+
+const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
 ---
 
-<!-- transition:persist keeps the footer (and its map) in place between pages, so the map is not reloaded on every click. -->
+<!-- transition:persist keeps the footer in place between pages, so it does not flicker on every click. -->
 <footer class="footer" transition:persist>
-  <div class="footer__grid">
-    <div class="footer__brand">
+  <div class="footer__inner">
+    <!-- The invitation: the mark, the handwritten line, and the way to book. -->
+    <div class="footer__lead">
       <a class="footer__mark" href={url()} aria-label={`${site.name} home`}>
-        <Image src={monogram} alt="" width={112} densities={[1, 2]} />
+        <Image src={monogram} alt="" width={120} densities={[1, 2]} />
       </a>
-      <span class="footer__script">{site.footerScript}</span>
+      <div class="footer__invite">
+        <span class="footer__script">{site.footerScript}</span>
+        <span class="footer__tag">{site.name} · {site.tagline}</span>
+      </div>
+      <BookButton variant="ivory">{site.bookLabel}</BookButton>
     </div>
 
-    <div class="footer__col footer__visit">
-      <span class="footer__h">Visit</span>
-      <address class="footer__address">
-        <span>{site.address.line1}</span>
-        <span>{site.address.city}</span>
-      </address>
-      <DirectionsMap compact />
-    </div>
-
-    <div class="footer__col footer__hours">
-      <span class="footer__h">Hours</span>
-      <dl class="hours">
-        {site.hours.map((h) => (
-          <div class:list={['hours__row', { 'hours__row--single': !h.time }]}>
-            <dt>{h.days}</dt>
-            {h.time && <dd>{h.time}</dd>}
-          </div>
-        ))}
-      </dl>
-    </div>
-
-    <div class="footer__col footer__explore">
-      <span class="footer__h">Explore</span>
-      {nav.map((item) => <a href={url(item.href)}>{item.label}</a>)}
-      <a href={url('careers/')}>Plant Your Roots</a>
-      {site.giftCardsUrl && <a href={site.giftCardsUrl} target="_blank" rel="noopener">Gift cards</a>}
-    </div>
-
-    <div class="footer__col">
-      <span class="footer__h">Stay rooted</span>
-      {/* The signup line and button appear with the newsletter form on Connect (once a form address is set). */}
-      {site.formsReady && <span>{site.footerNewsletter}</span>}
-      {site.formsReady && <div><Button variant="outline" tone="dark" size="sm" href={url('contact/#newsletter')}>Join the list</Button></div>}
-      <div class="footer__social">
-        <a href={site.instagram} aria-label="Instagram" rel="noopener" target="_blank">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r=".6" fill="currentColor" /></svg>
-        </a>
-        <a href={site.facebook} aria-label="Facebook" rel="noopener" target="_blank">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8z" /></svg>
+    <div class="footer__grid">
+      <div class="footer__col">
+        <span class="footer__h">Visit</span>
+        <address class="footer__address">
+          <span>{site.address.line1}</span>
+          <span>{site.address.city}</span>
+        </address>
+        <a class="footer__phone" href={tel}>{site.phone}</a>
+        <!-- Opens the Apple Maps / Google Maps chooser (DirectionsDialog); without JavaScript it goes to Google Maps. -->
+        <a class="footer__directions caps-link" href={maps.google} target="_blank" rel="noopener" data-directions-open aria-haspopup="dialog">
+          <Navigation size={14} stroke-width={1.5} aria-hidden="true" /> Get directions
         </a>
       </div>
+
+      <div class="footer__col">
+        <span class="footer__h">Hours</span>
+        <dl class="hours">
+          {site.hours.map((h) => (
+            <div class="hours__row">
+              <dt>{h.days}</dt>
+              {h.time && <dd>{h.time}</dd>}
+            </div>
+          ))}
+        </dl>
+      </div>
+
+      <div class="footer__col footer__explore">
+        <span class="footer__h">Explore</span>
+        {nav.map((item) => <a href={url(item.href)}>{item.label}</a>)}
+        <a href={url('careers/')}>Plant Your Roots</a>
+        {site.giftCardsUrl && <a href={site.giftCardsUrl} target="_blank" rel="noopener">Gift cards</a>}
+      </div>
+
+      <div class="footer__col">
+        <span class="footer__h">Stay rooted</span>
+        {/* The signup line and button appear with the newsletter form on Connect (once a form address is set). */}
+        {site.formsReady && <span>{site.footerNewsletter}</span>}
+        {site.formsReady && <div><Button variant="outline" tone="dark" size="sm" href={url('contact/#newsletter')}>Join the list</Button></div>}
+        <div class="footer__social">
+          <a href={site.instagram} aria-label="Instagram" rel="noopener" target="_blank">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r=".6" fill="currentColor" /></svg>
+          </a>
+          <a href={site.facebook} aria-label="Facebook" rel="noopener" target="_blank">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8z" /></svg>
+          </a>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="footer__legal">
-    <span>{site.name} · {site.tagline}</span>
-    <span>{site.websiteName}</span>
+
+    <div class="footer__legal">
+      <span>© {new Date().getFullYear()} {site.name}</span>
+      <span>{site.websiteName}</span>
+    </div>
   </div>
 </footer>
 
 <style>
   .footer { background: var(--surface-moody); color: var(--rh-ivory); }
-  .footer__grid { max-width: var(--container-max); margin: 0 auto; padding: 80px var(--gutter) 48px; display: grid;
-    grid-template-columns: 0.95fr 1.45fr 1fr 0.8fr 1.1fr; gap: 40px; align-items: start; }
-  .footer__brand { display: flex; flex-direction: column; gap: 18px; }
-  .footer__mark { display: block; width: 112px; border-radius: 50%; }
+  .footer__inner { max-width: var(--container-max); margin: 0 auto; padding: 72px var(--gutter) 0; }
+
+  .footer__lead { display: flex; flex-wrap: wrap; align-items: center; gap: 24px 28px; padding-bottom: 48px; border-bottom: 1px solid var(--border-on-dark); }
+  .footer__mark { display: block; flex: none; width: 120px; border-radius: 50%; }
   .footer__mark :global(img) { width: 100%; height: auto; }
-  .footer__script { font-family: var(--font-script); font-size: 34px; line-height: 1.1; white-space: nowrap; color: var(--rh-caramel-soft); }
+  .footer__invite { display: flex; flex-direction: column; gap: 10px; margin-right: auto; }
+  .footer__script { font-family: var(--font-script); font-size: clamp(40px, 5vw, 60px); line-height: 1; color: var(--rh-caramel-soft); }
+  .footer__tag { font-size: 11px; font-weight: 500; letter-spacing: .28em; text-transform: uppercase; color: var(--rh-sand); }
+
+  .footer__grid { display: grid; grid-template-columns: 1.2fr 1.4fr .8fr .9fr; gap: 48px; align-items: start; padding: 48px 0 56px; }
   .footer__col { display: flex; flex-direction: column; gap: 10px; font-size: 14px; color: var(--text-on-dark-muted); }
   .footer__col a { color: var(--text-on-dark-muted); text-decoration: none; }
   .footer__col a:hover { color: var(--rh-ivory); text-decoration: underline; }
   .footer__h { font-size: 11px; font-weight: 500; letter-spacing: .28em; text-transform: uppercase; color: var(--rh-sand); margin-bottom: 6px; }
 
-  .footer__address { display: flex; flex-direction: column; gap: 2px; font-style: normal; font-size: 15px; color: var(--rh-ivory); margin-bottom: 8px; }
+  .footer__address { display: flex; flex-direction: column; gap: 2px; font-style: normal; font-size: 15px; color: var(--rh-ivory); }
+  .footer__col .footer__phone { font-family: var(--font-display); font-size: var(--fs-title); color: var(--rh-ivory); font-variant-numeric: tabular-nums; }
+  .footer__col .footer__directions { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; margin-top: 6px; color: var(--rh-ivory); text-decoration: underline; text-decoration-color: transparent; }
+  .footer__col .footer__directions:hover { text-decoration-color: currentColor; }
 
-  /* Hours is its own narrow column, so each row stacks the day over the time. */
+  /* Day on the left, time on the right, a fine line under each. */
   .hours { margin: 0; display: flex; flex-direction: column; }
-  .hours__row { display: flex; flex-direction: column; gap: 2px; padding: 11px 0; border-bottom: 1px solid var(--border-on-dark); }
+  .hours__row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--border-on-dark); }
   .hours__row:first-child { border-top: 1px solid var(--border-on-dark); }
-  .hours dt { font-size: 13px; color: var(--text-on-dark-muted); }
-  .hours dd { margin: 0; font-size: 15px; color: var(--rh-ivory); font-variant-numeric: tabular-nums; }
-  .hours__row--single dt { font-size: 15px; color: var(--rh-ivory); }
+  .hours dt { color: var(--text-on-dark-muted); }
+  .hours dd { margin: 0; color: var(--rh-ivory); font-variant-numeric: tabular-nums; white-space: nowrap; }
 
-  .footer__social { display: flex; gap: 10px; margin-top: 8px; }
+  .footer__social { display: flex; gap: 10px; margin-top: 4px; }
   .footer__social a { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%;
-    border: 1px solid var(--border-on-dark); color: var(--rh-ivory); }
+    border: 1px solid var(--border-on-dark); color: var(--rh-ivory); transition: background var(--dur-base) var(--ease-soft), color var(--dur-base) var(--ease-soft); }
   .footer__social a:hover { background: var(--rh-ivory); color: var(--rh-espresso); text-decoration: none; }
-  /* Sized to the content width (not padded) so the rule above it ends where the columns do. */
-  .footer__legal { width: min(var(--container-max), 100% - 2 * var(--gutter)); margin: 0 auto; padding: 20px 0 32px; display: flex;
-    justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--border-on-dark);
-    font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--text-on-dark-muted); }
 
-  /* Tablet: brand across the top, then two columns (Visit | Hours, Explore | Stay rooted). */
-  @media (max-width: 1179px) {
+  .footer__legal { padding: 20px 0 32px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    border-top: 1px solid var(--border-on-dark); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--text-on-dark-muted); }
+
+  /* Tablet: two columns (Visit | Hours, Explore | Stay rooted). */
+  @media (max-width: 1000px) {
     .footer__grid { grid-template-columns: 1fr 1fr; gap: 48px 40px; }
-    .footer__brand { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 28px; }
   }
   @media (max-width: 560px) {
-    .footer__grid { grid-template-columns: 1fr; padding-top: 56px; }
-    .footer__brand { flex-direction: column; align-items: flex-start; gap: 18px; }
+    .footer__inner { padding-top: 56px; }
+    .footer__lead { flex-direction: column; align-items: flex-start; }
+    .footer__grid { grid-template-columns: 1fr; gap: 40px; }
     .footer__explore { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
     .footer__explore .footer__h { grid-column: 1 / -1; }
   }

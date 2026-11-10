@@ -17,6 +17,8 @@ interface Props {
   focus?: string;
   /** A fine line just outside the photo, following its shape, for the section it sits on. */
   framed?: 'light' | 'dark';
+  /** The main photo at the top of a page: load it right away instead of waiting for the visitor to scroll. */
+  eager?: boolean;
 }
 const {
   src,
@@ -28,12 +30,13 @@ const {
   sizes = '(min-width: 900px) 40vw, 90vw',
   focus,
   framed,
+  eager = false,
 } = Astro.props;
 const position = cropPosition(focus);
 ---
 
 <div class:list={['pf', `pf--${shape}`, { 'pf--fill': fill }, framed && `pf--framed pf--framed-${framed}`]} style={`--ratio:${shape === 'circle' ? '1 / 1' : ratio}`}>
-  {src ? <Image src={src} alt={alt} widths={[400, 800, 1200, 1600]} sizes={sizes} class="pf__img" style={position && `object-position:${position}`} /> : <span class="pf__label">{label}</span>}
+  {src ? <Image src={src} alt={alt} widths={[400, 800, 1200, 1600]} sizes={sizes} class="pf__img" loading={eager ? 'eager' : 'lazy'} fetchpriority={eager ? 'high' : undefined} style={position && `object-position:${position}`} /> : <span class="pf__label">{label}</span>}
 </div>
 
 <style>

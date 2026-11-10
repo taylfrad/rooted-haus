@@ -23,6 +23,31 @@ img{max-width:100%;display:block}
 /* Olive is the one surface where only full-strength ivory reaches 4.5:1, so muted text goes full ivory. */
 .on-olive{--text-on-dark-muted:var(--rh-ivory)}
 
+/* Shared pieces. Astro keeps each component's styles to itself, so anything used on more than one page lives here. */
+
+/* Sub-section headings (a menu category, "Perks", "Questions, answered"). Pages set only the space around them. */
+.title-m{margin:0;font-family:var(--font-display);font-weight:400;font-size:clamp(28px,3.4vw,var(--fs-display-m));
+  line-height:var(--lh-snug);color:var(--text-strong);text-wrap:balance}
+.title-m--dark{color:var(--rh-ivory)}
+
+/* Hover lift for anything clickable that holds a photo or a card. Put .lift on the thing that rises; if the link
+   is a parent of it, put .lift-host on the link. Give the lifted element its own border-radius so the shadow fits. */
+.lift{transition:transform var(--dur-base) var(--ease-soft),box-shadow var(--dur-base) var(--ease-soft)}
+:is(a,button).lift:hover,.lift-host:hover .lift{transform:translateY(calc(-1 * var(--lift)));box-shadow:var(--shadow-lift)}
+
+/* Outlined pill: the category links on The Rituals, the filters on the Gallery. */
+.pill{display:inline-flex;align-items:center;font:inherit;font-size:12px;font-weight:500;letter-spacing:var(--ls-button);
+  text-transform:uppercase;text-decoration:none;cursor:pointer;padding:10px 22px;border-radius:var(--radius-pill);
+  border:1px solid var(--rh-chocolate);background:transparent;color:var(--rh-chocolate);
+  transition:background var(--dur-base) var(--ease-soft),color var(--dur-base) var(--ease-soft)}
+.pill:hover,.pill[aria-pressed='true']{background:var(--rh-chocolate);color:var(--rh-ivory)}
+
+/* Small capitals text link whose underline fades in on hover ("Read Shelby's story", the back link, text buttons). */
+.caps-link{font-size:12px;font-weight:500;letter-spacing:var(--ls-button);text-transform:uppercase;color:inherit;
+  text-decoration:underline;text-underline-offset:6px;text-decoration-color:transparent;
+  transition:text-decoration-color var(--dur-base) var(--ease-soft)}
+.caps-link:hover,.lift-host:hover .caps-link{color:inherit;text-decoration-color:currentColor}
+
 /* Skip link: hidden until focused by keyboard */
 .skip-link{position:absolute;left:var(--gutter);top:-80px;z-index:100;padding:12px 24px;border-radius:var(--radius-pill);
   background:var(--rh-chocolate);color:var(--rh-ivory);font-size:12px;font-weight:500;letter-spacing:var(--ls-button);
@@ -36,18 +61,32 @@ main:focus{outline:none}
 @media (prefers-reduced-motion:no-preference){
   .js [data-reveal]:not(:has(img)),
   .js :is([data-reveal],[data-reveal] *):has(img) > :not(:has(img),img){opacity:0;translate:0 var(--rise-reveal)}
+  /* lib/motion.ts adds .is-revealing when a block comes into view, then swaps it for .is-revealed once it has
+     arrived. Only .is-revealing carries a transition, so afterwards the block's own hover transitions apply again.
+     The doubled class outranks the hidden-state rule above. Opacity and translate run on the compositor. */
+  html.js .is-revealing.is-revealing,html.js .is-revealed.is-revealed{opacity:1;translate:none}
+  html.js .is-revealing.is-revealing{transition:opacity var(--dur-reveal) var(--ease-glide) var(--reveal-delay,0ms),
+    translate var(--dur-reveal) var(--ease-glide) var(--reveal-delay,0ms)}
 }
 
 /* Page change. The header is its own still layer (transition:name in SiteHeader); everything else is the root layer,
-   which fades out, then fades back in as the new page, already at the top. Nothing slides: a named <main> would be
-   animated from its old box to its new one, so a scrolled page flew thousands of pixels. The fades run one after the
-   other so the two pages never overlap, with a moment of page color (never white) between them. The arriving page's
-   heading rises in with the scroll reveals (PageHeader). Astro switches all of this off for reduced motion. */
+   which fades out, then fades back in as the new page, already at the top, rising a few pixels as it settles (the same
+   gesture as the scroll reveals). <main> is deliberately not a named layer: it would be animated from its old box to
+   its new one, so a scrolled page flew thousands of pixels. The fades run one after the other so the two pages never
+   overlap, with a moment of page color (never white) between them. Astro switches all of this off for reduced motion. */
 ::view-transition{background:var(--surface-page)}
 ::view-transition-old(root){animation:var(--dur-page-out) var(--ease-soft) both rh-page-out}
 ::view-transition-new(root){animation:var(--dur-page) var(--ease-glide) var(--dur-page-out) both rh-page-in}
 @keyframes rh-page-out{to{opacity:0}}
-@keyframes rh-page-in{from{opacity:0}}
+@keyframes rh-page-in{from{opacity:0;translate:0 var(--rise-page)}}
+/* Small named layers (a stylist's portrait going from the team grid to their own page) glide between their two
+   places for as long as the whole page change takes. */
+::view-transition-group(*){animation-duration:calc(var(--dur-page-out) + var(--dur-page));animation-timing-function:var(--ease-glide)}
+::view-transition-group(root),::view-transition-group(site-header){animation-duration:0s}
+
+/* Photos fade in once as they finish loading, over the sand color of their frame (initPhotoFade in lib/motion.ts). */
+img:is(.pf__img,.wide){transition:opacity var(--dur-reveal) var(--ease-soft)}
+.js img.is-loading{opacity:0}
 
 /* In-page links (the category buttons on The Rituals, the skip link) stop clear of the sticky header. */
 [id]{scroll-margin-top:96px}

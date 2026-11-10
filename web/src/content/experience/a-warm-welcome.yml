@@ -1,5 +1,14 @@
+eyebrow: "What to expect"
 title: "A warm welcome"
 order: 1
 image: "../../assets/photos/salon/img-0161.jpg"
 alt: "A stylist greets a guest with a hug in the lounge, surrounded by plants and candles."
-body: "From the moment you step into the Rooted Haus, we want you to feel right at home. Settle into our cozy space, flip through a magazine, use the powder room, and help yourself to a thoughtfully curated selection of refreshments."
+image2: "../../assets/photos/refreshments/img-0145.jpg"
+alt2: "A smiling guest is handed a lavender drink in a gold-rimmed glass."
+items:
+  - title: "Welcome home"
+    text: "From the moment you step into the Rooted Haus, we want you to make yourself at home. Settle into our cozy space, flip through a magazine, use the powder room, and help yourself to our thoughtfully curated selection of refreshments. Our space was designed to help you slow down, step away from the noise of everyday life and into a calming environment. We want you to completely relax, feel at home, and enjoy a little time to yourself."
+  - title: "Thoughtful sips and nourishment"
+    text: "Every little thing matters. Enjoy a carefully curated selection of wholesome, seed oil free, and organic snacks and refreshing hand-crafted beverages, thoughtfully chosen with your wellness in mind. Don’t forget to try our signature lavender spritz (served with bubbles or zero proof)!"
+  - title: "Your time here is yours"
+    text: "Whether you’re craving a little peace and quiet, a moment to exhale, or looking forward to catching up, we’re happy to follow your lead. Simply let your artist know if you’d prefer a silent appointment or a good conversation."

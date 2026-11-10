@@ -3,42 +3,59 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
 import PageHeader from '../components/PageHeader.astro';
+import SectionHeading from '../components/content/SectionHeading.astro';
 import PhotoFrame from '../components/content/PhotoFrame.astro';
 import BookButton from '../components/core/BookButton.astro';
 import Button from '../components/core/Button.astro';
 import { url } from '../lib/paths';
 import { site } from '../lib/site';
 import { getPage } from '../lib/pages';
-import Sprig from '../components/Sprig.astro';
-import Flanked from '../components/Flanked.astro';
+import Emblem from '../components/Emblem.astro';
 
 const page = await getPage('experiencePage');
 
-const items = (await getCollection('experience')).sort((a, b) => a.data.order - b.data.order);
-// Photo shapes alternate down the page so the rows don't feel repetitive.
-const shapes = ['arch', 'rounded', 'arch', 'rounded'] as const;
+// Each group ("A warm welcome", "The rooted difference"...) is one file in src/content/experience: its photos and its points.
+const groups = (await getCollection('experience')).sort((a, b) => a.data.order - b.data.order);
+// Photo shapes alternate down the page so the groups don't feel repetitive.
+const shapes = ['arch', 'rounded'] as const;
 ---
 
 <BaseLayout title={page.seo.title} description={page.seo.description}>
   <PageHeader {...page.header} />
 
-  <Section bg="var(--surface-terracotta)">
+  <Section bg="var(--surface-terracotta)" mark="end">
     <div class="rows">
-      {items.map((it, i) => (
-        <article class:list={['row', { 'row--flip': i % 2 === 1, 'row--large': it.data.wide || it.data.image2 }]} data-reveal>
-          <div class:list={['row__photo', { 'row__photo--two': it.data.image2 }]}>
-            {it.data.wide && it.data.image ? (
-              <PhotoFrame framed="dark" src={it.data.image} alt={it.data.alt ?? ''} shape="rounded" ratio={`${it.data.image.width} / ${it.data.image.height}`} sizes="(min-width: 900px) 55vw, 90vw" />
+      {page.opening && (
+        <div class="opening">
+          <SectionHeading tone="dark" eyebrow={page.opening.eyebrow} title={page.opening.title} intro={page.opening.text} />
+        </div>
+      )}
+      {groups.map(({ data: g }, i) => (
+        <article class:list={['row', { 'row--flip': i % 2 === 1, 'row--large': g.wide || g.image2 }]} data-reveal>
+          <!-- The photos stay beside the list while it scrolls past, as the photo column does on The Rituals. -->
+          <div class:list={['row__photo', { 'row__photo--two': g.image2 }]}>
+            {g.wide && g.image ? (
+              <PhotoFrame framed="dark" src={g.image} alt={g.alt ?? ''} shape="rounded" ratio={`${g.image.width} / ${g.image.height}`} sizes="(min-width: 900px) 50vw, 90vw" />
             ) : (
-              <PhotoFrame framed="dark" src={it.data.image} alt={it.data.alt ?? ''} label={it.data.title} shape={shapes[i % shapes.length]} ratio="4 / 5" sizes={it.data.image2 ? '(min-width: 900px) 28vw, 45vw' : '(min-width: 900px) 40vw, 90vw'} />
+              <PhotoFrame framed="dark" src={g.image} alt={g.alt ?? ''} label={g.title} shape={shapes[i % shapes.length]} ratio="4 / 5" sizes={g.image2 ? '(min-width: 900px) 25vw, 45vw' : '(min-width: 900px) 40vw, 90vw'} />
             )}
-            {it.data.image2 && <PhotoFrame framed="dark" src={it.data.image2} alt={it.data.alt2 ?? ''} shape="arch" ratio="4 / 5" sizes="(min-width: 900px) 28vw, 45vw" />}
+            {g.image2 && <PhotoFrame framed="dark" src={g.image2} alt={g.alt2 ?? ''} shape="arch" ratio="4 / 5" sizes="(min-width: 900px) 25vw, 45vw" />}
           </div>
           <div class="row__text">
             <span class="row__n">{String(i + 1).padStart(2, '0')}</span>
-            <h2 class="row__title">{it.data.title}</h2>
-            <p class="row__body">{it.data.body}</p>
-            <Sprig tone="dark" side={i % 2 === 1 ? 'start' : 'end'} leaves={i % 2 === 0} />
+            {g.eyebrow && <span class="row__eyebrow">{g.eyebrow}</span>}
+            <h2 class="row__title">{g.title}</h2>
+            {g.body && <p class="row__body">{g.body}</p>}
+            {g.items.length > 0 && (
+              <ul class="points">
+                {g.items.map((p) => (
+                  <li class="point">
+                    <h3 class="point__title">{p.title}</h3>
+                    <p class="point__text">{p.text}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </article>
       ))}
@@ -46,7 +63,7 @@ const shapes = ['arch', 'rounded', 'arch', 'rounded'] as const;
   </Section>
 
   <Section bg="var(--surface-chocolate)" center>
-    <Flanked>
+    <Emblem side="start">
     <div class="closing">
       {page.closing.script && <span class="closing__script">{page.closing.script}</span>}
       <p class="closing__line">{page.closing.text}</p>
@@ -55,27 +72,36 @@ const shapes = ['arch', 'rounded', 'arch', 'rounded'] as const;
         <Button variant="outline" tone="dark" size="lg" href={url('services/')}>See our Rituals</Button>
       </div>
     </div>
-    </Flanked>
+    </Emblem>
   </Section>
 </BaseLayout>
 
 <style>
   /* Pulled up toward the heading: both sections are the same color, so their padding would add up to a big empty band. */
   .rows { display: flex; flex-direction: column; gap: clamp(72px, 9vw, 128px); margin-top: calc(var(--section-y) * -.5); }
-  .row { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
+  .opening { display: flex; justify-content: center; }
+  .opening :global(.sh__intro) { max-width: 720px; }
+  .row { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
   .row--flip .row__photo { order: 2; }
   /* Photos sit on the outer content edge (left, or right on flipped rows) so every row shares the page grid. */
-  .row__photo { max-width: 460px; width: 100%; justify-self: start; }
-  .row--large { grid-template-columns: 1.5fr 1fr; }
-  .row--large.row--flip { grid-template-columns: 1fr 1.5fr; }
+  .row__photo { max-width: 460px; width: 100%; justify-self: start; position: sticky; top: 118px; }
+  .row--large { grid-template-columns: 1.15fr 1fr; }
+  .row--large.row--flip { grid-template-columns: 1fr 1.15fr; }
   .row--large .row__photo { max-width: none; }
   .row__photo--two { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: end; }
   .row--flip .row__photo { justify-self: end; }
-  .row__text { display: flex; flex-direction: column; gap: 12px; max-width: 520px; }
+  .row__text { display: flex; flex-direction: column; gap: 12px; }
   .row__n { display: flex; align-items: center; gap: 16px; font-family: var(--font-display); font-size: 40px; line-height: 1; color: var(--rh-caramel-soft); }
   .row__n::after { content: ''; width: 56px; height: 1px; background: var(--rh-sand); }
+  .row__eyebrow { font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--rh-ivory); }
   .row__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 3.6vw, var(--fs-display-l)); line-height: var(--lh-tight); color: var(--rh-ivory); }
   .row__body { margin: 0; font-size: var(--fs-body-l); color: var(--rh-ivory); }
+  /* The points read like the price list on The Rituals: a fine line between each. */
+  .points { list-style: none; margin: 16px 0 0; padding: 0; }
+  .point { padding: 22px 0; border-top: 1px solid var(--border-on-dark); }
+  .point:last-child { border-bottom: 1px solid var(--border-on-dark); }
+  .point__title { margin: 0 0 8px; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-title); line-height: var(--lh-snug); color: var(--rh-ivory); }
+  .point__text { margin: 0; color: var(--rh-ivory); text-wrap: pretty; }
   .closing { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 20px; }
   .closing__script { font-family: var(--font-script); font-size: var(--fs-script-s); color: var(--rh-caramel-soft); }
   .closing__line { margin: 0; font-family: var(--font-display); font-size: clamp(24px, 2.8vw, 34px); line-height: 1.35; color: var(--rh-ivory); text-wrap: balance; }
@@ -84,7 +110,7 @@ const shapes = ['arch', 'rounded', 'arch', 'rounded'] as const;
     .row, .row--large, .row--large.row--flip { grid-template-columns: 1fr; }
     .closing__script { font-size: 40px; line-height: 1.15; text-wrap: balance; }
     .row--flip .row__photo { order: 0; }
-    .row__photo, .row--flip .row__photo { max-width: 380px; justify-self: center; }
+    .row__photo, .row--flip .row__photo { position: static; max-width: 380px; justify-self: center; }
     .row--large .row__photo, .row--large.row--flip .row__photo { max-width: none; justify-self: stretch; }
   }
 </style>

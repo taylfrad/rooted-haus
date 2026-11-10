@@ -56,8 +56,9 @@ const overlay = path === url();
 </script>
 
 <style>
-  .header { position: sticky; top: 0; z-index: 20; background: rgba(242, 228, 209, .92);
-    backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-hairline); }
+  /* Nearly solid, with no backdrop blur: a blurred sticky bar is redrawn on every frame of scrolling. */
+  .header { position: sticky; top: 0; z-index: 20; background: rgba(242, 228, 209, .97);
+    border-bottom: 1px solid var(--border-hairline); }
   .header__inner { max-width: var(--container-max); margin: 0 auto; padding: 14px var(--gutter); display: flex;
     align-items: center; justify-content: space-between; gap: 24px; }
   .header__logo { display: flex; flex-shrink: 0; } /* the logo never shrinks; the menu collapses first */
@@ -77,7 +78,7 @@ const overlay = path === url();
   /* --- Home: see-through over the hero until scrolled (or the menu is opened) --- */
   .logo--light { display: none; }
   .header--overlay { position: fixed; left: 0; right: 0; transition: background var(--dur-base) var(--ease-soft), border-color var(--dur-base) var(--ease-soft); }
-  .header--overlay:not(.is-solid):not(.is-open) { background: transparent; border-bottom-color: transparent; backdrop-filter: none; }
+  .header--overlay:not(.is-solid):not(.is-open) { background: transparent; border-bottom-color: transparent; }
   .header--overlay:not(.is-solid):not(.is-open) :global(.logo--dark) { display: none; }
   .header--overlay:not(.is-solid):not(.is-open) :global(.logo--light) { display: block; }
   .header--overlay:not(.is-solid):not(.is-open) .header__toggle { color: var(--rh-ivory); }

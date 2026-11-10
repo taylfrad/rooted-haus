@@ -97,8 +97,13 @@ const experience = defineCollection({
   loader: yml('experience'),
   schema: ({ image }) =>
     z.object({
+      /** Small line above the heading, e.g. "What to expect". */
+      eyebrow: z.string().optional(),
       title: z.string(),
-      body: z.string(),
+      /** An opening paragraph under the heading (optional). */
+      body: z.string().optional(),
+      /** The points in this group, each a short heading and a paragraph. */
+      items: z.array(z.object({ title: z.string(), text: z.string() })).default([]),
       image: image().optional(),
       alt: z.string().optional(),
       /** Show the whole photo at its own shape, for landscape photos. */
@@ -166,7 +171,14 @@ const teamPage = defineCollection({
 
 const experiencePage = defineCollection({
   loader: onePage('experience'),
-  schema: ({ image }) => z.object({ seo, header: pageHeader(image), closing: z.object({ script: z.string().optional(), text: z.string() }) }),
+  schema: ({ image }) =>
+    z.object({
+      seo,
+      header: pageHeader(image),
+      /** The words between the top of the page and the first group. */
+      opening: z.object({ eyebrow: z.string().optional(), title: z.string(), text: z.string().optional() }).optional(),
+      closing: z.object({ script: z.string().optional(), text: z.string() }),
+    }),
 });
 
 const galleryPage = defineCollection({
@@ -177,7 +189,15 @@ const galleryPage = defineCollection({
 const textBlock = z.object({ title: z.string(), text: z.string().optional() });
 const connectPage = defineCollection({
   loader: onePage('connect'),
-  schema: ({ image }) => z.object({ seo, header: pageHeader(image), message: textBlock, newsletter: textBlock }),
+  schema: ({ image }) =>
+    z.object({
+      seo,
+      header: pageHeader(image),
+      message: textBlock,
+      newsletter: textBlock,
+      /** The last words on the page, over the large monogram, with the booking button. */
+      closing: z.object({ script: z.string().optional(), text: z.string() }).optional(),
+    }),
 });
 
 const careersPage = defineCollection({

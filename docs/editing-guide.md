@@ -18,7 +18,7 @@ lists that appear on that page sit right after it.
 | **Love letters** | The reviews. Tick "Show on the Home page" to feature one, and "Feature this one large" on just one of them. Reviews about a stylist also appear on that stylist's page. |
 | **The Rituals page** and **Services & prices** | The top of the page and the photos beside the menu; then every service, price and time. |
 | **Meet the Haus page** and **Team members** | The top of the page and the mission; then each person's name, role, photos, specialties, quote and bio. A new team member gets their own page automatically. |
-| **The Experience page** and **The Experience rows** | The top of the page and the closing note; then each row of photo and text. |
+| **The Experience page** and **The Experience groups** | The top of the page, the opening words and the closing note; then each group (A warm welcome, The rooted difference, The little extras): its photos and its list of points. |
 | **Gallery page** and **Gallery photos** | The top of the page; then each photo, its caption, its group (the filter buttons) and its size in the grid. |
 | **Connect page** and **FAQ** | The top of the page and the headings for the message and newsletter forms (the forms appear once your web person has set up the form address in Studio details); then questions and answers (the FAQ section appears once there is at least one). |
 | **Plant Your Roots page** | Everything on the careers page. The hourly roles you list also become choices in the application form. |
