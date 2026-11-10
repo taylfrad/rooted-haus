@@ -101,8 +101,11 @@ const jsonLd = {
     <!-- TODO: add the Boulevard self-booking overlay <script> here once the snippet is copied from
          the owner's Boulevard dashboard (Settings > Online booking > Self-booking overlay). -->
     <script>
-      import { initReveal } from '../lib/motion';
-      document.addEventListener('astro:page-load', initReveal);
+      import { initPhotoFade, initReveal } from '../lib/motion';
+      document.addEventListener('astro:page-load', () => {
+        initPhotoFade();
+        initReveal();
+      });
 
       // Every new page starts at the top. A clicked footer link keeps focus (the footer is kept between pages), and
       // Astro refocuses it after the swap, which scrolls the new page down to the footer. Drop focus first, as a

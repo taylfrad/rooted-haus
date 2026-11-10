@@ -8,7 +8,6 @@ import Badge from '../../components/content/Badge.astro';
 import Button from '../../components/core/Button.astro';
 import BookButton from '../../components/core/BookButton.astro';
 import { url } from '../../lib/paths';
-import Sprig from '../../components/Sprig.astro';
 import Flanked from '../../components/Flanked.astro';
 
 // One page per team file: team/shelby.md -> /team/shelby/
@@ -27,10 +26,10 @@ const reviews = (await getCollection('reviews')).filter((r) => r.data.stylist ==
 ---
 
 <BaseLayout title={`${m.name}, ${m.role} · The Rooted Haus`} description={`Meet ${m.name}, ${m.role.toLowerCase()} at The Rooted Haus in Mandeville, Louisiana.`}>
-  <Section>
-    <a class="back" href={url('team/')}>← Meet the Haus</a>
+  <Section mark="end">
+    <a class="back caps-link" href={url('team/')}>← Meet the Haus</a>
     <div class="intro">
-      <div class="photos">
+      <div class="photos" transition:name={`portrait-${member.id}`}>
         <PhotoFrame framed="light" shape="arch" ratio="4 / 5" focus={photoFocus} src={photo} alt={`${m.name} at The Rooted Haus`} label={m.name} sizes="(min-width: 900px) 40vw, 90vw" />
       </div>
       <div class="text">
@@ -40,7 +39,6 @@ const reviews = (await getCollection('reviews')).filter((r) => r.data.stylist ==
         {m.specialties.length > 0 && <div class="tags">{m.specialties.map((s) => <Badge tone="sand">{s}</Badge>)}</div>}
         <div class="bio"><Content /></div>
         <BookButton>Book with {m.name}</BookButton>
-        <Sprig side="end" leaves />
       </div>
     </div>
   </Section>
@@ -59,7 +57,7 @@ const reviews = (await getCollection('reviews')).filter((r) => r.data.stylist ==
 
   {reviews.length > 0 && (
     <Section bg="var(--surface-raised)">
-      <h2 class="h2">Love letters for {m.name}</h2>
+      <h2 class="title-m h2">Love letters for {m.name}</h2>
       <div class="reviews">
         {reviews.map((r) => <ReviewCard quote={r.data.quote} name={r.data.name} rating={r.data.rating} />)}
       </div>
@@ -75,9 +73,7 @@ const reviews = (await getCollection('reviews')).filter((r) => r.data.stylist ==
 </BaseLayout>
 
 <style>
-  .back { display: inline-block; margin-bottom: 32px; font-size: 12px; font-weight: 500; letter-spacing: var(--ls-button); text-transform: uppercase;
-    color: var(--rh-chocolate); text-decoration: none; }
-  .back:hover { text-decoration: underline; text-underline-offset: 6px; }
+  .back { display: inline-block; margin-bottom: 32px; color: var(--rh-chocolate); }
   .intro { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(32px, 6vw, 88px); align-items: start; }
   .photos { width: 100%; justify-self: start; } /* in line with the back link above */
   .text { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
@@ -91,7 +87,7 @@ const reviews = (await getCollection('reviews')).filter((r) => r.data.stylist ==
   .quote__script { font-family: var(--font-script); font-size: var(--fs-script-s); color: var(--rh-caramel-soft); }
   .quote blockquote { margin: 0; font-family: var(--font-display); font-size: clamp(22px, 2.4vw, 30px); line-height: 1.45; text-wrap: pretty; }
   .quote figcaption { font-size: 12px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; }
-  .h2 { margin: 0 0 32px; font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 3.4vw, var(--fs-display-m)); color: var(--text-strong); }
+  .h2 { margin-bottom: 32px; }
   .reviews { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 48px; }
   .next { display: flex; flex-direction: column; align-items: center; gap: 16px; }
   .next__label { font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }

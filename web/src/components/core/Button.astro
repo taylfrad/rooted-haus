@@ -28,7 +28,7 @@ const Tag = href ? 'a' : 'button';
     text-transform: uppercase; text-decoration: none; border-radius: var(--radius-pill);
     border: 1px solid transparent;
     transition: background var(--dur-base) var(--ease-soft), color var(--dur-base) var(--ease-soft),
-      transform var(--dur-fast) var(--ease-soft);
+      text-decoration-color var(--dur-base) var(--ease-soft), transform var(--dur-fast) var(--ease-soft);
   }
   .btn:active { transform: scale(.98); }
   .btn:disabled { opacity: .45; cursor: not-allowed; }
@@ -51,7 +51,7 @@ const Tag = href ? 'a' : 'button';
   .btn--outline.btn--dark:hover { background: var(--rh-ivory); color: var(--rh-espresso); }
 
   /* chocolate, not terracotta: terracotta is only 4.2:1 on sand cards at this size */
-  .btn--text { padding: 6px 0; color: var(--rh-chocolate); }
+  .btn--text { padding: 6px 0; color: var(--rh-chocolate); text-decoration: underline; text-underline-offset: 6px; text-decoration-color: transparent; }
   .btn--text.btn--dark { color: var(--rh-ivory); }
-  .btn--text:hover { text-decoration: underline; text-underline-offset: 6px; }
+  .btn--text:hover { text-decoration-color: currentColor; }
 </style>

@@ -16,7 +16,7 @@ Send these in any format (photos, a text message, a voice memo all work). "Not s
 - [x] Who is in each stylist photo (portrait + second photo for all six; crop tweaks via `photoFocus` in each team file)
 - [ ] Vision statement, mission statement and core values for the Careers page (left blank in her doc)
 - [ ] Culture and core values (marked "not finished"; would go on Meet the Haus under the mission)
-- [ ] The rest of The Experience page (marked "not finished"; more sections can be added in the panel)
+- [x] The rest of The Experience page (three groups, 14 points, from the Oct 27 email)
 - [ ] FAQ answers: first visit, cancellation policy, products used, anything clients always ask (a FAQ section appears on Connect as soon as one is added in the panel)
 - [ ] Optional: a one-line description for any service (the menu currently shows names and prices only)
 

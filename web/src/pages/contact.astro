@@ -10,7 +10,6 @@ import BookButton from '../components/core/BookButton.astro';
 import { MapPin, Clock, Phone, ChevronDown } from '@lucide/astro';
 import { site, hoursLine } from '../lib/site';
 import { getPage } from '../lib/pages';
-import Sprig from '../components/Sprig.astro';
 
 const page = await getPage('connectPage');
 
@@ -21,7 +20,7 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
 <BaseLayout title={page.seo.title} description={page.seo.description}>
   <PageHeader {...page.header} />
 
-  <Section>
+  <Section mark="start">
     <div class="visit connect-visit">
       <DirectionsMap />
       <div class="info">
@@ -40,7 +39,6 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
         <div class="actions">
           <BookButton>{site.bookLabel}</BookButton>
         </div>
-        <Sprig side="end" leaves />
       </div>
     </div>
   </Section>
@@ -50,7 +48,7 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
   <Section bg="var(--surface-raised)">
     <div class="message" id="message">
       <div>
-        <h2 class="h">{page.message.title}</h2>
+        <h2 class="title-m h">{page.message.title}</h2>
         {page.message.text && <p class="lead">{page.message.text}</p>}
       </div>
       <ContactForm subject="Website message">
@@ -65,7 +63,7 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
   {faqs.length > 0 && (
     <Section>
       <div class="faq" id="faq">
-        <h2 class="h">Questions, answered</h2>
+        <h2 class="title-m h">Questions, answered</h2>
         {faqs.map((f) => (
           <details class="faq__item">
             <summary>
@@ -82,7 +80,7 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
   {site.formsReady && (
   <Section bg="var(--surface-sand)" center>
     <div class="news" id="newsletter">
-      <h2 class="h">{page.newsletter.title}</h2>
+      <h2 class="title-m h">{page.newsletter.title}</h2>
       {page.newsletter.text && <p>{page.newsletter.text}</p>}
       <ContactForm subject="Newsletter signup" submitLabel="Join the list">
         <Field label="Email" name="email" type="email" required />
@@ -98,7 +96,7 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
   .row { display: flex; gap: 18px; }
   .ic { flex: 0 0 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: var(--rh-sand); color: var(--rh-terracotta); }
   .actions { display: flex; flex-wrap: wrap; gap: 14px; }
-  .h { margin: 0 0 16px; font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 3.4vw, var(--fs-display-m)); color: var(--text-strong); }
+  .h { margin-bottom: 16px; }
   .lead { margin: 0; color: var(--text-muted); }
   .message { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
   .faq { max-width: var(--container-narrow); }

@@ -62,7 +62,7 @@ const { compact = false } = Astro.props;
 <style>
   .dm { position: relative; aspect-ratio: 16 / 11; min-height: 300px; border-radius: var(--radius-lg); overflow: hidden;
     background: var(--rh-sand); box-shadow: var(--shadow-soft); transition: box-shadow var(--dur-base) var(--ease-soft), transform var(--dur-base) var(--ease-soft); }
-  .dm:hover { box-shadow: var(--shadow-lift); transform: translateY(-4px); }
+  .dm:hover { box-shadow: var(--shadow-lift); transform: translateY(calc(-1 * var(--lift))); }
   /* On narrow screens a fixed height replaces the ratio: ratio + min-height would force the map wider than the screen. */
   @media (max-width: 900px) { .dm { aspect-ratio: auto; height: 340px; min-height: 0; } }
 

@@ -11,7 +11,7 @@ const { tone = 'dark' } = Astro.props;
 <div class="flanked">
   <Sprig {tone} side="start" class="flanked__sprig flanked__sprig--left" />
   <slot />
-  <Sprig {tone} side="end" leaves class="flanked__sprig flanked__sprig--right" />
+  <Sprig {tone} side="end" class="flanked__sprig flanked__sprig--right" />
 </div>
 
 <style>

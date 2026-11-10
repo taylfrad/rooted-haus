@@ -1,27 +1,23 @@
 ---
-// The frond from the logo, as a page accent. It takes its own space in the layout, so nothing ever sits on top of it.
+// The frond from the logo. Used sparingly: only as the pair beside a page's closing words (Flanked).
 // A mask, not an <img>, so one drawing can take the right color on light and dark sections.
 import sprig from '../assets/sprig-sand.svg';
-import sprigLeaves from '../assets/sprig-leaves-sand.svg';
 
 interface Props {
   /** The section it sits on. */
   tone?: 'light' | 'dark';
   /** Which side it lines up with; the frond leans in toward the middle of the page. */
   side?: 'start' | 'end';
-  /** With the two small leaves drifting off the tip, as in the logo. */
-  leaves?: boolean;
   class?: string;
 }
-const { tone = 'light', side = 'start', leaves = false, class: extra } = Astro.props;
+const { tone = 'light', side = 'start', class: extra } = Astro.props;
 ---
 
-<span class:list={['sprig', `sprig--${tone}`, `sprig--${side}`, { 'sprig--leaves': leaves }, extra]} style={`--sprig:url(${leaves ? sprigLeaves.src : sprig.src})`} aria-hidden="true"></span>
+<span class:list={['sprig', `sprig--${tone}`, `sprig--${side}`, extra]} style={`--sprig:url(${sprig.src})`} aria-hidden="true"></span>
 
 <style>
   .sprig { display: block; flex: none; width: clamp(100px, 11vw, 150px); aspect-ratio: 1350 / 1620; margin-top: 12px; pointer-events: none;
     -webkit-mask: var(--sprig) center / contain no-repeat; mask: var(--sprig) center / contain no-repeat; }
-  .sprig--leaves { aspect-ratio: 1640 / 2670; width: clamp(120px, 13vw, 178px); }
   .sprig--light { background: var(--rh-chocolate-50); }
   .sprig--dark { background: color-mix(in srgb, var(--rh-sand) 60%, transparent); }
   .sprig--start { align-self: flex-start; }

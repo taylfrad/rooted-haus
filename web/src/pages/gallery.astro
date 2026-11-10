@@ -4,11 +4,11 @@ import { getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
 import PageHeader from '../components/PageHeader.astro';
+import Seal from '../components/Seal.astro';
 import PhotoFrame from '../components/content/PhotoFrame.astro';
 import BookButton from '../components/core/BookButton.astro';
 import { site } from '../lib/site';
 import { getPage } from '../lib/pages';
-import Sprig from '../components/Sprig.astro';
 
 const page = await getPage('galleryPage');
 
@@ -35,9 +35,9 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
 
 <BaseLayout title={page.seo.title} description={page.seo.description}>
   <PageHeader {...page.header} bg="var(--surface-chocolate)" />
-  <Section>
+  <Section mark="start">
     <div class="filters" role="group" aria-label="Filter gallery">
-      {tags.map((t, i) => <button type="button" class="chip" data-filter={t} aria-pressed={i === 0}>{t}</button>)}
+      {tags.map((t, i) => <button type="button" class="pill" data-filter={t} aria-pressed={i === 0}>{t}</button>)}
     </div>
     <div class="mosaic-wrap">
       <div class="mosaic">
@@ -48,7 +48,7 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
           return (
             <div class={`tile tile--${i.data.size}`} data-tag={i.data.tag}>
               {full ? (
-                <a class="tile__link" href={full.src} data-pswp-width={full.width} data-pswp-height={full.height} aria-label={`View larger: ${alt}`}>
+                <a class="tile__link lift" href={full.src} data-pswp-width={full.width} data-pswp-height={full.height} aria-label={`View larger: ${alt}`}>
                   {frame}
                 </a>
               ) : (
@@ -59,10 +59,10 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
         })}
       </div>
     </div>
+    <Seal />
     <div class="cta">
       <BookButton>Book an appointment</BookButton>
       <a href={site.instagram} target="_blank" rel="noopener">Follow us on Instagram</a>
-      <Sprig side="end" />
     </div>
   </Section>
 </BaseLayout>
@@ -118,11 +118,6 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
 
 <style>
   .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 40px; }
-  .chip { font: inherit; font-size: 12px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
-    border: 1px solid var(--rh-chocolate); background: transparent; color: var(--rh-chocolate); cursor: pointer;
-    border-radius: var(--radius-pill); padding: 9px 20px;
-    transition: background var(--dur-base) var(--ease-soft), color var(--dur-base) var(--ease-soft); }
-  .chip:hover, .chip[aria-pressed='true'] { background: var(--rh-chocolate); color: var(--rh-ivory); }
 
   /* Mosaic: every cell is a square whose side is worked out from the grid's width, so wide, tall and large
      photos (spanning 2 cells) line up exactly with the small ones. `dense` lets small photos fill any gaps. */
@@ -134,14 +129,12 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
   .tile--tall { grid-row: span 2; }
   .tile--large { grid-column: span 2; grid-row: span 2; }
   .tile[hidden] { display: none; }
-  .tile__link { display: block; height: 100%; cursor: zoom-in;
-    transition: transform var(--dur-base) var(--ease-soft), filter var(--dur-base) var(--ease-soft); }
-  .tile__link:hover { transform: translateY(-4px); filter: drop-shadow(0 18px 24px rgba(59, 40, 25, .28)); }
+  .tile__link { display: block; height: 100%; cursor: zoom-in; border-radius: var(--radius-md); }
   /* Tablets use 2 columns too: with 2-cell-wide and 2-cell-tall photos, 3 columns cannot pack without holes. */
   @media (max-width: 900px) { .mosaic-wrap { --cols: 2; } }
   @media (max-width: 560px) { .mosaic-wrap { --cols: 2; --gap: 12px; } }
 
-  .cta { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; margin-top: 56px; }
+  .cta { display: flex; align-items: center; justify-content: center; gap: 28px; flex-wrap: wrap; }
 </style>
 
 <style is:global>

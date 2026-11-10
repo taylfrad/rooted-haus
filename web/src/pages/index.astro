@@ -15,7 +15,6 @@ import Watermark from '../components/Watermark.astro';
 import { url } from '../lib/paths';
 import { site } from '../lib/site';
 import { getPage } from '../lib/pages';
-import Sprig from '../components/Sprig.astro';
 import Flanked from '../components/Flanked.astro';
 import { cropPosition } from '../lib/crop';
 
@@ -101,13 +100,13 @@ const recent = (await getCollection('gallery'))
     </ol>
   </Section>
 
-  <Section bg="var(--surface-raised)">
+  <Section bg="var(--surface-raised)" mark="end">
     <SectionHeading eyebrow={home.specialties.eyebrow} script={home.specialties.script} title={home.specialties.title} />
     <ul class="specialties">
       {specialties.map((s) => (
         <li class="sp">
-          <a class="sp__link" href={url('services/')}>
-            <PhotoFrame src={s.image} alt={s.alt} label={s.label} focus={s.focus} shape="rounded" ratio="4 / 5" sizes="(min-width: 900px) 22vw, 45vw" />
+          <a class="sp__link lift-host" href={url('services/')}>
+            <div class="sp__photo lift"><PhotoFrame src={s.image} alt={s.alt} label={s.label} focus={s.focus} shape="rounded" ratio="4 / 5" sizes="(min-width: 900px) 22vw, 45vw" /></div>
             <span class="sp__label">{s.label}</span>
           </a>
         </li>
@@ -133,7 +132,6 @@ const recent = (await getCollection('gallery'))
           intro={experience.text}
         />
         <Button variant="outline" href={url('experience/')}>{experience.button}</Button>
-        <Sprig side="end" leaves />
       </div>
       <div class="split__photo">
         <PhotoFrame framed="light" src={experience.image} alt={experience.alt} shape="arch" ratio="4 / 5" focus={experience.focus} sizes="(min-width: 900px) 40vw, 90vw" />
@@ -141,7 +139,7 @@ const recent = (await getCollection('gallery'))
     </div>
   </Section>
 
-  <Section bg="var(--surface-olive)">
+  <Section bg="var(--surface-olive)" mark="start">
     <SectionHeading tone="dark" eyebrow={home.reviews.eyebrow} script={home.reviews.script} title={home.reviews.title} />
     <div class="letters">
       {lead && (
@@ -274,14 +272,14 @@ const recent = (await getCollection('gallery'))
      the hero fits on load and does not resize while those bars slide away. */
   .hero { position: relative; height: 100vh; height: 100svh; overflow: hidden; color: var(--rh-ivory); background: var(--rh-espresso);
     touch-action: pan-y pinch-zoom; /* the page still scrolls and zooms; sideways swipes go to the slideshow */ }
-  .hero__slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s var(--ease-soft); }
+  .hero__slide { position: absolute; inset: 0; opacity: 0; transition: opacity var(--dur-slow) var(--ease-soft); }
   .hero__slide[data-active='true'] { opacity: 1; }
   .hero.is-manual .hero__slide, .hero.is-manual .hero__script { transition-duration: .5s; }
   .hero__img { width: 100%; height: 100%; object-fit: cover; filter: var(--photo-warmth); }
   /* Darkens the bottom-left corner where the text sits, so ivory text stays readable on any photo. */
   .hero__top { position: absolute; z-index: 1; left: 0; right: 0; top: 0; height: 200px; pointer-events: none;
     background: linear-gradient(180deg, rgba(59, 40, 25, .8) 0%, rgba(59, 40, 25, .62) 40%, rgba(59, 40, 25, 0) 100%); }
-  .hero__shade { position: absolute; inset: 0; pointer-events: none; transition: opacity 1.2s var(--ease-soft); }
+  .hero__shade { position: absolute; inset: 0; pointer-events: none; transition: opacity var(--dur-slow) var(--ease-soft); }
   .hero__shade--left {
     background:
       radial-gradient(ellipse 85% 120% at 0% 100%, rgba(59, 40, 25, .9) 0%, rgba(59, 40, 25, .72) 45%, rgba(59, 40, 25, 0) 80%),
@@ -306,7 +304,7 @@ const recent = (await getCollection('gallery'))
   /* Wider than the rest of the text, but capped so a long phrase wraps instead of running across a face. */
   .hero__content > .hero__scripts { display: grid; max-width: 640px; align-items: end; }
   .hero__script { grid-area: 1 / 1; font-family: var(--font-script); font-size: clamp(50px, 7vw, 96px); text-wrap: balance;
-    line-height: 1; color: var(--rh-caramel-soft); opacity: 0; transition: opacity 1.2s var(--ease-soft);
+    line-height: 1; color: var(--rh-caramel-soft); opacity: 0; transition: opacity var(--dur-slow) var(--ease-soft);
     text-shadow: 0 2px 16px rgba(59, 40, 25, .7); }
   .hero__script[data-active='true'] { opacity: 1; }
   .hero__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 3.4vw, 44px);
@@ -315,7 +313,7 @@ const recent = (await getCollection('gallery'))
   .hero__dots { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); display: none; }
   .hero.has-slides .hero__dots { display: flex; }
   .hero__dots button { min-width: 24px; height: 24px; padding: 0; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
-  .hero__dots button::before { content: ''; width: 10px; height: 10px; border-radius: 999px; background: var(--rh-ivory-30); transition: width .3s, background .3s; }
+  .hero__dots button::before { content: ''; width: 10px; height: 10px; border-radius: 999px; background: var(--rh-ivory-30); transition: width var(--dur-base) var(--ease-soft), background var(--dur-base) var(--ease-soft); }
   .hero__dots button[data-active='true']::before { width: 36px; background: var(--rh-sand); }
 
   .steps { list-style: none; margin: 48px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; counter-reset: none; }
@@ -335,8 +333,7 @@ const recent = (await getCollection('gallery'))
   .split--flip .split__photo { justify-self: end; } /* on the content edge, in line with the sections around it */
   .specialties { list-style: none; margin: 48px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px 20px; }
   .sp__link { display: flex; flex-direction: column; gap: 14px; text-decoration: none; color: var(--text-strong); }
-  .sp__link :global(.pf) { transition: transform var(--dur-base) var(--ease-soft), box-shadow var(--dur-base) var(--ease-soft); }
-  .sp__link:hover :global(.pf) { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+  .sp__photo { border-radius: var(--radius-lg); }
   .sp__label { font-family: var(--font-display); font-size: 21px; line-height: 1.2; }
   .sp__link:hover .sp__label { color: var(--text-accent); }
   .sp__cta { height: 100%; min-height: 220px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; gap: 8px;

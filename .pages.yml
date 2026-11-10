@@ -333,6 +333,13 @@ content:
           - { name: intro, label: Intro line (optional), type: text }
           - { name: image, label: "Photo (shown whole: a landscape photo runs across the screen, a portrait one sits beside the heading)", type: image }
           - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+      - name: opening
+        label: Opening words (between the top of the page and the first group)
+        type: object
+        fields:
+          - { name: eyebrow, label: Small line above the heading, type: string }
+          - { name: title, label: Heading, type: string }
+          - { name: text, label: Text, type: text }
       - name: closing
         label: Closing note at the bottom
         type: object
@@ -341,15 +348,23 @@ content:
           - { name: text, label: Text, type: text }
 
   - name: experience
-    label: The Experience rows
+    label: The Experience groups
     type: collection
     path: web/src/content/experience
     format: yaml
     view:
       fields: [title, order]
     fields:
+      - { name: eyebrow, label: "Small line above the heading (optional, e.g. What to expect)", type: string }
       - { name: title, label: Heading, type: string, required: true }
-      - { name: body, label: Text, type: text, required: true }
+      - { name: body, label: Opening paragraph (optional), type: text }
+      - name: items
+        label: Points in this group
+        type: object
+        list: true
+        fields:
+          - { name: title, label: Heading, type: string, required: true }
+          - { name: text, label: Text, type: text, required: true }
       - { name: image, label: Photo, type: image }
       - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
       - { name: wide, label: Show the whole photo large (for a landscape photo), type: boolean }

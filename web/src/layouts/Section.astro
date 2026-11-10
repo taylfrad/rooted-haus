@@ -1,13 +1,20 @@
 ---
+import monogram from '../assets/monogram-sand.png';
+
 interface Props {
   bg?: string;
   center?: boolean;
   id?: string;
+  /** A large, faint RH monogram peeking in from this side of the screen. It only shows on wide screens, where the
+      page has empty margins, and is sized to stay inside that margin so it never sits under any words. */
+  mark?: 'start' | 'end';
 }
-const { bg = 'var(--surface-page)', center = false, id } = Astro.props;
+const { bg = 'var(--surface-page)', center = false, id, mark } = Astro.props;
+const dark = /olive|terracotta|chocolate|moody/.test(bg);
 ---
 
-<section id={id} style={`background:${bg}`} class:list={['section', { 'section--center': center, 'on-olive': bg.includes('olive') }]}>
+<section id={id} style={`background:${bg}`} class:list={['section', { 'section--center': center, 'section--marked': mark, 'on-olive': bg.includes('olive') }]}>
+  {mark && <span class:list={['section__mark', `section__mark--${mark}`, { 'section__mark--dark': dark }]} style={`--mark:url(${monogram.src})`} aria-hidden="true" />}
   <div class="section__inner" data-reveal><slot /></div>
 </section>
 
@@ -15,4 +22,18 @@ const { bg = 'var(--surface-page)', center = false, id } = Astro.props;
   .section { padding: var(--section-y) var(--gutter); }
   .section--center { text-align: center; }
   .section__inner { max-width: var(--container-max); margin: 0 auto; }
+
+  /* clip, not hidden: hidden would stop the sticky photo column on The Rituals from sticking. */
+  .section--marked { position: relative; overflow: clip; }
+  .section--marked .section__inner { position: relative; z-index: 1; }
+  /* --margin is the empty band beside the content. The monogram shows --shown of its width, and that visible part is
+     kept 16px short of the content edge. */
+  .section__mark { --margin: calc((100vw - var(--container-max)) / 2); --shown: .62;
+    display: none; position: absolute; width: min(460px, calc((var(--margin) - 16px) / var(--shown))); aspect-ratio: 640 / 579;
+    background: var(--rh-chocolate); opacity: .12; pointer-events: none;
+    -webkit-mask: var(--mark) center / contain no-repeat; mask: var(--mark) center / contain no-repeat; }
+  .section__mark--dark { background: var(--rh-sand); opacity: .18; }
+  .section__mark--end { top: clamp(48px, 12%, 160px); right: 0; translate: calc((1 - var(--shown)) * 100%) 0; }
+  .section__mark--start { bottom: clamp(48px, 12%, 160px); left: 0; translate: calc((var(--shown) - 1) * 100%) 0; }
+  @media (min-width: 1440px) { .section__mark { display: block; } }
 </style>
