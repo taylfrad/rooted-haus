@@ -4,7 +4,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
 import PageHeader from '../components/PageHeader.astro';
 import DirectionsMap from '../components/DirectionsMap.astro';
-import Emblem from '../components/Emblem.astro';
 import ContactForm from '../components/forms/ContactForm.astro';
 import Field from '../components/forms/Field.astro';
 import BookButton from '../components/core/BookButton.astro';
@@ -22,7 +21,7 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
 <BaseLayout title={page.seo.title} description={page.seo.description}>
   <PageHeader {...page.header} />
 
-  <Section mark="start">
+  <Section>
     <!-- The three things people come here for, side by side; then the map, wide, beneath them. -->
     <ul class="ways">
       <li class="way">
@@ -100,14 +99,12 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
   )}
 
   {page.closing && (
-    <Section bg="var(--surface-olive)" center>
-      <Emblem>
+    <Section bg="var(--surface-olive)" center curve>
         <div class="closing">
           {page.closing.script && <span class="closing__script">{page.closing.script}</span>}
           <p class="closing__line">{page.closing.text}</p>
           <BookButton variant="ivory" size="lg">{site.bookLabel}</BookButton>
         </div>
-      </Emblem>
     </Section>
   )}
 </BaseLayout>

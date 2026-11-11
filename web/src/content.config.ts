@@ -152,7 +152,8 @@ const homePage = defineCollection({
         items: z.array(z.object({ label: z.string(), ...photo(image) })),
         card: z.object({ script: z.string().optional(), title: z.string(), text: z.string().optional() }),
       }),
-      experience: z.object({ ...heading, text: z.string(), button: z.string(), ...photo(image) }),
+      /** `image2` is the smaller photo that overlaps the corner of the first. */
+      experience: z.object({ ...heading, text: z.string(), button: z.string(), ...photo(image), image2: image().optional(), alt2: z.string().default(''), focus2: z.string().optional() }),
       reviews: z.object(heading),
       work: z.object({ ...heading, button: z.string() }),
       hiring: z.object({ ...heading, badge: z.string().optional(), text: z.string().optional(), button: z.string() }),
@@ -210,6 +211,8 @@ const careersPage = defineCollection({
       intro: z.string(),
       offer: z.string().optional(),
       photo: z.object(photo(image)),
+      /** The smaller photo that overlaps the corner of the first. */
+      photo2: z.object(photo(image)).optional(),
       /** Shown large, side by side, under the intro. */
       photos: z.array(z.object(photo(image))).default([]),
       perksTitle: z.string(),

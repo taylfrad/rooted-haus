@@ -31,6 +31,50 @@ export function initPhotoFade(): void {
   });
 }
 
+/** A page's main heading arrives one line at a time: each word is wrapped, then numbered by the line it lands on. */
+export function initHeadlines(): void {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll<HTMLElement>('h1[data-lines]:not(.is-split)').forEach((h) => {
+    h.setAttribute('aria-label', (h.textContent ?? '').trim()); // read as one sentence, not word by word
+    const units: HTMLElement[] = [];
+    const out = document.createDocumentFragment();
+    h.childNodes.forEach((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        (node.textContent ?? '').split(/(\s+)/).forEach((token) => {
+          if (token === '') return;
+          if (/^\s+$/.test(token)) return void out.append(' ');
+          const word = document.createElement('span');
+          word.className = 'w';
+          word.textContent = token;
+          out.append(word);
+          units.push(word);
+        });
+      } else if (node instanceof HTMLElement) {
+        node.classList.add('w'); // an accented phrase moves as one piece
+        out.append(node);
+        units.push(node);
+      }
+    });
+    h.replaceChildren(out);
+    h.classList.add('is-split');
+
+    // Words whose tops are within half a line of each other are on the same line.
+    const lineHeight = parseFloat(getComputedStyle(h).lineHeight) || parseFloat(getComputedStyle(h).fontSize) * 1.15;
+    let line = -1;
+    let lastTop: number | undefined;
+    units.forEach((u) => {
+      const top = u.offsetTop + u.offsetHeight / 2;
+      if (lastTop === undefined || Math.abs(top - lastTop) > lineHeight * 0.6) {
+        line += 1;
+        lastTop = top;
+      }
+      u.style.setProperty('--line', String(line));
+    });
+    // Two frames, so the starting position is painted before the words are released.
+    requestAnimationFrame(() => requestAnimationFrame(() => h.classList.add('is-lined')));
+  });
+}
+
 let observer: IntersectionObserver | undefined;
 
 /** Fade-and-rise for the photo-free parts of every `[data-reveal]` block. Skipped for reduced motion. */

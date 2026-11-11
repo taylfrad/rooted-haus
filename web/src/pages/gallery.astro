@@ -4,7 +4,6 @@ import { getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
 import PageHeader from '../components/PageHeader.astro';
-import Seal from '../components/Seal.astro';
 import PhotoFrame from '../components/content/PhotoFrame.astro';
 import BookButton from '../components/core/BookButton.astro';
 import { site } from '../lib/site';
@@ -59,7 +58,6 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
         })}
       </div>
     </div>
-    <Seal />
     <div class="cta">
       <BookButton>Book an appointment</BookButton>
       <a href={site.instagram} target="_blank" rel="noopener">Follow us on Instagram</a>
@@ -134,7 +132,7 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
   @media (max-width: 900px) { .mosaic-wrap { --cols: 2; } }
   @media (max-width: 560px) { .mosaic-wrap { --cols: 2; --gap: 12px; } }
 
-  .cta { display: flex; align-items: center; justify-content: center; gap: 28px; flex-wrap: wrap; }
+  .cta { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; margin-top: 56px; }
 </style>
 
 <style is:global>

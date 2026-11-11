@@ -26,9 +26,14 @@ lists that appear on that page sit right after it.
 Every page also has **How the page appears in Google**: the title in the browser tab and in search results, and the
 short summary underneath it. Keep the summary to about 150 characters.
 
+## Headings
+
+To set one phrase of a heading in the handwritten font, put a star on each side of it: `Make yourself *at home*`.
+Keep it to two or three words, and to one phrase per heading.
+
 ## Photos
 
-- **Top of each page:** the photo is always shown whole. A landscape photo (wider than tall) runs across the full screen with the heading below it; a portrait photo sits beside the heading. Landscape looks best here. Leave the photo empty for a heading with no photo. On Meet the Haus the group photos sit beside the words instead, also shown whole.
+- **Top of each page:** the photo is always shown whole. A landscape photo (wider than tall) runs across the full screen with the heading set over its lower left corner (on phones the heading sits below it); a portrait photo sits beside the heading. Landscape looks best here. Leave the photo empty for a heading with no photo. On Meet the Haus the group photos sit beside the words instead, also shown whole.
 - **Describe the photo** in a sentence, as if to someone who cannot see it ("A stylist curls a client's long blonde
   hair"). Screen readers read it aloud, and Google uses it too.
 - **Other photos: crop position** decides which part of a photo stays in view when it is trimmed to fit its frame. Leave it empty to

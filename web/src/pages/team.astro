@@ -3,7 +3,6 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
 import PageHeader from '../components/PageHeader.astro';
-import Seal from '../components/Seal.astro';
 import PhotoFrame from '../components/content/PhotoFrame.astro';
 import BookButton from '../components/core/BookButton.astro';
 import { url } from '../lib/paths';
@@ -17,7 +16,7 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
 
 <BaseLayout title={page.seo.title} description={page.seo.description}>
   <PageHeader {...page.header} bg="var(--surface-olive)" beside />
-  <Section mark="end">
+  <Section>
     <div class:list={['story', { 'story--photo': bandPhoto }]}>
       {bandPhoto && (
         <PhotoFrame framed="light" src={bandPhoto} alt={page.band?.alt} shape="rounded" ratio={`${bandPhoto.width} / ${bandPhoto.height}`} sizes="(min-width: 900px) 55vw, 90vw" />
@@ -28,7 +27,7 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
       </div>
     </div>
   </Section>
-  <Section bg="var(--surface-olive)">
+  <Section bg="var(--surface-olive)" curve>
     <ul class="team">
       {team.map((m) => (
         <li>
@@ -44,7 +43,6 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
         </li>
       ))}
     </ul>
-    <Seal tone="dark" />
     <div class="cta"><BookButton variant="ivory">Book with us</BookButton></div>
   </Section>
 </BaseLayout>
@@ -56,7 +54,7 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
   .story--photo .mission { margin: 0; text-align: left; align-items: flex-start; }
   .mission__label { font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
   .mission__text { margin: 0; font-family: var(--font-display); font-size: clamp(22px, 2.4vw, 30px); line-height: 1.4; color: var(--text-strong); text-wrap: balance; }
-  .team { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 56px 40px; }
+  .team { list-style: none; margin: 0 0 56px; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 56px 40px; }
   .member { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; color: var(--rh-ivory); text-decoration: none; }
   .member__photo { width: min(320px, 100%); margin-bottom: 22px; border-radius: var(--radius-arch); }
   .member__name { font-family: var(--font-display); font-size: 30px; line-height: 1.1; }

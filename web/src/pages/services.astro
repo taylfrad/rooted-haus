@@ -3,7 +3,6 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
 import PageHeader from '../components/PageHeader.astro';
-import Seal from '../components/Seal.astro';
 import DealBanner from '../components/DealBanner.astro';
 import BookButton from '../components/core/BookButton.astro';
 import Button from '../components/core/Button.astro';
@@ -22,7 +21,7 @@ const categories = (await getCollection('services')).sort((a, b) => a.data.order
 <BaseLayout title={page.seo.title} description={page.seo.description}>
   <PageHeader {...page.header} />
   <DealBanner />
-  <Section bg="var(--surface-raised)" mark="end">
+  <Section bg="var(--surface-raised)">
     <div class="layout">
     <div class="menu-col">
     <nav class="jump" aria-label="Service categories">
@@ -53,7 +52,6 @@ const categories = (await getCollection('services')).sort((a, b) => a.data.order
       {photos.map((p) => <PhotoFrame framed="light" src={p.image} alt={p.alt} focus={p.focus} shape={p.shape} ratio="4 / 5" sizes="(min-width: 900px) 30vw, 33vw" />)}
     </div>
     </div>
-    <Seal />
     <div class="cta">
       <BookButton size="lg">Book an appointment</BookButton>
       {site.giftCardsUrl && <Button variant="outline" size="lg" href={site.giftCardsUrl} target="_blank" rel="noopener">Give a gift card</Button>}
@@ -79,5 +77,5 @@ const categories = (await getCollection('services')).sort((a, b) => a.data.order
   .menu__meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; white-space: nowrap; }
   .menu__price { font-family: var(--font-display); font-size: 20px; color: var(--text-strong); }
   .menu__dur { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted); }
-  .cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px; }
+  .cta { margin-top: 8px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
 </style>

@@ -162,6 +162,9 @@ content:
           - { name: image, label: Photo, type: image }
           - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
           - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
+          - { name: image2, label: "Smaller photo overlapping the corner (optional)", type: image }
+          - { name: alt2, label: Describe the smaller photo, type: string }
+          - { name: focus2, label: "Smaller photo crop position (optional)", type: string }
       - name: reviews
         label: "Love letters heading (the reviews themselves are under Love letters)"
         type: object
@@ -497,6 +500,13 @@ content:
       - { name: offer, label: Line under the intro, type: string }
       - name: photo
         label: Photo beside the intro
+        type: object
+        fields:
+          - { name: image, label: Photo, type: image }
+          - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
+      - name: photo2
+        label: "Smaller photo overlapping the corner of the first (optional)"
         type: object
         fields:
           - { name: image, label: Photo, type: image }

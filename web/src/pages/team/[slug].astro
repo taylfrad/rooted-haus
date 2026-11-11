@@ -8,7 +8,6 @@ import Badge from '../../components/content/Badge.astro';
 import Button from '../../components/core/Button.astro';
 import BookButton from '../../components/core/BookButton.astro';
 import { url } from '../../lib/paths';
-import Emblem from '../../components/Emblem.astro';
 
 // One page per team file: team/shelby.md -> /team/shelby/
 export async function getStaticPaths() {
@@ -26,7 +25,7 @@ const reviews = (await getCollection('reviews')).filter((r) => r.data.stylist ==
 ---
 
 <BaseLayout title={`${m.name}, ${m.role} · The Rooted Haus`} description={`Meet ${m.name}, ${m.role.toLowerCase()} at The Rooted Haus in Mandeville, Louisiana.`}>
-  <Section mark="end">
+  <Section>
     <a class="back caps-link" href={url('team/')}>← Meet the Haus</a>
     <div class="intro">
       <div class="photos" transition:name={`portrait-${member.id}`}>
@@ -44,14 +43,12 @@ const reviews = (await getCollection('reviews')).filter((r) => r.data.stylist ==
   </Section>
 
   {m.quote && (
-    <Section bg="var(--surface-olive)" center>
-      <Emblem layout="behind">
+    <Section bg="var(--surface-olive)" center curve>
       <figure class="quote">
         <span class="quote__script">in her words</span>
         <blockquote>“{m.quote}”</blockquote>
         <figcaption>{m.name}</figcaption>
       </figure>
-      </Emblem>
     </Section>
   )}
 

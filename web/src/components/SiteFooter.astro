@@ -16,7 +16,7 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
     <!-- The invitation: the mark, the handwritten line, and the way to book. -->
     <div class="footer__lead">
       <a class="footer__mark" href={url()} aria-label={`${site.name} home`}>
-        <Image src={monogram} alt="" width={120} densities={[1, 2]} />
+        <Image src={monogram} alt="" width={96} densities={[1, 2]} />
       </a>
       <div class="footer__invite">
         <span class="footer__script">{site.footerScript}</span>
@@ -86,7 +86,7 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
   .footer__inner { max-width: var(--container-max); margin: 0 auto; padding: 72px var(--gutter) 0; }
 
   .footer__lead { display: flex; flex-wrap: wrap; align-items: center; gap: 24px 28px; padding-bottom: 48px; border-bottom: 1px solid var(--border-on-dark); }
-  .footer__mark { display: block; flex: none; width: 120px; border-radius: 50%; }
+  .footer__mark { display: block; flex: none; width: 96px; border-radius: 50%; }
   .footer__mark :global(img) { width: 100%; height: auto; }
   .footer__invite { display: flex; flex-direction: column; gap: 10px; margin-right: auto; }
   .footer__script { font-family: var(--font-script); font-size: clamp(40px, 5vw, 60px); line-height: 1; color: var(--rh-caramel-soft); }

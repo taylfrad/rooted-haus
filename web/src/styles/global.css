@@ -10,7 +10,7 @@
 @import './tokens/effects.css';
 
 /* base (from design system tokens/base.css) */
-html{background:var(--surface-page);color:var(--text-body);font-family:var(--font-body);font-size:var(--fs-body);line-height:var(--lh-body);-webkit-font-smoothing:antialiased}
+html{background:var(--surface-page) var(--grain);color:var(--text-body);font-family:var(--font-body);font-size:var(--fs-body);line-height:var(--lh-body);-webkit-font-smoothing:antialiased}
 a{color:var(--text-accent);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
 a:hover{color:var(--rh-chocolate)}
 ::selection{background:var(--rh-sand);color:var(--rh-espresso)}
@@ -29,6 +29,10 @@ img{max-width:100%;display:block}
 .title-m{margin:0;font-family:var(--font-display);font-weight:400;font-size:clamp(28px,3.4vw,var(--fs-display-m));
   line-height:var(--lh-snug);color:var(--text-strong);text-wrap:balance}
 .title-m--dark{color:var(--rh-ivory)}
+
+/* One phrase of a heading in the handwritten font (stars around it in the panel; see lib/emphasis.ts). */
+.accent{font-family:var(--font-script);font-style:normal;font-weight:400;font-size:1.3em;line-height:.7;letter-spacing:0;
+  color:var(--accent-ink,var(--text-script));white-space:nowrap}
 
 /* Hover lift for anything clickable that holds a photo or a card. Put .lift on the thing that rises; if the link
    is a parent of it, put .lift-host on the link. Give the lifted element its own border-radius so the shadow fits. */
@@ -67,6 +71,14 @@ main:focus{outline:none}
   html.js .is-revealing.is-revealing,html.js .is-revealed.is-revealed{opacity:1;translate:none}
   html.js .is-revealing.is-revealing{transition:opacity var(--dur-reveal) var(--ease-glide) var(--reveal-delay,0ms),
     translate var(--dur-reveal) var(--ease-glide) var(--reveal-delay,0ms)}
+}
+
+/* A page's main heading arrives one line at a time. lib/motion.ts wraps each word in .w and numbers its line. */
+@media (prefers-reduced-motion:no-preference){
+  .js h1.is-split .w{display:inline-block;opacity:0;translate:0 .5em}
+  .js h1.is-lined .w{opacity:1;translate:none;
+    transition:opacity var(--dur-reveal) var(--ease-glide) calc(var(--line,0) * var(--stagger-line) + 120ms),
+      translate var(--dur-reveal) var(--ease-glide) calc(var(--line,0) * var(--stagger-line) + 120ms)}
 }
 
 /* Page change. The header is its own still layer (transition:name in SiteHeader); everything else is the root layer,

@@ -7,6 +7,7 @@ import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import DirectionsDialog from '../components/DirectionsDialog.astro';
 import BackToTop from '../components/BackToTop.astro';
+import BookBar from '../components/BookBar.astro';
 // The three font files every page uses (Latin letters). Preloading them means text is drawn in its real font from
 // the first paint, instead of appearing in a fallback and shifting when the font arrives.
 import fontBody from '@fontsource-variable/montserrat/files/montserrat-latin-wght-normal.woff2?url';
@@ -104,12 +105,14 @@ const jsonLd = {
     <SiteFooter />
     <DirectionsDialog />
     <BackToTop />
+    <BookBar />
     <!-- TODO: add the Boulevard self-booking overlay <script> here once the snippet is copied from
          the owner's Boulevard dashboard (Settings > Online booking > Self-booking overlay). -->
     <script>
-      import { initPhotoFade, initReveal } from '../lib/motion';
+      import { initHeadlines, initPhotoFade, initReveal } from '../lib/motion';
       document.addEventListener('astro:page-load', () => {
         initPhotoFade();
+        initHeadlines();
         initReveal();
       });
 

@@ -14,6 +14,9 @@ photo:
   image: "../../assets/photos/stylists/img-9934.jpg"
   alt: "Sadie laughs as she spins in a salon chair."
   focus: "50% 30%"
+photo2:
+  image: "../../assets/photos/salon/img-0194.jpg"
+  alt: "Two leather armchairs in front of a floral wallpaper wall hung with small frames and woven pieces."
 photos:
   - image: "../../assets/photos/salon/img-0180.jpg"
     alt: "The front desk, with a welcome screen, gold mirror and fresh flowers beneath a landscape painting."

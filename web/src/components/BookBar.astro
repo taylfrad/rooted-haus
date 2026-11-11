@@ -1,0 +1,50 @@
+---
+// Phones only: a bar fixed to the bottom of the screen with the two things a guest is most likely to want,
+// calling and booking. It slides up once the guest has scrolled past the top of the page.
+import { Phone } from '@lucide/astro';
+import BookButton from './core/BookButton.astro';
+import { site } from '../lib/site';
+
+const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
+---
+
+<div class="bookbar" data-bookbar>
+  <a class="bookbar__call" href={tel}><Phone size={16} stroke-width={1.5} aria-hidden="true" /> Call</a>
+  <BookButton class="bookbar__book">{site.bookLabel}</BookButton>
+</div>
+
+<script>
+  const SHOW_AFTER = 500; // px scrolled before the bar slides up
+
+  const sync = () => {
+    const bar = document.querySelector<HTMLElement>('[data-bookbar]');
+    if (!bar) return;
+    const show = window.scrollY > SHOW_AFTER;
+    if (show !== bar.classList.contains('is-shown')) bar.classList.toggle('is-shown', show);
+  };
+  window.addEventListener('scroll', sync, { passive: true });
+  document.addEventListener('astro:page-load', sync);
+</script>
+
+<style>
+  .bookbar { display: none; }
+  @media (max-width: 700px) {
+    .bookbar { display: flex; align-items: stretch; gap: 10px; position: fixed; z-index: 16; left: 0; right: 0; bottom: 0;
+      padding: 10px 14px calc(10px + env(safe-area-inset-bottom)); background: rgba(242, 228, 209, .97);
+      border-top: 1px solid var(--border-hairline); translate: 0 110%; visibility: hidden;
+      transition: translate var(--dur-base) var(--ease-soft), visibility 0s linear var(--dur-base); }
+    .bookbar.is-shown { translate: none; visibility: visible; transition-delay: 0s; }
+    .bookbar__call { flex: none; display: inline-flex; align-items: center; gap: 8px; padding: 0 20px; border-radius: var(--radius-pill);
+      border: 1px solid var(--rh-chocolate); color: var(--rh-chocolate); text-decoration: none; font-size: 12px; font-weight: 500;
+      letter-spacing: var(--ls-button); text-transform: uppercase; }
+    .bookbar :global(.bookbar__book) { flex: 1; }
+  }
+</style>
+
+<style is:global>
+  /* Phones: the back-to-top button and the end of the footer stay clear of the booking bar. */
+  @media (max-width: 700px) {
+    .totop { bottom: calc(max(16px, env(safe-area-inset-bottom)) + 68px); }
+    .footer { padding-bottom: 68px; }
+  }
+</style>

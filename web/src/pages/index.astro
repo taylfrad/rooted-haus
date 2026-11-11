@@ -11,10 +11,13 @@ import Badge from '../components/content/Badge.astro';
 import Button from '../components/core/Button.astro';
 import BookButton from '../components/core/BookButton.astro';
 import DealBanner from '../components/DealBanner.astro';
+import Marquee from '../components/Marquee.astro';
+import PhotoPair from '../components/content/PhotoPair.astro';
+import { ChevronLeft, ChevronRight } from '@lucide/astro';
+import { emphasis } from '../lib/emphasis';
 import { url } from '../lib/paths';
 import { site } from '../lib/site';
 import { getPage } from '../lib/pages';
-import Emblem from '../components/Emblem.astro';
 import { cropPosition } from '../lib/crop';
 
 // All words and photos come from the "Home page" entry in the panel (src/content/pages/home.yml).
@@ -34,14 +37,14 @@ const specialties = home.specialties.items;
 const experience = home.experience;
 
 const reviews = (await getCollection('reviews')).filter((r) => r.data.featured);
-// One love letter is shown large (set "Feature this one large" in the panel); the rest sit beside it.
+// Love letters are shown one at a time; the one marked "Feature this one large" in the panel goes first.
 const lead = reviews.find((r) => r.data.highlight) ?? reviews[0];
-const others = reviews.filter((r) => r !== lead);
+const letters = lead ? [lead, ...reviews.filter((r) => r !== lead)] : [];
 const team = await getCollection('team');
 const stylistName = (slug?: string) => team.find((t) => t.id === slug)?.data.name;
 // Recent work is hair work only, and skips any photo already shown higher on this page, so nothing repeats.
 // Square side-by-side before/afters are left out too: this section's tall frames would cut them in half.
-const usedOnHome = new Set([...slides.map((s) => s.image.src), ...steps.map((s) => s.image?.src), ...specialties.map((s) => s.image?.src), experience.image?.src]);
+const usedOnHome = new Set([...slides.map((s) => s.image.src), ...steps.map((s) => s.image?.src), ...specialties.map((s) => s.image?.src), experience.image?.src, experience.image2?.src]);
 const recent = (await getCollection('gallery'))
   .sort((a, b) => a.data.order - b.data.order)
   .filter((g) => ['color', 'styling', 'results'].includes(g.data.tag))
@@ -71,7 +74,7 @@ const recent = (await getCollection('gallery'))
       <div class="hero__scripts">
         {slides.map((s, i) => <span class="hero__script" data-phrase data-active={i === 0}>{s.phrase}</span>)}
       </div>
-      <h1 class="hero__title">{home.hero.title}</h1>
+      <h1 class="hero__title" data-lines>{emphasis(home.hero.title).map((p) => (p.accent ? <em class="accent">{p.text}</em> : p.text))}</h1>
       <div class="hero__actions">
         <BookButton variant="ivory" size="lg">{site.bookLabel}</BookButton>
         <Button variant="outline" tone="dark" size="lg" href={url('services/')}>{home.hero.ritualsButton}</Button>
@@ -89,9 +92,13 @@ const recent = (await getCollection('gallery'))
     <ol class="steps">
       {steps.map((s, i) => (
         <li class="step">
-          <div class="step__photo"><PhotoFrame src={s.image} alt={s.alt} label={s.title} focus={s.focus} shape="soft" ratio="4 / 3" sizes="(min-width: 900px) 30vw, 90vw" /></div>
-          <span class="step__n">{String(i + 1).padStart(2, '0')}</span>
-          <h3 class="step__title">{s.title}</h3>
+          <div class="step__photo">
+            <PhotoFrame src={s.image} alt={s.alt} label={s.title} focus={s.focus} shape="rounded" ratio="5 / 4" sizes="(min-width: 900px) 30vw, 90vw" />
+            <div class="step__tab">
+              <span class="step__n">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="step__title">{s.title}</h3>
+            </div>
+          </div>
           <p class="step__text">{s.text}</p>
           {s.book ? <BookButton variant="text">{s.button}</BookButton> : <Button variant="text" href={s.href}>{s.button}</Button>}
         </li>
@@ -99,7 +106,9 @@ const recent = (await getCollection('gallery'))
     </ol>
   </Section>
 
-  <Section bg="var(--surface-raised)" mark="end">
+  <Marquee items={specialties.map((s) => s.label)} />
+
+  <Section bg="var(--surface-raised)">
     <SectionHeading eyebrow={home.specialties.eyebrow} script={home.specialties.script} title={home.specialties.title} />
     <ul class="specialties">
       {specialties.map((s) => (
@@ -133,24 +142,31 @@ const recent = (await getCollection('gallery'))
         <Button variant="outline" href={url('experience/')}>{experience.button}</Button>
       </div>
       <div class="split__photo">
-        <PhotoFrame framed="light" src={experience.image} alt={experience.alt} shape="arch" ratio="4 / 5" focus={experience.focus} sizes="(min-width: 900px) 40vw, 90vw" />
+        <PhotoPair src={experience.image} alt={experience.alt} focus={experience.focus} src2={experience.image2} alt2={experience.alt2} focus2={experience.focus2} ring="var(--surface-sand)" />
       </div>
     </div>
   </Section>
 
-  <Section bg="var(--surface-olive)" mark="start">
+  <Section bg="var(--surface-moody)" curve>
     <SectionHeading tone="dark" eyebrow={home.reviews.eyebrow} script={home.reviews.script} title={home.reviews.title} />
-    <div class="letters">
-      {lead && (
-        <div class="letters__lead">
-          <ReviewCard tone="dark" quote={lead.data.quote} name={lead.data.name} detail={lead.data.stylist ? `with ${stylistName(lead.data.stylist)}` : lead.data.detail} rating={lead.data.rating} />
-        </div>
-      )}
-      <div class="letters__rest">
-        {others.map((r) => (
-          <ReviewCard tone="dark" quote={r.data.quote} name={r.data.name} detail={r.data.stylist ? `with ${stylistName(r.data.stylist)}` : r.data.detail} rating={r.data.rating} />
+    <!-- One love letter at a time. Without JavaScript they are simply listed one under another. -->
+    <div class="letters" data-letters aria-roledescription="carousel" aria-label="Love letters from our clients">
+      <div class="letters__stage">
+        {letters.map((r, i) => (
+          <div class="letter" data-letter data-active={i === 0}>
+            <ReviewCard tone="dark" quote={r.data.quote} name={r.data.name} detail={r.data.stylist ? `with ${stylistName(r.data.stylist)}` : r.data.detail} rating={r.data.rating} />
+          </div>
         ))}
       </div>
+      {letters.length > 1 && (
+        <div class="letters__nav">
+          <button type="button" class="letters__arrow" data-letter-prev aria-label="Previous love letter"><ChevronLeft size={20} stroke-width={1.5} /></button>
+          <div class="letters__dots">
+            {letters.map((_, i) => <button type="button" data-letter-dot aria-label={`Love letter ${i + 1} of ${letters.length}`} data-active={i === 0}></button>)}
+          </div>
+          <button type="button" class="letters__arrow" data-letter-next aria-label="Next love letter"><ChevronRight size={20} stroke-width={1.5} /></button>
+        </div>
+      )}
     </div>
   </Section>
 
@@ -166,18 +182,69 @@ const recent = (await getCollection('gallery'))
     </div>
   </Section>
 
-  <section class="band">
-    <Emblem>
-    <div class="hiring" data-reveal>
+  <Section bg="var(--surface-terracotta)" center curve>
+    <div class="hiring">
       {home.hiring.badge && <Badge tone="ivory">{home.hiring.badge}</Badge>}
       <SectionHeading tone="dark" eyebrow={home.hiring.eyebrow} script={home.hiring.script} title={home.hiring.title} intro={home.hiring.text} />
       <Button variant="ivory" href={url('careers/')}>{home.hiring.button}</Button>
     </div>
-    </Emblem>
-  </section>
+  </Section>
 </BaseLayout>
 
 <script>
+  // Love letters: one at a time, moving on every 8 seconds. It waits while the guest is reading (pointer or keyboard
+  // focus on it), while it is off screen, and in a background tab; with reduced motion it only moves when asked.
+  let lettersTimer: number | undefined;
+  document.addEventListener('astro:page-load', () => {
+    window.clearInterval(lettersTimer);
+    const root = document.querySelector<HTMLElement>('[data-letters]');
+    if (!root) return; // not the home page
+    const letters = [...root.querySelectorAll<HTMLElement>('[data-letter]')];
+    const dots = [...root.querySelectorAll<HTMLButtonElement>('[data-letter-dot]')];
+    if (letters.length < 2) return;
+    let current = 0;
+    let onScreen = false;
+    let reading = false;
+
+    const show = (i: number) => {
+      current = (i + letters.length) % letters.length;
+      letters.forEach((el, k) => {
+        el.dataset.active = String(k === current);
+        el.toggleAttribute('aria-hidden', k !== current);
+      });
+      dots.forEach((d, k) => (d.dataset.active = String(k === current)));
+    };
+    const resume = () => {
+      window.clearInterval(lettersTimer);
+      if (!root.isConnected) return document.removeEventListener('visibilitychange', resume); // left the home page
+      if (!onScreen || reading || document.hidden || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      lettersTimer = window.setInterval(() => show(current + 1), 8000);
+    };
+    // A letter the guest picked restarts the wait, so it is not swapped out from under them.
+    const go = (i: number) => {
+      show(i);
+      resume();
+    };
+
+    dots.forEach((d, i) => d.addEventListener('click', () => go(i)));
+    root.querySelector('[data-letter-prev]')?.addEventListener('click', () => go(current - 1));
+    root.querySelector('[data-letter-next]')?.addEventListener('click', () => go(current + 1));
+    const setReading = (value: boolean) => () => {
+      reading = value;
+      resume();
+    };
+    root.addEventListener('pointerenter', setReading(true));
+    root.addEventListener('pointerleave', setReading(false));
+    root.addEventListener('focusin', setReading(true));
+    root.addEventListener('focusout', setReading(false));
+    new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      resume();
+    }).observe(root);
+    document.addEventListener('visibilitychange', resume);
+    show(0);
+  });
+
   // Hero: cross-fades photos every 6s (design system: 1.2s cross-fade). Static when reduced motion is on.
   // Guests can also swipe between photos on touch screens, or tap the dots.
   let timer: number | undefined;
@@ -326,20 +393,21 @@ const recent = (await getCollection('gallery'))
   .hero__dots button::before { content: ''; width: 10px; height: 10px; border-radius: 999px; background: var(--rh-ivory-30); transition: width var(--dur-base) var(--ease-soft), background var(--dur-base) var(--ease-soft); }
   .hero__dots button[data-active='true']::before { width: 36px; background: var(--rh-sand); }
 
-  .steps { list-style: none; margin: 48px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; counter-reset: none; }
-  .step { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 0 28px 32px; border-radius: var(--radius-lg); background: var(--surface-sand); overflow: hidden; }
-  .step__photo { align-self: stretch; margin: 0 -28px 14px; }
-  .step__photo :global(.pf) { border-radius: 0; }
-  .step__n { font-family: var(--font-display); font-size: 52px; line-height: 1; color: var(--rh-terracotta); display: flex; align-items: center; gap: 16px; }
-  .step__n::after { content: ''; width: 56px; height: 1px; background: var(--rh-terracotta); }
-  .step__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 26px; color: var(--text-strong); }
-  .step__text { margin: 0 0 4px; color: var(--text-muted); }
-  .step > :global(.btn) { margin-top: auto; } /* links share one line across the row, however long the text above */
+  .steps { list-style: none; margin: 48px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px 28px; }
+  .step { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; }
+  /* The label sits half on the photo and half below it. */
+  .step__photo { position: relative; align-self: stretch; margin-bottom: 36px; }
+  /* `transform`, not `translate`: the scroll reveal animates `translate` on this element. */
+  .step__tab { position: absolute; left: 50%; bottom: 0; transform: translate(-50%, 50%); max-width: 92%; box-sizing: border-box; display: flex; align-items: baseline; gap: 12px;
+    padding: 14px 26px; border-radius: var(--radius-pill); background: var(--rh-ivory); box-shadow: var(--shadow-soft); white-space: nowrap; }
+  .step__n { font-family: var(--font-display); font-size: 18px; line-height: 1; color: var(--rh-terracotta); }
+  .step__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(18px, 1.7vw, 22px); line-height: 1.2; color: var(--text-strong); }
+  .step__text { margin: 0 0 2px; max-width: 30ch; color: var(--text-muted); }
 
   .split { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
   .split--flip { grid-template-columns: 1.1fr 1fr; }
   .split__text { display: flex; flex-direction: column; gap: 28px; align-items: flex-start; }
-  .split__photo { max-width: 520px; width: 100%; justify-self: center; }
+  .split__photo { max-width: 560px; width: 100%; justify-self: center; }
   .split--flip .split__photo { justify-self: end; } /* on the content edge, in line with the sections around it */
   .specialties { list-style: none; margin: 48px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px 20px; }
   .sp__link { display: flex; flex-direction: column; gap: 14px; text-decoration: none; color: var(--text-strong); }
@@ -354,32 +422,43 @@ const recent = (await getCollection('gallery'))
   .sp__cta-title { font-family: var(--font-display); font-size: 28px; line-height: 1.15; }
   .sp__cta-text { font-size: 15px; color: var(--text-on-dark-muted); }
 
-  .letters { margin: 48px 0 8px; display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: start; }
-  .letters__lead :global(.review__quote) { font-size: clamp(24px, 2.4vw, 32px); line-height: 1.4; }
-  .letters__rest { columns: 2; column-gap: 36px; }
-  .letters__rest > :global(*) { break-inside: avoid; margin-bottom: 36px; }
-  .letters__rest :global(.review__quote) { font-size: 18px; }
+  .letters { max-width: 860px; margin: 48px auto 0; text-align: center; }
+  .letter + .letter { margin-top: 48px; }
+  .letter :global(.review) { align-items: center; gap: 22px; }
+  .letter :global(.review__quote) { font-size: clamp(22px, 2.5vw, 32px); line-height: 1.45; text-wrap: balance; }
+  .letter :global(.review__by) { align-items: center; }
+  .letters__nav { display: none; }
+  /* With JavaScript the letters share one spot (as tall as the longest), and only the current one shows. */
+  :global(.js) .letters__stage { display: grid; align-items: center; }
+  :global(.js) .letter { grid-area: 1 / 1; margin: 0; opacity: 0; visibility: hidden;
+    transition: opacity var(--dur-reveal) var(--ease-soft), visibility 0s linear var(--dur-reveal); }
+  :global(.js) .letter[data-active='true'] { opacity: 1; visibility: visible; transition-delay: 0s; }
+  :global(.js) .letters__nav { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 36px; }
+  .letters__arrow { width: 44px; height: 44px; padding: 0; display: grid; place-items: center; cursor: pointer; border-radius: 50%;
+    border: 1px solid var(--border-on-dark); background: transparent; color: var(--rh-ivory);
+    transition: background var(--dur-base) var(--ease-soft), color var(--dur-base) var(--ease-soft); }
+  .letters__arrow:hover { background: var(--rh-ivory); color: var(--rh-espresso); }
+  .letters__dots { display: flex; }
+  .letters__dots button { min-width: 24px; height: 24px; padding: 0; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
+  .letters__dots button::before { content: ''; width: 10px; height: 10px; border-radius: 999px; background: var(--rh-ivory-30); transition: width var(--dur-base) var(--ease-soft), background var(--dur-base) var(--ease-soft); }
+  .letters__dots button[data-active='true']::before { width: 36px; background: var(--rh-sand); }
   .center { display: flex; justify-content: center; }
 
   .work__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 36px; flex-wrap: wrap; }
   .work__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-  .band { position: relative; overflow: hidden; padding: var(--section-y) var(--gutter); background: var(--surface-terracotta); text-align: center; }
-  .hiring { position: relative; z-index: 1; max-width: var(--container-max); margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 24px; }
+  .hiring { display: flex; flex-direction: column; align-items: center; gap: 24px; }
 
   @media (max-width: 900px) {
-    .steps { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr; max-width: 440px; margin-inline: auto; }
     .split, .split--flip { grid-template-columns: 1fr; }
     .split--flip .split__photo { order: -1; justify-self: center; }
-    .letters { grid-template-columns: 1fr; }
     .specialties { grid-template-columns: repeat(2, 1fr); }
     .work__grid { grid-template-columns: repeat(2, 1fr); }
   }
-  @media (max-width: 1100px) and (min-width: 901px) { .letters__rest { columns: 1; } }
   @media (max-width: 560px) {
     .hero__eyebrow { font-size: 10.5px; letter-spacing: .2em; padding: 7px 14px; }
     /* Stacked buttons share the width of the wider one, so the pair reads as one block. */
     .hero__actions { display: grid; justify-content: start; }
-    .letters__rest { columns: 1; }
     .hero__content { padding-bottom: 72px; }
     .hero__shade--left, .hero__shade--right, .hero[data-align='right'] .hero__shade--left { opacity: 1;
       background: linear-gradient(0deg, rgba(59, 40, 25, .9) 0%, rgba(59, 40, 25, .65) 45%, rgba(59, 40, 25, 0) 80%); }

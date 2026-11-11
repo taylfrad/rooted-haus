@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
 import PageHeader from '../components/PageHeader.astro';
 import PhotoFrame from '../components/content/PhotoFrame.astro';
+import PhotoPair from '../components/content/PhotoPair.astro';
 import ContactForm from '../components/forms/ContactForm.astro';
 import Field from '../components/forms/Field.astro';
 import FileField from '../components/forms/FileField.astro';
@@ -34,7 +35,7 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
         <Button variant="outline" href={url('team/')}>Meet the Haus</Button>
       </div>
       <div class="split__photo">
-        <PhotoFrame framed="light" src={c.photo.image} alt={c.photo.alt} shape="rounded" ratio="4 / 5" focus={c.photo.focus} sizes="(min-width: 900px) 40vw, 90vw" />
+        <PhotoPair src={c.photo.image} alt={c.photo.alt} focus={c.photo.focus} src2={c.photo2?.image} alt2={c.photo2?.alt} focus2={c.photo2?.focus} side="end" />
       </div>
     </div>
     {c.photos.length > 0 && (
@@ -44,7 +45,7 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
     )}
   </Section>
 
-  <Section bg="var(--surface-raised)" mark="end">
+  <Section bg="var(--surface-raised)">
     <h2 class="title-m h2">{c.perksTitle}</h2>
     <ul class="ticks ticks--cols">{c.perks.map((p) => <li><Check size={18} stroke-width={1.5} />{p}</li>)}</ul>
 
@@ -66,7 +67,7 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
     </div>
   </Section>
 
-  <Section bg="var(--surface-olive)">
+  <Section bg="var(--surface-olive)" curve>
     <h2 class="title-m title-m--dark h2 h2--dark">{c.quotesTitle}</h2>
     <div class="quotes">
       {c.stylistQuotes.map((q) => (

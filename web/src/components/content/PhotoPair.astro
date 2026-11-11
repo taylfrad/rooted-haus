@@ -1,0 +1,45 @@
+---
+// Two photos as one composition: a large arched one, and a smaller one overlapping its lower corner.
+// With only one photo it is simply that photo, framed.
+import type { ImageMetadata } from 'astro';
+import PhotoFrame from './PhotoFrame.astro';
+
+interface Props {
+  src?: ImageMetadata;
+  alt?: string;
+  focus?: string;
+  /** The smaller photo that overlaps the corner (optional). */
+  src2?: ImageMetadata;
+  alt2?: string;
+  focus2?: string;
+  /** Which lower corner the smaller photo sits on. */
+  side?: 'start' | 'end';
+  /** The color of the section behind, used for the gap around the smaller photo. */
+  ring?: string;
+  label?: string;
+}
+const { src, alt = '', focus, src2, alt2 = '', focus2, side = 'start', ring = 'var(--surface-page)', label } = Astro.props;
+---
+
+<div class:list={['pair', `pair--${side}`, { 'pair--single': !src2 }]} style={`--pair-ring:${ring}`}>
+  <div class="pair__main">
+    <PhotoFrame framed="light" {src} {alt} {focus} {label} shape="arch" ratio="4 / 5" sizes="(min-width: 900px) 36vw, 80vw" />
+  </div>
+  {src2 && (
+    <div class="pair__second">
+      <PhotoFrame src={src2} alt={alt2} focus={focus2} shape="rounded" ratio="4 / 5" sizes="(min-width: 900px) 20vw, 42vw" />
+    </div>
+  )}
+</div>
+
+<style>
+  .pair { position: relative; padding-bottom: 14%; }
+  .pair__main { width: 80%; margin-left: auto; }
+  /* The gap around the smaller photo is a ring in the section's own color, so it reads as cut out of the large one. */
+  .pair__second { position: absolute; left: 0; bottom: 0; width: 44%; border-radius: var(--radius-lg);
+    box-shadow: 0 0 0 10px var(--pair-ring), var(--shadow-lift); }
+  .pair--end .pair__main { margin-left: 0; margin-right: auto; }
+  .pair--end .pair__second { left: auto; right: 0; }
+  .pair--single { padding-bottom: 0; }
+  .pair--single .pair__main { width: 100%; }
+</style>

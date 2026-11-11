@@ -10,11 +10,16 @@
 --dur-slow:1200ms;
 --stagger-reveal:80ms;
 --stagger-reveal-max:320ms;
+--stagger-line:130ms;
 --lift:4px;
 --dur-page-out:140ms;
 --dur-page:420ms;
 --rise-page:12px;
 --rise-reveal:16px;
+/* A fine paper grain laid over the flat colors (a tiny tile drawn once and repeated). */
+--grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .23 0 0 0 0 .16 0 0 0 0 .1 .16 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+/* How far a curved section edge rises over the section above. */
+--curve:clamp(28px,5vw,72px);
 --photo-warmth:sepia(.12) saturate(.9);
 --overlay-moody:linear-gradient(180deg,rgba(59,40,25,0) 40%,rgba(59,40,25,.65) 100%);
 }

@@ -1,45 +1,26 @@
 ---
-import monogram from '../assets/monogram-sand.png';
-
 interface Props {
   bg?: string;
   center?: boolean;
   id?: string;
-  /** Desktop only: the whole RH monogram stands beside this section's content, on this side. On very wide screens it
-      sits in the empty margin; on laptops the content moves over to make room for it. It never sits under the content
-      and is never cut off by the edge of the screen. Phones and tablets do not show it. */
-  mark?: 'start' | 'end';
+  /** The top edge rises in a wide, shallow arch over the section above, instead of meeting it in a straight line. */
+  curve?: boolean;
 }
-const { bg = 'var(--surface-page)', center = false, id, mark } = Astro.props;
-const dark = /olive|terracotta|chocolate|moody/.test(bg);
+const { bg = 'var(--surface-page)', center = false, id, curve = false } = Astro.props;
 ---
 
-<section id={id} style={`background:${bg}`} class:list={['section', { 'section--center': center, 'section--marked': mark, 'on-olive': bg.includes('olive') }, mark && `section--mark-${mark}`]}>
-  {mark && <span class:list={['section__mark', `section__mark--${mark}`, { 'section__mark--dark': dark }]} style={`--mark:url(${monogram.src})`} aria-hidden="true" />}
+<section id={id} style={`background-color:${bg}`} class:list={['section', { 'section--center': center, 'section--curve': curve, 'on-olive': bg.includes('olive') }]}>
   <div class="section__inner" data-reveal><slot /></div>
 </section>
 
 <style>
-  .section { padding: var(--section-y) var(--gutter); }
+  /* background-color (not the shorthand) is set inline, so the paper grain below is kept on every section. */
+  .section { padding: var(--section-y) var(--gutter); background-image: var(--grain); }
   .section--center { text-align: center; }
   .section__inner { max-width: var(--container-max); margin: 0 auto; }
 
-  .section__mark { display: none; aspect-ratio: 640 / 579; background: var(--rh-chocolate); opacity: .14; pointer-events: none;
-    -webkit-mask: var(--mark) center / contain no-repeat; mask: var(--mark) center / contain no-repeat; }
-  .section__mark--dark { background: var(--rh-sand); opacity: .2; }
-
-  /* Three columns: margin, content, margin. The margin on the monogram's side is never narrower than the monogram
-     plus breathing room. On a very wide screen both margins are already wider than that, so the content stays
-     centered; on a laptop that margin holds its width and the content moves over (and narrows a little) instead. */
-  @media (min-width: 1360px) {
-    .section--marked { --mark-w: clamp(260px, 21vw, 440px); --mark-room: calc(var(--mark-w) + 56px + var(--gutter));
-      display: grid; align-items: start; padding-left: 0; padding-right: 0; }
-    .section--mark-end { grid-template-columns: minmax(var(--gutter), 1fr) minmax(0, var(--container-max)) minmax(var(--mark-room), 1fr); }
-    .section--mark-start { grid-template-columns: minmax(var(--mark-room), 1fr) minmax(0, var(--container-max)) minmax(var(--gutter), 1fr); }
-    .section--marked .section__inner { grid-column: 2; grid-row: 1; width: 100%; max-width: none; min-width: 0; margin: 0; }
-    /* It stays in the middle of the screen while its section scrolls past, so a long section never leaves it behind. */
-    .section__mark { display: block; grid-row: 1; justify-self: center; width: var(--mark-w); position: sticky; top: calc(50vh - var(--mark-w) * .45 + 36px); }
-    .section__mark--end { grid-column: 3; }
-    .section__mark--start { grid-column: 1; }
-  }
+  /* The arch is a cap in the section's own color, sitting in the bottom padding of the section above. */
+  .section--curve { position: relative; }
+  .section--curve::before { content: ''; position: absolute; left: 0; right: 0; bottom: calc(100% - 1px); height: var(--curve);
+    background-color: inherit; border-radius: 50% 50% 0 0 / 100% 100% 0 0; pointer-events: none; }
 </style>

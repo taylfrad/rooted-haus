@@ -1,0 +1,39 @@
+---
+// One slow line of oversized words moving across the screen, alternating the serif and the handwritten font.
+// Decorative: the same words appear as real content elsewhere on the page, so screen readers skip this.
+interface Props {
+  items: string[];
+}
+const { items } = Astro.props;
+---
+
+{items.length > 0 && (
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      {/* Two identical halves: the track slides left by exactly one half, then starts over, so the loop has no seam. */}
+      {[0, 1].map(() => (
+        <div class="marquee__half">
+          {items.map((item, i) => (
+            <span class:list={['marquee__item', { 'marquee__item--script': i % 2 === 1 }]}>{item}</span>
+          ))}
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+
+<style>
+  .marquee { overflow: hidden; padding: clamp(20px, 3vw, 36px) 0; background-color: var(--surface-sand); background-image: var(--grain);
+    border-block: 1px solid var(--border-hairline); }
+  .marquee__track { display: flex; width: max-content; animation: marquee-slide 60s linear infinite; }
+  .marquee:hover .marquee__track { animation-play-state: paused; }
+  .marquee__half { display: flex; align-items: baseline; flex: none; }
+  .marquee__item { display: flex; align-items: baseline; white-space: nowrap; font-family: var(--font-display);
+    font-size: clamp(30px, 4.4vw, 58px); line-height: 1.2; color: var(--rh-chocolate); }
+  .marquee__item--script { font-family: var(--font-script); font-size: clamp(38px, 5.4vw, 72px); color: var(--text-script); text-transform: lowercase; }
+  /* The dot between words belongs to each word, so both halves are exactly the same width. */
+  .marquee__item::after { content: '·'; margin: 0 clamp(20px, 3vw, 44px); font-family: var(--font-display); font-size: clamp(30px, 4.4vw, 58px); color: var(--rh-terracotta); }
+  @keyframes marquee-slide { to { transform: translateX(-50%); } }
+  /* Reduced motion: a still line. (The site-wide rule only shortens animations, which would make this one race.) */
+  @media (prefers-reduced-motion: reduce) { .marquee__track { animation: none; } }
+</style>

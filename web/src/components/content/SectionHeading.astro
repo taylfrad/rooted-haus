@@ -1,4 +1,6 @@
 ---
+import { emphasis } from '../../lib/emphasis';
+
 interface Props {
   eyebrow?: string;
   script?: string;
@@ -22,7 +24,7 @@ const { eyebrow, script, title, intro, align = 'center', tone = 'light', ruled =
     </div>
   )}
   {script && <span class="sh__script">{script}</span>}
-  {title && <Heading class="sh__title">{title}</Heading>}
+  {title && <Heading class="sh__title" data-lines={Heading === 'h1' ? '' : undefined}>{emphasis(title).map((p) => (p.accent ? <em class="accent">{p.text}</em> : p.text))}</Heading>}
   {intro && <p class="sh__intro">{intro}</p>}
 </div>
 
@@ -40,6 +42,7 @@ const { eyebrow, script, title, intro, align = 'center', tone = 'light', ruled =
   .sh__rule:first-child { margin-right: 16px; }
   .sh__rule:last-child { margin-left: 16px; }
   .sh--dark .sh__eyebrow { color: var(--rh-ivory); }
+  .sh--dark { --accent-ink: var(--rh-caramel-soft); }
   .sh--sage .sh__eyebrow, .sh--sage .sh__script, .sh--sage .sh__intro { color: var(--rh-espresso); }
   .sh--sage .sh__rule { background: var(--rh-espresso); }
   /* A real width (not flex-basis): an empty span's flex-basis is ignored when the row sizes itself to fit. */
@@ -53,6 +56,8 @@ const { eyebrow, script, title, intro, align = 'center', tone = 'light', ruled =
     font-size: clamp(30px, 4vw, var(--fs-display-l)); line-height: var(--lh-tight);
     letter-spacing: var(--ls-display); color: var(--text-strong); text-wrap: balance; }
   .sh--dark .sh__title { color: var(--rh-ivory); }
+  /* Room under the heading for the handwritten phrase's tails (g, y), so they do not touch the line below. */
+  .sh__title:has(:global(.accent)) { padding-bottom: .2em; }
   .sh__intro { margin: 0; max-width: 620px; font-size: var(--fs-body-l); line-height: var(--lh-body);
     color: var(--text-muted); text-wrap: pretty; }
   .sh--dark .sh__intro { color: var(--text-on-dark-muted); }

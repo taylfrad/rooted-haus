@@ -10,7 +10,6 @@ import Button from '../components/core/Button.astro';
 import { url } from '../lib/paths';
 import { site } from '../lib/site';
 import { getPage } from '../lib/pages';
-import Emblem from '../components/Emblem.astro';
 
 const page = await getPage('experiencePage');
 
@@ -23,7 +22,7 @@ const shapes = ['arch', 'rounded'] as const;
 <BaseLayout title={page.seo.title} description={page.seo.description}>
   <PageHeader {...page.header} />
 
-  <Section bg="var(--surface-terracotta)" mark="end">
+  <Section bg="var(--surface-terracotta)">
     <div class="rows">
       {page.opening && (
         <div class="opening">
@@ -62,8 +61,7 @@ const shapes = ['arch', 'rounded'] as const;
     </div>
   </Section>
 
-  <Section bg="var(--surface-chocolate)" center>
-    <Emblem side="start">
+  <Section bg="var(--surface-chocolate)" center curve>
     <div class="closing">
       {page.closing.script && <span class="closing__script">{page.closing.script}</span>}
       <p class="closing__line">{page.closing.text}</p>
@@ -72,7 +70,6 @@ const shapes = ['arch', 'rounded'] as const;
         <Button variant="outline" tone="dark" size="lg" href={url('services/')}>See our Rituals</Button>
       </div>
     </div>
-    </Emblem>
   </Section>
 </BaseLayout>
 
