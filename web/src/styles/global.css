@@ -36,8 +36,13 @@ img{max-width:100%;display:block}
 
 /* Hover lift for anything clickable that holds a photo or a card. Put .lift on the thing that rises; if the link
    is a parent of it, put .lift-host on the link. Give the lifted element its own border-radius so the shadow fits. */
-.lift{transition:transform var(--dur-base) var(--ease-soft),box-shadow var(--dur-base) var(--ease-soft)}
-:is(a,button).lift:hover,.lift-host:hover .lift{transform:translateY(calc(-1 * var(--lift)));box-shadow:var(--shadow-lift)}
+.lift{position:relative;transition:transform var(--dur-base) var(--ease-soft)}
+/* The shadow is drawn once on a layer of its own and only its opacity changes. Animating box-shadow itself makes
+   the browser redraw the element, photo and tint included, on every frame of the hover. */
+.lift::after{content:'';position:absolute;inset:0;border-radius:inherit;box-shadow:var(--shadow-lift);opacity:0;
+  pointer-events:none;transition:opacity var(--dur-base) var(--ease-soft)}
+:is(a,button).lift:hover,.lift-host:hover .lift{transform:translateY(calc(-1 * var(--lift)))}
+:is(a,button).lift:hover::after,.lift-host:hover .lift::after{opacity:1}
 
 /* Outlined pill: the category links on The Rituals, the filters on the Gallery. */
 .pill{display:inline-flex;align-items:center;font:inherit;font-size:12px;font-weight:500;letter-spacing:var(--ls-button);
@@ -51,6 +56,11 @@ img{max-width:100%;display:block}
   text-decoration:underline;text-underline-offset:6px;text-decoration-color:transparent;
   transition:text-decoration-color var(--dur-base) var(--ease-soft)}
 .caps-link:hover,.lift-host:hover .caps-link{color:inherit;text-decoration-color:currentColor}
+
+/* Touch screens: small text links get a taller area to tap, without changing how they look with a mouse. */
+@media (pointer:coarse){
+  .caps-link{display:inline-block;padding-block:10px}
+}
 
 /* Skip link: hidden until focused by keyboard */
 .skip-link{position:absolute;left:var(--gutter);top:-80px;z-index:100;padding:12px 24px;border-radius:var(--radius-pill);

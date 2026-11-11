@@ -12,8 +12,12 @@ It crops the circular RH emblem from `web/src/assets/logo-wordmark-chocolate.png
 
 **Share banner** (`web/public/og.png`, 1200 x 630, used for Facebook, Twitter/X, iMessage and Slack previews):
 
-1. `pnpm dev`, then open `http://localhost:4321/dev/og/` (a dev-only page, not part of the production build).
-2. Make the browser window exactly 1200 x 630 and screenshot the page into `web/public/og.png`.
+1. `pnpm dev`, so `http://localhost:4321/dev/og/` is being served (a dev-only page, not part of the production build).
+2. Let Chrome take the picture at exactly 1200 x 630 (adjust the path to Chrome on a Mac or Linux machine):
+
+   ```bash
+   "C:/Program Files/Google/Chrome/Application/chrome.exe" --headless --hide-scrollbars --window-size=1200,630 --virtual-time-budget=6000 --screenshot=web/public/og.png http://localhost:4321/dev/og/
+   ```
 
 **Photo shoot** (`web/src/assets/photos/{hero,stylists,rituals}/`):
 

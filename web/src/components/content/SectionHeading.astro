@@ -39,6 +39,7 @@ const { eyebrow, script, title, intro, align = 'center', tone = 'light', ruled =
     letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
   /* letter-spacing also follows the last letter; cancel it so the label sits centered between its rules */
   .sh__label { white-space: nowrap; margin-right: calc(-1 * var(--ls-eyebrow)); }
+  @media (max-width: 480px) { .sh__label { white-space: normal; text-align: center; } .sh--left .sh__label { text-align: left; } }
   .sh__rule:first-child { margin-right: 16px; }
   .sh__rule:last-child { margin-left: 16px; }
   .sh--dark .sh__eyebrow { color: var(--rh-ivory); }

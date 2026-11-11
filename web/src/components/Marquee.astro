@@ -25,7 +25,7 @@ const { items } = Astro.props;
 <style>
   .marquee { overflow: hidden; padding: clamp(20px, 3vw, 36px) 0; background-color: var(--surface-sand); background-image: var(--grain);
     border-block: 1px solid var(--border-hairline); }
-  .marquee__track { display: flex; width: max-content; animation: marquee-slide 60s linear infinite; }
+  .marquee__track { display: flex; width: max-content; will-change: transform; animation: marquee-slide 60s linear infinite; }
   .marquee:hover .marquee__track { animation-play-state: paused; }
   .marquee__half { display: flex; align-items: baseline; flex: none; }
   .marquee__item { display: flex; align-items: baseline; white-space: nowrap; font-family: var(--font-display);

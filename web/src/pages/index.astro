@@ -15,6 +15,7 @@ import Marquee from '../components/Marquee.astro';
 import PhotoPair from '../components/content/PhotoPair.astro';
 import { ChevronLeft, ChevronRight } from '@lucide/astro';
 import { emphasis } from '../lib/emphasis';
+import logoIvory from '../assets/logo-wordmark-ivory.png';
 import { url } from '../lib/paths';
 import { site } from '../lib/site';
 import { getPage } from '../lib/pages';
@@ -69,6 +70,22 @@ const recent = (await getCollection('gallery'))
     <div class="hero__top" aria-hidden="true"></div>
     <div class="hero__shade hero__shade--left" aria-hidden="true"></div>
     <div class="hero__shade hero__shade--right" aria-hidden="true"></div>
+    <!-- First visit of a browsing session only: the full logo appears over the photo for a moment, then makes way
+         for the words. The tiny script below decides, before anything is painted, whether this is that first visit. -->
+    <div class="hero__welcome" aria-hidden="true">
+      <Image src={logoIvory} alt="" width={640} densities={[1, 2]} loading="eager" />
+    </div>
+    <script is:inline>
+      (() => {
+        const hero = document.currentScript.closest('.hero');
+        try {
+          if (sessionStorage.getItem('rh-welcomed') || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          sessionStorage.setItem('rh-welcomed', '1');
+        } catch { return; } // storage blocked: skip the welcome rather than show it on every page view
+        hero.classList.add('is-welcoming');
+        setTimeout(() => hero.classList.remove('is-welcoming'), 3600);
+      })();
+    </script>
     <div class="hero__content">
       <div class="hero__eyebrow"><span>{home.hero.eyebrow}</span></div>
       <div class="hero__scripts">
@@ -367,6 +384,15 @@ const recent = (await getCollection('gallery'))
       linear-gradient(0deg, rgba(59, 40, 25, .55) 0%, rgba(59, 40, 25, 0) 45%); }
   .hero[data-align='right'] .hero__shade--left { opacity: 0; }
   .hero[data-align='right'] .hero__shade--right { opacity: 1; }
+  /* The welcome: logo in (0.6s), held (1.2s), out (0.6s); the words wait for it, then fade in. */
+  .hero__welcome { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; padding: 0 var(--gutter);
+    opacity: 0; visibility: hidden; pointer-events: none;
+    background: radial-gradient(ellipse 60% 55% at 50% 50%, rgba(59, 40, 25, .72) 0%, rgba(59, 40, 25, .45) 45%, rgba(59, 40, 25, 0) 75%); }
+  .hero__welcome :global(img) { width: min(640px, 82vw); height: auto; }
+  .hero.is-welcoming .hero__welcome { visibility: visible; animation: hero-welcome 2.4s var(--ease-soft) both; }
+  .hero.is-welcoming .hero__content, .hero.is-welcoming .hero__dots { animation: hero-words .9s var(--ease-soft) 2.2s both; }
+  @keyframes hero-welcome { 0% { opacity: 0; } 25%, 75% { opacity: 1; } 100% { opacity: 0; } }
+  @keyframes hero-words { from { opacity: 0; } }
   .hero__content { position: absolute; left: 0; right: 0; bottom: 0; max-width: var(--container-max); margin: 0 auto;
     padding: 0 var(--gutter) clamp(72px, 9vh, 104px); display: flex; flex-direction: column; gap: 16px; }
   .hero__content > * { max-width: 600px; }
@@ -376,7 +402,7 @@ const recent = (await getCollection('gallery'))
   .hero[data-align='right'] .hero__actions { justify-content: flex-end; }
   /* Small text over a changing photo: a translucent espresso pill keeps it readable on every slide. */
   .hero__eyebrow { display: inline-flex; padding: 7px 16px; border-radius: var(--radius-pill);
-    background: rgba(59, 40, 25, .78); backdrop-filter: blur(4px); font-size: 12px; font-weight: 500;
+    background: rgba(59, 40, 25, .82); font-size: 12px; font-weight: 500;
     letter-spacing: .32em; text-transform: uppercase; color: var(--rh-ivory); }
   /* Wider than the rest of the text, but capped so a long phrase wraps instead of running across a face. */
   .hero__content > .hero__scripts { display: grid; max-width: 640px; align-items: end; }
@@ -387,9 +413,9 @@ const recent = (await getCollection('gallery'))
   .hero__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 3.4vw, 44px);
     line-height: 1.15; text-wrap: balance; text-shadow: 0 1px 18px rgba(59, 40, 25, .45); }
   .hero__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 8px; }
-  .hero__dots { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); display: none; }
+  .hero__dots { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); display: none; }
   .hero.has-slides .hero__dots { display: flex; }
-  .hero__dots button { min-width: 24px; height: 24px; padding: 0; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
+  .hero__dots button { min-width: 28px; height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
   .hero__dots button::before { content: ''; width: 10px; height: 10px; border-radius: 999px; background: var(--rh-ivory-30); transition: width var(--dur-base) var(--ease-soft), background var(--dur-base) var(--ease-soft); }
   .hero__dots button[data-active='true']::before { width: 36px; background: var(--rh-sand); }
 
@@ -439,7 +465,7 @@ const recent = (await getCollection('gallery'))
     transition: background var(--dur-base) var(--ease-soft), color var(--dur-base) var(--ease-soft); }
   .letters__arrow:hover { background: var(--rh-ivory); color: var(--rh-espresso); }
   .letters__dots { display: flex; }
-  .letters__dots button { min-width: 24px; height: 24px; padding: 0; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
+  .letters__dots button { min-width: 28px; height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
   .letters__dots button::before { content: ''; width: 10px; height: 10px; border-radius: 999px; background: var(--rh-ivory-30); transition: width var(--dur-base) var(--ease-soft), background var(--dur-base) var(--ease-soft); }
   .letters__dots button[data-active='true']::before { width: 36px; background: var(--rh-sand); }
   .center { display: flex; justify-content: center; }
@@ -473,7 +499,7 @@ const recent = (await getCollection('gallery'))
     .hero__title { font-size: clamp(22px, 5.5vh, 34px); }
     .hero__actions { margin-top: 2px; gap: 10px; }
     .hero__actions :global(.btn--lg) { padding: 12px 26px; font-size: 12px; }
-    .hero__dots { bottom: 12px; }
+    .hero__dots { bottom: 2px; }
   }
   @media (max-height: 440px) {
     .hero__eyebrow { display: none; }
