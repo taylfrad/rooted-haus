@@ -3,19 +3,24 @@ import { getCollection } from 'astro:content';
 import { getImage } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Section from '../layouts/Section.astro';
-import PageHeader from '../components/PageHeader.astro';
+import SectionHeading from '../components/content/SectionHeading.astro';
 import PhotoFrame from '../components/content/PhotoFrame.astro';
+import Button from '../components/core/Button.astro';
 import BookButton from '../components/core/BookButton.astro';
 import { site } from '../lib/site';
 import { getPage } from '../lib/pages';
+import { emphasis } from '../lib/emphasis';
 
 const page = await getPage('galleryPage');
 
 const items = (await getCollection('gallery')).sort((a, b) => a.data.order - b.data.order);
-const tags = ['all', ...new Set(items.map((i) => i.data.tag))];
+// The filter buttons: "all", then each group in the order it first appears, with how many photos it holds.
+const tags = [
+  { name: 'all', count: items.length },
+  ...[...new Set(items.map((i) => i.data.tag))].map((name) => ({ name, count: items.filter((i) => i.data.tag === name).length })),
+];
 
 // A larger copy of each photo for the lightbox (and for the plain link when JavaScript is off).
-// Every gallery photo is a square or rectangle (gently rounded corners); only the size varies.
 const tiles = await Promise.all(
   items.map(async (entry) => {
     const img = entry.data.image;
@@ -33,34 +38,65 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
 ---
 
 <BaseLayout title={page.seo.title} description={page.seo.description}>
-  <PageHeader {...page.header} bg="var(--surface-chocolate)" />
-  <Section>
-    <div class="filters" role="group" aria-label="Filter gallery">
-      {tags.map((t, i) => <button type="button" class="pill" data-filter={t} aria-pressed={i === 0}>{t}</button>)}
+  <!-- No color band or photo at the top: a large heading on the page color, then straight into the photos. -->
+  <section class="top">
+    <div class="top__inner" data-reveal>
+      <div class="top__head">
+        <span class="top__eyebrow">{page.header.eyebrow}</span>
+        <h1 class="top__title" data-lines>{emphasis(page.header.title).map((p) => (p.accent ? <em class="accent">{p.text}</em> : p.text))}</h1>
+      </div>
+      {page.header.intro && <p class="top__intro">{page.header.intro}</p>}
     </div>
-    <div class="mosaic-wrap">
-      <div class="mosaic">
-        {tiles.map(({ entry: i, alt, full }) => {
-          const frame = (
-            <PhotoFrame fill shape="soft" label={i.data.label} src={i.data.image} alt={alt} sizes={sizesFor(i.data.size)} />
-          );
-          return (
-            <div class={`tile tile--${i.data.size}`} data-tag={i.data.tag}>
-              {full ? (
-                <a class="tile__link lift" href={full.src} data-pswp-width={full.width} data-pswp-height={full.height} aria-label={`View larger: ${alt}`}>
-                  {frame}
-                </a>
-              ) : (
-                frame
-              )}
-            </div>
-          );
-        })}
+  </section>
+
+  <section class="wall">
+    <div class="wall__inner">
+      <!-- The filters stay under the header while the photos scroll, so a guest can switch groups from anywhere. -->
+      <div class="bar">
+        <div class="filters" role="group" aria-label="Filter gallery">
+          {tags.map((t, i) => (
+            <button type="button" class="pill" data-filter={t.name} aria-pressed={i === 0}>
+              {t.name}<span class="pill__count">{t.count}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div class="mosaic-wrap">
+        <div class="mosaic">
+          {tiles.map(({ entry: i, alt, full }) => {
+            const frame = <PhotoFrame fill shape="rounded" label={i.data.label} src={i.data.image} alt={alt} sizes={sizesFor(i.data.size)} />;
+            return (
+              <div class={`tile tile--${i.data.size}`} data-tag={i.data.tag}>
+                {full ? (
+                  <a class="tile__link lift" href={full.src} data-pswp-width={full.width} data-pswp-height={full.height} aria-label={`View larger: ${alt}`}>
+                    {frame}
+                    <span class="tile__caption" aria-hidden="true">{i.data.label}</span>
+                  </a>
+                ) : (
+                  frame
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <!-- Shown by the script below when there are more photos than the first batch. Without JavaScript every photo shows. -->
+      <div class="more" data-more hidden>
+        <span class="more__status" data-more-status aria-live="polite"></span>
+        <button type="button" class="pill" data-more-button>{page.buttons.more}</button>
       </div>
     </div>
-    <div class="cta">
-      <BookButton>{page.buttons.book}</BookButton>
-      <a href={site.instagram} target="_blank" rel="noopener">{page.buttons.instagram}</a>
+  </section>
+
+  <Section bg="var(--surface-terracotta)" center curve>
+    <div class="closing">
+      <SectionHeading tone="dark" script={page.closing.script} title={page.closing.title} intro={page.closing.text} />
+      <div class="closing__actions">
+        <BookButton variant="ivory" size="lg">{page.buttons.book}</BookButton>
+        <Button variant="outline" tone="dark" size="lg" href={site.instagram} target="_blank" rel="noopener">{page.buttons.instagram}</Button>
+      </div>
     </div>
   </Section>
 </BaseLayout>
@@ -69,57 +105,103 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
   import PhotoSwipeLightbox from 'photoswipe/lightbox';
   import 'photoswipe/style.css';
 
+  const BATCH = 24; // photos shown at first, and added by each press of "Show more"
   let lightbox: PhotoSwipeLightbox | undefined;
 
   document.addEventListener('astro:page-load', () => {
-    // Lightbox: rebuilt on each visit to the page, and only over the photos the current filter shows.
+    // Lightbox: rebuilt on each visit to the page, and only over the photos currently showing.
     lightbox?.destroy();
     lightbox = undefined;
-    if (document.querySelector('.mosaic')) {
-      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-      lightbox = new PhotoSwipeLightbox({
-        gallery: '.mosaic',
-        children: '.tile:not([hidden]) .tile__link',
-        pswpModule: () => import('photoswipe'),
-        showHideAnimationType: reduce ? 'none' : 'fade',
-        bgOpacity: 0.97,
-        padding: { top: 32, bottom: 72, left: 16, right: 16 },
+    const mosaic = document.querySelector<HTMLElement>('.mosaic');
+    if (!mosaic) return; // not the gallery page
+
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    lightbox = new PhotoSwipeLightbox({
+      gallery: '.mosaic',
+      children: '.tile:not([hidden]) .tile__link',
+      pswpModule: () => import('photoswipe'),
+      showHideAnimationType: reduce ? 'none' : 'fade',
+      bgOpacity: 0.97,
+      padding: { top: 32, bottom: 72, left: 16, right: 16 },
+    });
+    // Caption: the photo's description, under the photo.
+    lightbox.on('uiRegister', () => {
+      lightbox!.pswp!.ui!.registerElement({
+        name: 'caption',
+        order: 9,
+        isButton: false,
+        appendTo: 'root',
+        onInit: (el, pswp) => {
+          pswp.on('change', () => {
+            el.textContent = pswp.currSlide?.data.element?.querySelector('img')?.alt ?? '';
+          });
+        },
       });
-      // Caption: the photo's description, under the photo.
-      lightbox.on('uiRegister', () => {
-        lightbox!.pswp!.ui!.registerElement({
-          name: 'caption',
-          order: 9,
-          isButton: false,
-          appendTo: 'root',
-          onInit: (el, pswp) => {
-            pswp.on('change', () => {
-              el.textContent = pswp.currSlide?.data.element?.querySelector('img')?.alt ?? '';
-            });
-          },
-        });
-      });
-      lightbox.init();
-    }
+    });
+    lightbox.init();
 
     const chips = [...document.querySelectorAll<HTMLButtonElement>('[data-filter]')];
-    const cells = [...document.querySelectorAll<HTMLElement>('[data-tag]')];
+    const cells = [...mosaic.querySelectorAll<HTMLElement>('[data-tag]')];
+    const more = document.querySelector<HTMLElement>('[data-more]');
+    const status = document.querySelector<HTMLElement>('[data-more-status]');
+    let filter = 'all';
+    let limit = BATCH;
+
+    // Show the first `limit` photos of the chosen group; the rest wait behind "Show more".
+    const apply = () => {
+      let matched = 0;
+      cells.forEach((cell) => {
+        const match = filter === 'all' || cell.dataset.tag === filter;
+        cell.hidden = !match || matched >= limit;
+        if (match) matched += 1;
+      });
+      if (more) more.hidden = matched <= limit;
+      if (status) status.textContent = `Showing ${Math.min(limit, matched)} of ${matched}`;
+    };
+
     chips.forEach((chip) =>
       chip.addEventListener('click', () => {
-        const f = chip.dataset.filter;
+        filter = chip.dataset.filter ?? 'all';
+        limit = BATCH;
         chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
-        cells.forEach((cell) => (cell.hidden = f !== 'all' && cell.dataset.tag !== f));
+        apply();
+        // Replay the short fade so the change of photos reads as one gesture.
+        mosaic.classList.remove('is-swapping');
+        void mosaic.offsetWidth;
+        mosaic.classList.add('is-swapping');
       }),
     );
+    document.querySelector('[data-more-button]')?.addEventListener('click', () => {
+      limit += BATCH;
+      apply();
+    });
+    apply();
   });
 </script>
 
 <style>
-  .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 40px; }
+  /* --- Top: a large heading on the page color --- */
+  /* No background of their own: the page color and its grain show through, so the grain is not laid on twice. */
+  .top { padding: clamp(56px, 8vw, 112px) var(--gutter) clamp(28px, 4vw, 48px); }
+  .top__inner { max-width: var(--container-max); margin: 0 auto; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px clamp(32px, 6vw, 96px); flex-wrap: wrap; }
+  .top__head { display: flex; flex-direction: column; gap: 18px; }
+  .top__eyebrow { display: flex; align-items: center; gap: 16px; font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
+  .top__eyebrow::after { content: ''; width: 48px; height: 1px; background: var(--rh-terracotta); }
+  .top__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(44px, 7vw, 88px); line-height: 1; letter-spacing: var(--ls-display); color: var(--text-strong); }
+  .top__intro { margin: 0 0 10px; max-width: 34ch; font-size: var(--fs-body-l); color: var(--text-muted); text-wrap: balance; }
+
+  /* --- The wall of photos --- */
+  .wall { padding: 0 var(--gutter) var(--section-y); }
+  .wall__inner { max-width: var(--container-max); margin: 0 auto; }
+  /* Sticks just under the site header (72px tall). Solid, so photos pass cleanly beneath it. */
+  .bar { position: sticky; top: 72px; z-index: 5; margin-bottom: 20px; padding: 14px 0; background: var(--surface-page) var(--grain);
+    border-bottom: 1px solid var(--border-hairline); }
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; }
+  .pill__count { margin-left: 10px; font-variant-numeric: tabular-nums; opacity: .6; }
 
   /* Mosaic: every cell is a square whose side is worked out from the grid's width, so wide, tall and large
      photos (spanning 2 cells) line up exactly with the small ones. `dense` lets small photos fill any gaps. */
-  .mosaic-wrap { --cols: 4; --gap: 16px; container-type: inline-size; } /* cqw below measures this wrapper, not the grid itself */
+  .mosaic-wrap { --cols: 4; --gap: 20px; container-type: inline-size; } /* cqw below measures this wrapper, not the grid itself */
   .mosaic { display: grid; gap: var(--gap); grid-auto-flow: dense;
     grid-template-columns: repeat(var(--cols), 1fr);
     grid-auto-rows: calc((100cqw - (var(--cols) - 1) * var(--gap)) / var(--cols)); }
@@ -127,12 +209,37 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
   .tile--tall { grid-row: span 2; }
   .tile--large { grid-column: span 2; grid-row: span 2; }
   .tile[hidden] { display: none; }
-  .tile__link { display: block; height: 100%; cursor: zoom-in; border-radius: var(--radius-md); }
-  /* Tablets use 2 columns too: with 2-cell-wide and 2-cell-tall photos, 3 columns cannot pack without holes. */
-  @media (max-width: 900px) { .mosaic-wrap { --cols: 2; } }
-  @media (max-width: 560px) { .mosaic-wrap { --cols: 2; --gap: 12px; } }
+  .mosaic.is-swapping .tile { animation: tile-in var(--dur-reveal) var(--ease-glide) both; }
+  @keyframes tile-in { from { opacity: 0; } }
+  /* No overflow clip here: it would cut off the hover shadow. The photo and the caption round their own corners. */
+  .tile__link { display: block; height: 100%; cursor: zoom-in; border-radius: var(--radius-lg); }
+  /* The caption rises over the foot of the photo on hover or keyboard focus. */
+  .tile__caption { position: absolute; left: 0; right: 0; bottom: 0; padding: 48px 20px 18px; border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    background: linear-gradient(0deg, rgba(59, 40, 25, .82) 0%, rgba(59, 40, 25, 0) 100%);
+    font-family: var(--font-display); font-size: 18px; line-height: 1.25; color: var(--rh-ivory); text-align: left;
+    opacity: 0; transition: opacity var(--dur-base) var(--ease-soft); pointer-events: none; }
+  .tile__link:hover .tile__caption, .tile__link:focus-visible .tile__caption { opacity: 1; }
+  @media (hover: none) { .tile__caption { display: none; } } /* phones: the caption shows in the larger view instead */
 
-  .cta { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; margin-top: 56px; }
+  .more { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 44px; }
+  .more[hidden] { display: none; }
+  .more__status { font-size: 12px; font-weight: 500; letter-spacing: var(--ls-button); text-transform: uppercase; color: var(--text-muted); }
+
+  .closing { display: flex; flex-direction: column; align-items: center; gap: 28px; }
+  .closing__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+
+  /* Tablets use 2 columns too: with 2-cell-wide and 2-cell-tall photos, 3 columns cannot pack without holes. */
+  @media (max-width: 900px) { .mosaic-wrap { --cols: 2; --gap: 16px; } }
+  @media (max-width: 1099px) { .bar { top: 68px; } }
+  @media (max-width: 700px) {
+    .mosaic-wrap { --gap: 12px; }
+    /* One row of filters that scrolls sideways, instead of three rows pinned to the top of a small screen. */
+    .bar { margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
+    .filters { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
+    .filters::-webkit-scrollbar { display: none; }
+    .filters :global(.pill) { flex: none; }
+    .tile__link { border-radius: var(--radius-md); }
+  }
 </style>
 
 <style is:global>

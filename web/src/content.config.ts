@@ -210,7 +210,15 @@ const experiencePage = defineCollection({
 
 const galleryPage = defineCollection({
   loader: onePage('gallery'),
-  schema: ({ image }) => z.object({ seo, header: pageHeader(image), buttons: z.object({ book: label('Book an appointment'), instagram: label('Follow us on Instagram') }) }),
+  schema: ({ image }) =>
+    z.object({
+      seo,
+      /** The gallery opens on a large heading with no photo or color band; only the words are used. */
+      header: pageHeader(image),
+      buttons: z.object({ book: label('Book an appointment'), instagram: label('Follow us on Instagram'), more: label('Show more') }),
+      /** The band under the photos, with the booking and Instagram buttons. */
+      closing: z.object({ script: z.string().optional(), title: label('Ready for *your* turn?'), text: z.string().optional() }),
+    }),
 });
 
 const textBlock = z.object({ title: z.string(), text: z.string().optional() });

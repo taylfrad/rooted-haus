@@ -6,6 +6,7 @@ The gallery is a mosaic: photos of different sizes that fit together like a phot
 
 | Setting | What it does |
 |---|---|
+| Caption | A few words, shown over the photo when the pointer rests on it ("Soft blonde curls"). |
 | Photo | The picture. Leave it empty to show a placeholder. |
 | Describe the photo | A short description for people who use screen readers, and shown if the picture fails to load. |
 | Group | Used by the filter buttons above the gallery (color, cut, scalp, and so on). |
@@ -26,6 +27,10 @@ The gallery is a mosaic: photos of different sizes that fit together like a phot
 - Photos are stored in the repo under `web/src/assets/photos/`, sorted by subject: `group`, `stylists`, `salon`, `services`, `scalp`, `products`, `refreshments`, `results` (client results, shown with their permission). A photo only appears on the site once an entry in the panel picks it, so the rest are a pool to choose from. The site adds the warm tone from the brand guide, so avoid heavy filters before uploading.
 - Photo uploads from the panel have **not been tested yet**. Pages CMS should save the file into that folder and write a path like `../../assets/photos/services/img-0142.jpg` into the entry. If the panel saves it somewhere else, the build will fail on the missing file; tell your web person and they can adjust the panel's media setting.
 
-## Not built yet
+## How the page behaves
 
-Clicking a photo does not open a larger view. A lightbox (PhotoSwipe) can be added once the real photos are in.
+- The page opens on a large heading with no photo or color band, then goes straight to the photos.
+- The filter buttons show how many photos each group holds and stay under the site header while the photos scroll. On a phone they sit in one row that scrolls sideways.
+- The first 24 photos of a group show at once; "Show more" adds the next 24.
+- Hovering a photo shows its caption; clicking opens a larger view with the description underneath.
+- A terracotta band under the photos holds the booking and Instagram buttons. Its words are in the panel under "Gallery page".

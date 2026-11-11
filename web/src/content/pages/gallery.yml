@@ -3,9 +3,13 @@ seo:
   description: "Recent work from The Rooted Haus."
 header:
   eyebrow: "Gallery"
-  script: "our work"
-  title: "Recent work"
+  title: "Recent *work*"
   intro: "Healthy hair, finished with care."
 buttons:
   book: "Book an appointment"
   instagram: "Follow us on Instagram"
+  more: "Show more"
+closing:
+  script: "like what you see?"
+  title: "Ready for *your* turn?"
+  text: "Book a visit, or follow along on Instagram for the latest from the Haus."

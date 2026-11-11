@@ -424,17 +424,22 @@ content:
         type: object
         fields:
           - { name: eyebrow, label: Small line above the heading, type: string }
-          - { name: script, label: Handwritten accent, type: string }
-          - { name: title, label: Heading, type: string }
+          - { name: title, label: "Heading (put *stars* around a phrase to set it in the handwritten font)", type: string }
           - { name: intro, label: Intro line (optional), type: text }
-          - { name: image, label: "Photo (shown whole: a landscape photo runs across the screen, a portrait one sits beside the heading)", type: image }
-          - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
       - name: buttons
         label: "Buttons under the photos"
         type: object
         fields:
           - { name: book, label: "Booking button", type: string }
           - { name: instagram, label: "Instagram link", type: string }
+          - { name: more, label: "Button that shows more photos", type: string }
+      - name: closing
+        label: "Band under the photos (with the booking and Instagram buttons)"
+        type: object
+        fields:
+          - { name: script, label: Handwritten accent, type: string }
+          - { name: title, label: "Heading (put *stars* around a phrase to set it in the handwritten font)", type: string }
+          - { name: text, label: Text, type: text }
 
   - name: gallery
     label: Gallery photos
