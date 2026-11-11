@@ -14,20 +14,25 @@ interface Props {
   focus2?: string;
   /** Which lower corner the smaller photo sits on. */
   side?: 'start' | 'end';
+  /** Shape of the large photo and of the smaller one. Keep them different. */
+  shape?: 'arch' | 'rounded';
+  shape2?: 'arch' | 'rounded' | 'circle';
+  /** The fine line around the large photo: light sections or dark ones. */
+  framed?: 'light' | 'dark';
   /** The color of the section behind, used for the gap around the smaller photo. */
   ring?: string;
   label?: string;
 }
-const { src, alt = '', focus, src2, alt2 = '', focus2, side = 'start', ring = 'var(--surface-page)', label } = Astro.props;
+const { src, alt = '', focus, src2, alt2 = '', focus2, side = 'start', shape = 'arch', shape2 = 'rounded', framed = 'light', ring = 'var(--surface-page)', label } = Astro.props;
 ---
 
 <div class:list={['pair', `pair--${side}`, { 'pair--single': !src2 }]} style={`--pair-ring:${ring}`}>
   <div class="pair__main">
-    <PhotoFrame framed="light" {src} {alt} {focus} {label} shape="arch" ratio="4 / 5" sizes="(min-width: 900px) 36vw, 80vw" />
+    <PhotoFrame {framed} {src} {alt} {focus} {label} {shape} ratio="4 / 5" sizes="(min-width: 900px) 36vw, 80vw" />
   </div>
   {src2 && (
-    <div class="pair__second">
-      <PhotoFrame src={src2} alt={alt2} focus={focus2} shape="rounded" ratio="4 / 5" sizes="(min-width: 900px) 20vw, 42vw" />
+    <div class:list={['pair__second', `pair__second--${shape2}`]}>
+      <PhotoFrame src={src2} alt={alt2} focus={focus2} shape={shape2} ratio="4 / 5" sizes="(min-width: 900px) 20vw, 42vw" />
     </div>
   )}
 </div>
@@ -35,9 +40,12 @@ const { src, alt = '', focus, src2, alt2 = '', focus2, side = 'start', ring = 'v
 <style>
   .pair { position: relative; padding-bottom: 14%; }
   .pair__main { width: 80%; margin-left: auto; }
-  /* The gap around the smaller photo is a ring in the section's own color, so it reads as cut out of the large one. */
-  .pair__second { position: absolute; left: 0; bottom: 0; width: 44%; border-radius: var(--radius-lg);
-    box-shadow: 0 0 0 10px var(--pair-ring), var(--shadow-lift); }
+  /* The gap around the smaller photo is a band in the section's own color and grain, so it matches the section
+     exactly and reads as cut out of the large photo. */
+  .pair__second { position: absolute; left: 0; bottom: 0; width: 44%; box-sizing: border-box; padding: 10px;
+    border-radius: calc(var(--radius-lg) + 10px); background-color: var(--pair-ring); background-image: var(--grain); }
+  .pair__second--arch { border-radius: var(--radius-arch); }
+  .pair__second--circle { border-radius: 50%; }
   .pair--end .pair__main { margin-left: 0; margin-right: auto; }
   .pair--end .pair__second { left: auto; right: 0; }
   .pair--single { padding-bottom: 0; }

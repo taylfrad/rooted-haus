@@ -5,6 +5,7 @@ import Section from '../layouts/Section.astro';
 import PageHeader from '../components/PageHeader.astro';
 import SectionHeading from '../components/content/SectionHeading.astro';
 import PhotoFrame from '../components/content/PhotoFrame.astro';
+import PhotoPair from '../components/content/PhotoPair.astro';
 import BookButton from '../components/core/BookButton.astro';
 import Button from '../components/core/Button.astro';
 import { url } from '../lib/paths';
@@ -15,8 +16,15 @@ const page = await getPage('experiencePage');
 
 // Each group ("A warm welcome", "The rooted difference"...) is one file in src/content/experience: its photos and its points.
 const groups = (await getCollection('experience')).sort((a, b) => a.data.order - b.data.order);
-// Photo shapes alternate down the page so the groups don't feel repetitive.
+// Photo shapes alternate down the page so the groups don't feel repetitive, and no two arches sit side by side:
+// a group with two photos overlaps them (large + small), and each such group uses the next arrangement below.
 const shapes = ['arch', 'rounded'] as const;
+const pairings = [
+  { shape: 'arch', shape2: 'rounded', side: 'start' },
+  { shape: 'rounded', shape2: 'circle', side: 'end' },
+] as const;
+let pairCount = 0;
+const rows = groups.map(({ data }) => ({ g: data, pairing: data.image2 ? pairings[pairCount++ % pairings.length] : undefined }));
 ---
 
 <BaseLayout title={page.seo.title} description={page.seo.description}>
@@ -29,16 +37,17 @@ const shapes = ['arch', 'rounded'] as const;
           <SectionHeading tone="dark" eyebrow={page.opening.eyebrow} title={page.opening.title} intro={page.opening.text} />
         </div>
       )}
-      {groups.map(({ data: g }, i) => (
+      {rows.map(({ g, pairing }, i) => (
         <article class:list={['row', { 'row--flip': i % 2 === 1, 'row--large': g.wide || g.image2 }]} data-reveal>
           <!-- The photos stay beside the list while it scrolls past, as the photo column does on The Rituals. -->
-          <div class:list={['row__photo', { 'row__photo--two': g.image2 }]}>
-            {g.wide && g.image ? (
+          <div class="row__photo">
+            {pairing ? (
+              <PhotoPair framed="dark" ring="var(--surface-terracotta)" src={g.image} alt={g.alt ?? ''} src2={g.image2} alt2={g.alt2 ?? ''} label={g.title} {...pairing} />
+            ) : g.wide && g.image ? (
               <PhotoFrame framed="dark" src={g.image} alt={g.alt ?? ''} shape="rounded" ratio={`${g.image.width} / ${g.image.height}`} sizes="(min-width: 900px) 50vw, 90vw" />
             ) : (
-              <PhotoFrame framed="dark" src={g.image} alt={g.alt ?? ''} label={g.title} shape={shapes[i % shapes.length]} ratio="4 / 5" sizes={g.image2 ? '(min-width: 900px) 25vw, 45vw' : '(min-width: 900px) 40vw, 90vw'} />
+              <PhotoFrame framed="dark" src={g.image} alt={g.alt ?? ''} label={g.title} shape={shapes[i % shapes.length]} ratio="4 / 5" sizes="(min-width: 900px) 40vw, 90vw" />
             )}
-            {g.image2 && <PhotoFrame framed="dark" src={g.image2} alt={g.alt2 ?? ''} shape="arch" ratio="4 / 5" sizes="(min-width: 900px) 25vw, 45vw" />}
           </div>
           <div class="row__text">
             <span class="row__n">{String(i + 1).padStart(2, '0')}</span>
@@ -85,7 +94,6 @@ const shapes = ['arch', 'rounded'] as const;
   .row--large { grid-template-columns: 1.15fr 1fr; }
   .row--large.row--flip { grid-template-columns: 1fr 1.15fr; }
   .row--large .row__photo { max-width: none; }
-  .row__photo--two { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: end; }
   .row--flip .row__photo { justify-self: end; }
   .row__text { display: flex; flex-direction: column; gap: 12px; }
   .row__n { display: flex; align-items: center; gap: 16px; font-family: var(--font-display); font-size: 40px; line-height: 1; color: var(--rh-caramel-soft); }

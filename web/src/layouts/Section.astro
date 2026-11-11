@@ -19,8 +19,9 @@ const { bg = 'var(--surface-page)', center = false, id, curve = false } = Astro.
   .section--center { text-align: center; }
   .section__inner { max-width: var(--container-max); margin: 0 auto; }
 
-  /* The arch is a cap in the section's own color, sitting in the bottom padding of the section above. */
+  /* The arch is a cap in the section's own color and grain, sitting in the bottom padding of the section above.
+     (Without the grain it would be a shade lighter than the section it belongs to.) */
   .section--curve { position: relative; }
   .section--curve::before { content: ''; position: absolute; left: 0; right: 0; bottom: calc(100% - 1px); height: var(--curve);
-    background-color: inherit; border-radius: 50% 50% 0 0 / 100% 100% 0 0; pointer-events: none; }
+    background-color: inherit; background-image: var(--grain); border-radius: 50% 50% 0 0 / 100% 100% 0 0; pointer-events: none; }
 </style>
