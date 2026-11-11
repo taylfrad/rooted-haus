@@ -15,3 +15,6 @@ photos:
     alt: "A client smiles in the mirror while her stylist paints in foils."
   - image: "../../assets/photos/scalp/img-0098.jpg"
     alt: "A client relaxes under a stone eye mask while a scalp treatment is brushed on."
+buttons:
+  book: "Book an appointment"
+  gift: "Give a gift card"

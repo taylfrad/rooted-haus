@@ -23,6 +23,9 @@ lists that appear on that page sit right after it.
 | **Connect page** and **FAQ** | The top of the page and the headings for the message and newsletter forms (the forms appear once your web person has set up the form address in Studio details); then questions and answers (the FAQ section appears once there is at least one). |
 | **Plant Your Roots page** | Everything on the careers page. The hourly roles you list also become choices in the application form. |
 
+Buttons and small headings are editable too: each page entry has a short group for them (for example "Buttons at the
+bottom of the page"). On Meet the Haus, `{name}` in one of those is replaced by the stylist's first name.
+
 Every page also has **How the page appears in Google**: the title in the browser tab and in search results, and the
 short summary underneath it. Keep the summary to about 150 characters.
 
@@ -47,4 +50,5 @@ If a change cannot be built (for example, a required box left empty), the site s
 version; nothing breaks for visitors. Undo the change in the panel, or ask your web person, who can see exactly what
 happened.
 
-Things that stay with your web person: the layout, colors, fonts and the menu. Ask whenever you want one of those changed.
+Things that stay with your web person: the layout, colors, fonts, the menu, the footer's column titles, and the
+labels on form boxes (Name, Email...). Ask whenever you want one of those changed.

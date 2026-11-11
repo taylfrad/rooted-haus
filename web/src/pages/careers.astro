@@ -32,7 +32,7 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
         {c.badge && <Badge tone="terracotta">{c.badge}</Badge>}
         <p class="lead">{c.intro}</p>
         {c.offer && <p class="offer">{c.offer}</p>}
-        <Button variant="outline" href={url('team/')}>Meet the Haus</Button>
+        <Button variant="outline" href={url('team/')}>{c.teamButton}</Button>
       </div>
       <div class="split__photo">
         <PhotoPair src={c.photo.image} alt={c.photo.alt} focus={c.photo.focus} src2={c.photo2?.image} alt2={c.photo2?.alt} focus2={c.photo2?.focus} side="end" />

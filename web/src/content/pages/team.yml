@@ -14,3 +14,12 @@ band:
 mission:
   label: "Our roots · our mission"
   text: "We help natural minded women nurture their low-tox dream lifestyles by offering personalized hair care services rooted in wellness and centered by faith while making each guest feel like they have stepped into an extension of their home."
+labels:
+  book: "Book with us"
+  story: "Read {name}’s story"
+  bookWith: "Book with {name}"
+  quote: "in her words"
+  reviews: "Love letters for {name}"
+  next: "Next in the Haus"
+  meet: "Meet {name}"
+  back: "← Meet the Haus"

@@ -26,13 +26,13 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
     <ul class="ways">
       <li class="way">
         <span class="ic"><MapPin size={20} stroke-width={1.5} /></span>
-        <h2 class="way__label">Find us</h2>
+        <h2 class="way__label">{page.labels.find}</h2>
         <p class="way__main">{site.address.line1}<br />{site.address.city}</p>
-        <a class="way__link caps-link" href={maps.google} target="_blank" rel="noopener" data-directions-open aria-haspopup="dialog">Get directions</a>
+        <a class="way__link caps-link" href={maps.google} target="_blank" rel="noopener" data-directions-open aria-haspopup="dialog">{page.labels.directions}</a>
       </li>
       <li class="way">
         <span class="ic"><Clock size={20} stroke-width={1.5} /></span>
-        <h2 class="way__label">Hours</h2>
+        <h2 class="way__label">{page.labels.hours}</h2>
         <dl class="hours">
           {site.hours.map((h) => (
             <div class="hours__row">
@@ -44,7 +44,7 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
       </li>
       <li class="way">
         <span class="ic"><Phone size={20} stroke-width={1.5} /></span>
-        <h2 class="way__label">Call or book</h2>
+        <h2 class="way__label">{page.labels.call}</h2>
         <a class="way__main way__phone" href={tel}>{site.phone}</a>
         <div class="way__action"><BookButton>{site.bookLabel}</BookButton></div>
       </li>
@@ -72,7 +72,7 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
   {faqs.length > 0 && (
     <Section>
       <div class="faq" id="faq">
-        <h2 class="title-m h">Questions, answered</h2>
+        <h2 class="title-m h">{page.labels.faq}</h2>
         {faqs.map((f) => (
           <details class="faq__item">
             <summary>

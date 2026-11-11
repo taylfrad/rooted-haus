@@ -6,3 +6,6 @@ header:
   script: "our work"
   title: "Recent work"
   intro: "Healthy hair, finished with care."
+buttons:
+  book: "Book an appointment"
+  instagram: "Follow us on Instagram"

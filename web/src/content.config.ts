@@ -121,6 +121,9 @@ const experience = defineCollection({
 // Photo paths are relative to that folder, e.g. ../../assets/photos/salon/img-0156.jpg.
 const onePage = (name: string) => glob({ pattern: `${name}.yml`, base: './src/content/pages' });
 
+/** A button or small heading the owner can reword; an emptied box falls back to the usual words. */
+const label = (usual: string) => z.string().optional().transform((v) => v?.trim() || usual);
+
 /** The page's name and summary in Google results and link previews. */
 const seo = z.object({ title: z.string(), description: z.string() });
 /** Eyebrow, script accent and title, as SectionHeading shows them. */
@@ -162,12 +165,35 @@ const homePage = defineCollection({
 
 const ritualsPage = defineCollection({
   loader: onePage('rituals'),
-  schema: ({ image }) => z.object({ seo, header: pageHeader(image), photos: z.array(z.object(photo(image))).default([]) }),
+  schema: ({ image }) =>
+    z.object({
+      seo,
+      header: pageHeader(image),
+      photos: z.array(z.object(photo(image))).default([]),
+      buttons: z.object({ book: label('Book an appointment'), gift: label('Give a gift card') }),
+    }),
 });
 
 const teamPage = defineCollection({
   loader: onePage('team'),
-  schema: ({ image }) => z.object({ seo, header: pageHeader(image), mission: z.object({ label: z.string().optional(), text: z.string() }), band: z.object({ image: image().optional(), alt: z.string().default('') }).optional() }),
+  schema: ({ image }) =>
+    z.object({
+      seo,
+      header: pageHeader(image),
+      mission: z.object({ label: z.string().optional(), text: z.string() }),
+      band: z.object({ image: image().optional(), alt: z.string().default('') }).optional(),
+      /** Buttons and small headings here and on each stylist's page; {name} becomes the stylist's first name. */
+      labels: z.object({
+        book: label('Book with us'),
+        story: label('Read {name}’s story'),
+        bookWith: label('Book with {name}'),
+        quote: label('in her words'),
+        reviews: label('Love letters for {name}'),
+        next: label('Next in the Haus'),
+        meet: label('Meet {name}'),
+        back: label('← Meet the Haus'),
+      }),
+    }),
 });
 
 const experiencePage = defineCollection({
@@ -178,13 +204,13 @@ const experiencePage = defineCollection({
       header: pageHeader(image),
       /** The words between the top of the page and the first group. */
       opening: z.object({ eyebrow: z.string().optional(), title: z.string(), text: z.string().optional() }).optional(),
-      closing: z.object({ script: z.string().optional(), text: z.string() }),
+      closing: z.object({ script: z.string().optional(), text: z.string(), ritualsButton: label('See our Rituals') }),
     }),
 });
 
 const galleryPage = defineCollection({
   loader: onePage('gallery'),
-  schema: ({ image }) => z.object({ seo, header: pageHeader(image) }),
+  schema: ({ image }) => z.object({ seo, header: pageHeader(image), buttons: z.object({ book: label('Book an appointment'), instagram: label('Follow us on Instagram') }) }),
 });
 
 const textBlock = z.object({ title: z.string(), text: z.string().optional() });
@@ -198,6 +224,7 @@ const connectPage = defineCollection({
       newsletter: textBlock,
       /** The last words on the page, over the large monogram, with the booking button. */
       closing: z.object({ script: z.string().optional(), text: z.string() }).optional(),
+      labels: z.object({ find: label('Find us'), directions: label('Get directions'), hours: label('Hours'), call: label('Call or book'), faq: label('Questions, answered') }),
     }),
 });
 
@@ -210,6 +237,7 @@ const careersPage = defineCollection({
       badge: z.string().optional(),
       intro: z.string(),
       offer: z.string().optional(),
+      teamButton: label('Meet the Haus'),
       photo: z.object(photo(image)),
       /** The smaller photo that overlaps the corner of the first. */
       photo2: z.object(photo(image)).optional(),

@@ -59,8 +59,8 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
       </div>
     </div>
     <div class="cta">
-      <BookButton>Book an appointment</BookButton>
-      <a href={site.instagram} target="_blank" rel="noopener">Follow us on Instagram</a>
+      <BookButton>{page.buttons.book}</BookButton>
+      <a href={site.instagram} target="_blank" rel="noopener">{page.buttons.instagram}</a>
     </div>
   </Section>
 </BaseLayout>

@@ -2,6 +2,8 @@
 # Every save is a commit to this repo, which rebuilds and redeploys the site.
 # Photos uploaded in the panel are saved here, and the paths written into content files are relative to them.
 # (Untested against the live panel; see docs/gallery.md.)
+# Every list sets `filename`, so a new entry is saved as <its main field>.yml (team: .md), which is what the site
+# reads. Without it the panel would save new entries as dated .md files, and they would never appear on the site.
 # Entries are grouped by page, in menu order: each "... page" entry holds that page's words and photos, and the
 # lists that appear on it (services, team, gallery...) follow it. Labels with commas are quoted (a comma ends an
 # unquoted value inside { }).
@@ -47,7 +49,9 @@ content:
     type: collection
     path: web/src/content/deals
     format: yaml
+    filename: "{primary}.yml"
     view:
+      primary: title
       fields: [title, start, end]
     fields:
       - { name: title, label: Deal title, type: string, required: true }
@@ -194,7 +198,9 @@ content:
     type: collection
     path: web/src/content/reviews
     format: yaml
+    filename: "{primary}.yml"
     view:
+      primary: name
       fields: [name, featured]
     fields:
       - { name: quote, label: What they said, type: text, required: true }
@@ -228,6 +234,12 @@ content:
           - { name: intro, label: Intro line (optional), type: text }
           - { name: image, label: "Photo (shown whole: a landscape photo runs across the screen, a portrait one sits beside the heading)", type: image }
           - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+      - name: buttons
+        label: "Buttons at the bottom of the page"
+        type: object
+        fields:
+          - { name: book, label: "Booking button", type: string }
+          - { name: gift, label: "Gift card button (shows only when a gift card link is set in Studio details)", type: string }
       - name: photos
         label: "Photos beside the menu (shapes alternate: arch, rounded, arch)"
         type: object
@@ -242,7 +254,9 @@ content:
     type: collection
     path: web/src/content/services
     format: yaml
+    filename: "{primary}.yml"
     view:
+      primary: title
       fields: [title, order]
     fields:
       - { name: title, label: Category name, type: string, required: true }
@@ -293,13 +307,27 @@ content:
         fields:
           - { name: label, label: Small line above, type: string }
           - { name: text, label: Mission statement, type: text }
+      - name: labels
+        label: "Buttons and small headings (here and on each stylist's page). {name} is replaced by the stylist's first name."
+        type: object
+        fields:
+          - { name: book, label: "Booking button under the team", type: string }
+          - { name: story, label: "Link under each portrait", type: string }
+          - { name: bookWith, label: "Booking button on a stylist's page", type: string }
+          - { name: quote, label: "Handwritten line above a stylist's quote", type: string }
+          - { name: reviews, label: "Heading above a stylist's reviews", type: string }
+          - { name: next, label: "Small line above the next-stylist button", type: string }
+          - { name: meet, label: "Next-stylist button", type: string }
+          - { name: back, label: "Link back to this page", type: string }
 
   - name: team
     label: Team members
     type: collection
     path: web/src/content/team
     format: yaml-frontmatter
+    filename: "{primary}.md"
     view:
+      primary: name
       fields: [name, role]
     fields:
       - { name: name, label: Name, type: string, required: true }
@@ -311,7 +339,7 @@ content:
       - { name: extraPhoto, label: Second photo (shown beside their bio on their own page), type: image }
       - { name: specialties, label: Specialties, type: string, list: true }
       - { name: quote, label: Quote in their own words, type: text }
-      - { name: body, label: Bio, type: rich-text }
+      - { name: body, label: Bio, type: rich-text, options: { format: markdown } }
 
   # --- The Experience ---
   - name: experience-page
@@ -349,13 +377,16 @@ content:
         fields:
           - { name: script, label: Handwritten accent, type: string }
           - { name: text, label: Text, type: text }
+          - { name: ritualsButton, label: "Second button (goes to The Rituals)", type: string }
 
   - name: experience
     label: The Experience groups
     type: collection
     path: web/src/content/experience
     format: yaml
+    filename: "{primary}.yml"
     view:
+      primary: title
       fields: [title, order]
     fields:
       - { name: eyebrow, label: "Small line above the heading (optional, e.g. What to expect)", type: string }
@@ -398,13 +429,21 @@ content:
           - { name: intro, label: Intro line (optional), type: text }
           - { name: image, label: "Photo (shown whole: a landscape photo runs across the screen, a portrait one sits beside the heading)", type: image }
           - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+      - name: buttons
+        label: "Buttons under the photos"
+        type: object
+        fields:
+          - { name: book, label: "Booking button", type: string }
+          - { name: instagram, label: "Instagram link", type: string }
 
   - name: gallery
     label: Gallery photos
     type: collection
     path: web/src/content/gallery
     format: yaml
+    filename: "{primary}.yml"
     view:
+      primary: label
       fields: [label, tag]
     fields:
       - { name: label, label: Caption, type: string, required: true }
@@ -459,13 +498,24 @@ content:
         fields:
           - { name: script, label: Handwritten accent, type: string }
           - { name: text, label: Text, type: string }
+      - name: labels
+        label: "Small headings and links on the page"
+        type: object
+        fields:
+          - { name: find, label: "Heading of the address card", type: string }
+          - { name: directions, label: "Directions link", type: string }
+          - { name: hours, label: "Heading of the hours card", type: string }
+          - { name: call, label: "Heading of the phone card", type: string }
+          - { name: faq, label: "Heading above the questions", type: string }
 
   - name: faq
     label: FAQ (shown on the Connect page)
     type: collection
     path: web/src/content/faq
     format: yaml
+    filename: "{primary}.yml"
     view:
+      primary: question
       fields: [question, order]
     fields:
       - { name: question, label: Question, type: string, required: true }
@@ -498,6 +548,7 @@ content:
       - { name: badge, label: Badge above the intro, type: string }
       - { name: intro, label: Intro, type: text }
       - { name: offer, label: Line under the intro, type: string }
+      - { name: teamButton, label: "Button under the intro (goes to Meet the Haus)", type: string }
       - name: photo
         label: Photo beside the intro
         type: object

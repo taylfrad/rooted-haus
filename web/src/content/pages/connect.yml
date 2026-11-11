@@ -17,3 +17,9 @@ newsletter:
 closing:
   script: "see you soon"
   text: "Your chair is waiting."
+labels:
+  find: "Find us"
+  directions: "Get directions"
+  hours: "Hours"
+  call: "Call or book"
+  faq: "Questions, answered"

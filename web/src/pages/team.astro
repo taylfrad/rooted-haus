@@ -38,12 +38,12 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
             <span class="member__name">{m.data.name}</span>
             <span class="member__role">{m.data.role}</span>
             {m.data.experience && <span class="member__exp">{m.data.experience}</span>}
-            <span class="member__more caps-link">Read {m.data.name}’s story</span>
+            <span class="member__more caps-link">{page.labels.story.replaceAll('{name}', m.data.name)}</span>
           </a>
         </li>
       ))}
     </ul>
-    <div class="cta"><BookButton variant="ivory">Book with us</BookButton></div>
+    <div class="cta"><BookButton variant="ivory">{page.labels.book}</BookButton></div>
   </Section>
 </BaseLayout>
 

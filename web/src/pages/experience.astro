@@ -76,7 +76,7 @@ const rows = groups.map(({ data }) => ({ g: data, pairing: data.image2 ? pairing
       <p class="closing__line">{page.closing.text}</p>
       <div class="closing__actions">
         <BookButton variant="ivory" size="lg">{site.bookLabel}</BookButton>
-        <Button variant="outline" tone="dark" size="lg" href={url('services/')}>See our Rituals</Button>
+        <Button variant="outline" tone="dark" size="lg" href={url('services/')}>{page.closing.ritualsButton}</Button>
       </div>
     </div>
   </Section>

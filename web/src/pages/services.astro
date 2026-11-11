@@ -53,8 +53,8 @@ const categories = (await getCollection('services')).sort((a, b) => a.data.order
     </div>
     </div>
     <div class="cta">
-      <BookButton size="lg">Book an appointment</BookButton>
-      {site.giftCardsUrl && <Button variant="outline" size="lg" href={site.giftCardsUrl} target="_blank" rel="noopener">Give a gift card</Button>}
+      <BookButton size="lg">{page.buttons.book}</BookButton>
+      {site.giftCardsUrl && <Button variant="outline" size="lg" href={site.giftCardsUrl} target="_blank" rel="noopener">{page.buttons.gift}</Button>}
     </div>
   </Section>
 </BaseLayout>
