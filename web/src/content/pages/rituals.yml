@@ -8,6 +8,7 @@ header:
   intro: "Personalized hair care, rooted in wellness."
   image: "../../assets/photos/services/img-9963.jpg"
   alt: "Color mixed by hand in a bowl at the station."
+  side: right
 photos:
   - image: "../../assets/photos/services/victoria-with-client.jpg"
     alt: "Victoria talks with her smiling client in the mirror."

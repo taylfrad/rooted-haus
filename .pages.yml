@@ -232,8 +232,14 @@ content:
           - { name: script, label: Handwritten accent, type: string }
           - { name: title, label: Heading, type: string }
           - { name: intro, label: Intro line (optional), type: text }
-          - { name: image, label: "Photo (shown whole: a landscape photo runs across the screen, a portrait one sits beside the heading)", type: image }
+          - { name: image, label: "Photo (a landscape photo fills the first screen, a portrait one sits whole beside the heading)", type: image }
           - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+          - name: side
+            label: Which side the words sit on over a landscape photo (the side away from faces)
+            type: select
+            options:
+              values: [left, right]
+          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
       - name: buttons
         label: "Buttons at the bottom of the page"
         type: object
@@ -362,8 +368,14 @@ content:
           - { name: script, label: Handwritten accent, type: string }
           - { name: title, label: Heading, type: string }
           - { name: intro, label: Intro line (optional), type: text }
-          - { name: image, label: "Photo (shown whole: a landscape photo runs across the screen, a portrait one sits beside the heading)", type: image }
+          - { name: image, label: "Photo (a landscape photo fills the first screen, a portrait one sits whole beside the heading)", type: image }
           - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+          - name: side
+            label: Which side the words sit on over a landscape photo (the side away from faces)
+            type: select
+            options:
+              values: [left, right]
+          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
       - name: opening
         label: Opening words (between the top of the page and the first group)
         type: object
@@ -483,8 +495,14 @@ content:
           - { name: script, label: Handwritten accent, type: string }
           - { name: title, label: Heading, type: string }
           - { name: intro, label: Intro line (optional), type: text }
-          - { name: image, label: "Photo (shown whole: a landscape photo runs across the screen, a portrait one sits beside the heading)", type: image }
+          - { name: image, label: "Photo (a landscape photo fills the first screen, a portrait one sits whole beside the heading)", type: image }
           - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+          - name: side
+            label: Which side the words sit on over a landscape photo (the side away from faces)
+            type: select
+            options:
+              values: [left, right]
+          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
       - name: message
         label: Message form
         type: object
@@ -548,8 +566,14 @@ content:
           - { name: script, label: Handwritten accent, type: string }
           - { name: title, label: Heading, type: string }
           - { name: intro, label: Intro line (optional), type: text }
-          - { name: image, label: "Photo (shown whole: a landscape photo runs across the screen, a portrait one sits beside the heading)", type: image }
+          - { name: image, label: "Photo (a landscape photo fills the first screen, a portrait one sits whole beside the heading)", type: image }
           - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
+          - name: side
+            label: Which side the words sit on over a landscape photo (the side away from faces)
+            type: select
+            options:
+              values: [left, right]
+          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
       - { name: badge, label: Badge above the intro, type: string }
       - { name: intro, label: Intro, type: text }
       - { name: offer, label: Line under the intro, type: string }
