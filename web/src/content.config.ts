@@ -235,6 +235,21 @@ const connectPage = defineCollection({
     z.object({
       seo,
       header: pageHeader(image),
+      /** "Your first visit": a short welcome beside two photos, with links to The Experience and Meet the Haus. */
+      expect: z
+        .object({
+          ...heading,
+          text: z.string(),
+          experienceButton: label('See the Experience'),
+          teamButton: label('Meet the Haus'),
+          ...photo(image),
+          image2: image().optional(),
+          alt2: z.string().default(''),
+          focus2: z.string().optional(),
+        })
+        .optional(),
+      /** "Step inside": four photos of the studio from the gallery, with links to the gallery and Instagram. */
+      inside: z.object({ ...heading, galleryButton: label('Full gallery'), instagramButton: label('Follow on Instagram') }).optional(),
       message: textBlock,
       newsletter: textBlock,
       /** The last words on the page, over the large monogram, with the booking button. */

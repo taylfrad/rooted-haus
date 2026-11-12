@@ -7,7 +7,12 @@ import DirectionsMap from '../components/DirectionsMap.astro';
 import ContactForm from '../components/forms/ContactForm.astro';
 import Field from '../components/forms/Field.astro';
 import BookButton from '../components/core/BookButton.astro';
+import Button from '../components/core/Button.astro';
+import SectionHeading from '../components/content/SectionHeading.astro';
+import PhotoFrame from '../components/content/PhotoFrame.astro';
+import PhotoPair from '../components/content/PhotoPair.astro';
 import { MapPin, Clock, Phone, ChevronDown } from '@lucide/astro';
+import { url } from '../lib/paths';
 import { maps, site } from '../lib/site';
 import { getPage } from '../lib/pages';
 
@@ -16,6 +21,13 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
 
 // FAQ lives here (no separate page). The section only appears once there are questions in the panel.
 const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.order);
+
+// "Step inside": the first four studio photos from the Gallery, skipping any already shown higher on this page.
+const shown = new Set([page.header.image?.src, page.expect?.image?.src, page.expect?.image2?.src]);
+const studio = (await getCollection('gallery'))
+  .sort((a, b) => a.data.order - b.data.order)
+  .filter((g) => g.data.tag === 'studio' && g.data.image && !shown.has(g.data.image.src))
+  .slice(0, 4);
 ---
 
 <BaseLayout title={page.seo.title} description={page.seo.description}>
@@ -51,6 +63,23 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
     </ul>
     <div class="map"><DirectionsMap /></div>
   </Section>
+
+  {page.expect && (
+    <Section bg="var(--surface-sand)">
+      <div class="split">
+        <div class="split__photo">
+          <PhotoPair src={page.expect.image} alt={page.expect.alt} focus={page.expect.focus} src2={page.expect.image2} alt2={page.expect.alt2} focus2={page.expect.focus2} ring="var(--surface-sand)" side="end" />
+        </div>
+        <div class="split__text">
+          <SectionHeading align="left" eyebrow={page.expect.eyebrow} script={page.expect.script} title={page.expect.title} intro={page.expect.text} />
+          <div class="split__actions">
+            <Button variant="outline" href={url('experience/')}>{page.expect.experienceButton}</Button>
+            <Button variant="text" href={url('team/')}>{page.expect.teamButton}</Button>
+          </div>
+        </div>
+      </div>
+    </Section>
+  )}
 
   {/* The message form and newsletter signup appear once a form address is set in the panel (docs/forms.md). */}
   {site.formsReady && (
@@ -98,6 +127,23 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
   </Section>
   )}
 
+  {page.inside && studio.length > 0 && (
+    <Section bg="var(--surface-raised)">
+      <div class="inside__head">
+        <SectionHeading align="left" eyebrow={page.inside.eyebrow} script={page.inside.script} title={page.inside.title} />
+        <div class="inside__actions">
+          {site.instagram && (
+            <a class="caps-link inside__ig" href={site.instagram} target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r=".6" fill="currentColor" /></svg>{page.inside.instagramButton}</a>
+          )}
+          <Button variant="outline" href={url('gallery/')}>{page.inside.galleryButton}</Button>
+        </div>
+      </div>
+      <div class="inside__grid">
+        {studio.map((g) => <PhotoFrame src={g.data.image} alt={g.data.alt ?? g.data.label} label={g.data.label} shape="soft" ratio="3 / 4" sizes="(min-width: 900px) 25vw, 50vw" />)}
+      </div>
+    </Section>
+  )}
+
   {page.closing && (
     <Section bg="var(--surface-olive)" center curve>
         <div class="closing">
@@ -128,6 +174,17 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
   .map { margin-top: 24px; }
   .map :global(.dm) { aspect-ratio: 21 / 8; min-height: 320px; }
 
+  /* Your first visit: photos on the outer edge, words beside them, as on the home page. */
+  .split { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
+  .split__photo { max-width: 520px; width: 100%; }
+  .split__text { display: flex; flex-direction: column; gap: 28px; align-items: flex-start; }
+  .split__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; }
+  /* Step inside: the same heading row and photo row as "Recent work" on the home page. */
+  .inside__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 36px; flex-wrap: wrap; }
+  .inside__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; }
+  .inside__ig { display: inline-flex; align-items: center; gap: 8px; color: var(--rh-chocolate); }
+  .inside__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
   .h { margin-bottom: 16px; }
   .lead { margin: 0; color: var(--text-muted); }
   .message { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
@@ -148,7 +205,9 @@ const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.o
   .closing__line { margin: 0 0 8px; font-family: var(--font-display); font-size: clamp(24px, 2.8vw, 34px); line-height: 1.35; color: var(--rh-ivory); text-wrap: balance; }
 
   @media (max-width: 900px) {
-    .ways, .message { grid-template-columns: 1fr; }
+    .ways, .message, .split { grid-template-columns: 1fr; }
+    .split__photo { justify-self: center; }
+    .inside__grid { grid-template-columns: repeat(2, 1fr); }
     .map :global(.dm) { aspect-ratio: auto; }
   }
 </style>

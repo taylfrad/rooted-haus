@@ -503,6 +503,29 @@ content:
             options:
               values: [left, right]
           - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
+      - name: expect
+        label: "Your first visit (welcome words beside two photos)"
+        type: object
+        fields:
+          - { name: eyebrow, label: Small label above the heading, type: string }
+          - { name: title, label: "Heading (put *stars* around a phrase to handwrite it)", type: string }
+          - { name: text, label: Text, type: text }
+          - { name: experienceButton, label: "Button to The Experience", type: string }
+          - { name: teamButton, label: "Button to Meet the Haus", type: string }
+          - { name: image, label: Large photo, type: image }
+          - { name: alt, label: Describe the large photo (for people who cannot see it), type: string }
+          - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
+          - { name: image2, label: "Smaller photo overlapping the corner (optional)", type: image }
+          - { name: alt2, label: Describe the smaller photo, type: string }
+          - { name: focus2, label: "Smaller photo crop position (optional)", type: string }
+      - name: inside
+        label: "Step inside (four studio photos from the Gallery)"
+        type: object
+        fields:
+          - { name: eyebrow, label: Small label above the heading, type: string }
+          - { name: title, label: "Heading (put *stars* around a phrase to handwrite it)", type: string }
+          - { name: galleryButton, label: "Button to the Gallery", type: string }
+          - { name: instagramButton, label: "Instagram link words", type: string }
       - name: message
         label: Message form
         type: object
