@@ -42,9 +42,9 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
 </style>
 
 <style is:global>
-  /* Phones: the back-to-top button and the end of the footer stay clear of the booking bar. */
+  /* Phones: the end of the footer stays clear of the booking bar. (The back-to-top button lifts itself above the
+     bar in BackToTop.astro: a rule here would be outranked by that component's own styles.) */
   @media (max-width: 700px) {
-    .totop { bottom: calc(max(16px, env(safe-area-inset-bottom)) + 68px); }
-    .footer { padding-bottom: 68px; }
+    .footer { padding-bottom: 72px; }
   }
 </style>

@@ -16,7 +16,8 @@
 --fs-micro:11px;
 --fs-script-l:92px;
 --fs-script-m:66px;
---fs-script-s:52px;
+/* Smaller on phones, so a short handwritten phrase stays on one line and does not outweigh the heading under it. */
+--fs-script-s:clamp(38px,10.5vw,52px);
 
 --lh-tight:1.1;
 --lh-snug:1.25;

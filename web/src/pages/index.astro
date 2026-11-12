@@ -55,14 +55,18 @@ const recent = (await getCollection('gallery'))
 
 <BaseLayout title={home.seo.title} description={home.seo.description}>
   <section class="hero" data-align={slides[0].side} aria-roledescription="carousel" aria-label="Welcome to The Rooted Haus">
-    <!-- First photo is in the page; the other three wait in a <template> and are added after the page has loaded,
-         so they never compete with the first photo (the page's largest paint). Without JavaScript the first photo stays. -->
-    <div class="hero__slide" data-slide data-align={slides[0].side} data-active="true">
-      <Image src={slides[0].image} alt={slides[0].alt} widths={heroWidths} sizes="100vw" loading="eager" fetchpriority="high" class="hero__img" style={slides[0].position && `object-position:${slides[0].position}`} />
-    </div>
+    <!-- Which photo greets a guest is picked at random on each visit (never the same one twice in a row), by the tiny
+         script at the end of this section. Every photo waits in a <template>, where the browser does not load it:
+         the script moves the chosen one into the page, and the rest are added after the page has loaded, so they
+         never compete with the first photo (the page's largest paint). Without JavaScript the first photo shows. -->
+    <noscript>
+      <div class="hero__slide" data-active="true">
+        <Image src={slides[0].image} alt={slides[0].alt} widths={heroWidths} sizes="100vw" loading="eager" class="hero__img" style={slides[0].position && `object-position:${slides[0].position}`} />
+      </div>
+    </noscript>
     <template data-more-slides>
-      {slides.slice(1).map((s) => (
-        <div class="hero__slide" data-slide data-align={s.side} data-active="false" aria-hidden="true">
+      {slides.map((s, i) => (
+        <div class="hero__slide" data-slide data-index={i} data-align={s.side} data-active="false" aria-hidden="true">
           <Image src={s.image} alt={s.alt} widths={heroWidths} sizes="100vw" class="hero__img" style={s.position && `object-position:${s.position}`} />
         </div>
       ))}
@@ -100,6 +104,35 @@ const recent = (await getCollection('gallery'))
     <div class="hero__dots">
       {slides.map((_, i) => <button type="button" data-dot aria-label={`Show photo ${i + 1} of ${slides.length}`} data-active={i === 0}></button>)}
     </div>
+    <!-- Runs as the page is read, before anything is painted. data-astro-rerun: it also runs when a guest comes
+         back to the home page from another page without a full reload. -->
+    <script is:inline data-astro-rerun>
+      (() => {
+        const hero = document.querySelector('.hero');
+        const waiting = hero && hero.querySelector('template[data-more-slides]');
+        if (!waiting || hero.querySelector('[data-slide]')) return;
+        const count = waiting.content.children.length;
+        let start = Math.floor(Math.random() * count);
+        try {
+          // An even pick among the photos other than the one shown last time.
+          const last = Number(localStorage.getItem('rh-hero-photo') ?? -1);
+          if (count > 1 && last >= 0 && last < count) start = (last + 1 + Math.floor(Math.random() * (count - 1))) % count;
+          localStorage.setItem('rh-hero-photo', String(start));
+        } catch {} // storage blocked: still random, it may just repeat now and then
+        const slide = waiting.content.children[start];
+        const img = slide.querySelector('img');
+        img.loading = 'eager';
+        img.fetchPriority = 'high';
+        slide.dataset.active = 'true';
+        slide.removeAttribute('aria-hidden');
+        hero.dataset.align = slide.dataset.align || 'left';
+        waiting.before(slide);
+        hero.querySelectorAll('[data-phrase], [data-dot]').forEach((el) => {
+          const set = el.matches('[data-phrase]') ? '[data-phrase]' : '[data-dot]';
+          el.dataset.active = String([...hero.querySelectorAll(set)].indexOf(el) === start);
+        });
+      })();
+    </script>
   </section>
 
   <DealBanner />
@@ -289,12 +322,15 @@ const recent = (await getCollection('gallery'))
   });
 
   function initSlideshow(hero: HTMLElement) {
-    const slides = [...hero.querySelectorAll<HTMLElement>('[data-slide]')];
+    // In the order they were written (the photo picked to greet the guest was added to the page first), so each
+    // photo lines up with its phrase and its dot.
+    const slides = [...hero.querySelectorAll<HTMLElement>('[data-slide]')].sort((x, y) => Number(x.dataset.index) - Number(y.dataset.index));
     const phrases = [...document.querySelectorAll<HTMLElement>('[data-phrase]')];
     const dots = [...document.querySelectorAll<HTMLButtonElement>('[data-dot]')];
-    let current = 0;
+    let current = Math.max(0, slides.findIndex((el) => el.dataset.active === 'true'));
 
     let swap: number | undefined;
+    if (slides[current].dataset.active !== 'true') show(current); // the picking script did not run: start on the first
 
     function show(i: number) {
       current = i;
@@ -410,8 +446,9 @@ const recent = (await getCollection('gallery'))
     line-height: 1; color: var(--rh-caramel-soft); opacity: 0; transition: opacity var(--dur-slow) var(--ease-soft);
     text-shadow: 0 2px 16px rgba(59, 40, 25, .7); }
   .hero__script[data-active='true'] { opacity: 1; }
-  .hero__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 3.4vw, 44px);
-    line-height: 1.15; text-wrap: balance; text-shadow: 0 1px 18px rgba(59, 40, 25, .45); }
+  .hero__content > .hero__title { max-width: 760px; }
+  .hero__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 4.2vw, 56px);
+    line-height: 1.12; text-wrap: balance; text-shadow: 0 1px 18px rgba(59, 40, 25, .45); }
   .hero__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 8px; }
   .hero__dots { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); display: none; }
   .hero.has-slides .hero__dots { display: flex; }

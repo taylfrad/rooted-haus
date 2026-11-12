@@ -2,8 +2,11 @@ title: "Extensions"
 order: 4
 items:
   - name: "Volume Transformation"
+    description: "Extensions placed for fullness, without changing your length."
     price: "$80–$650"
   - name: "Volume and Length"
+    description: "A full install for longer, fuller hair, matched to your own color."
     price: "$600–$2,000"
   - name: "Regular Maintenance"
+    description: "Move-ups and care to keep your extensions comfortable and blended."
     price: "$50–$400"

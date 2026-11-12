@@ -58,7 +58,8 @@ hourlyPrice: "Starting at $12/hour"
 hourlyRoles:
   - "Salon Assistant"
   - "Front Desk Coordinator"
-quotesTitle: "Here’s what our stylists have to say!"
+quotesEyebrow: "Life at the Haus"
+quotesTitle: "Here’s what *our stylists* have to say!"
 stylistQuotes:
   - quote: "I love working in an atmosphere where I feel seen, heard, and supported. Where the goal is to grow each stylist!"
     name: "Ashley"
@@ -67,3 +68,11 @@ stylistQuotes:
 apply:
   title: "Apply to join the Haus"
   text: "Tell us about yourself and what you are looking for. A resume is welcome but not required."
+  stepsTitle: "What happens next"
+  steps:
+    - title: "Say hello"
+      text: "Reach out and tell us a little about yourself and the role you are interested in."
+    - title: "Come see the Haus"
+      text: "We will invite you in to meet the team, see the space and talk through what you are looking for."
+    - title: "Find your fit"
+      text: "Commission, booth rental or hourly: together we will work out which path suits you best."

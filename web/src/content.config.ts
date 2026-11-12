@@ -269,9 +269,15 @@ const careersPage = defineCollection({
       hourlyPrice: z.string().optional(),
       /** Also listed as choices in the application form's "I'm interested in" menu. */
       hourlyRoles: z.array(z.string()).default([]),
+      quotesEyebrow: z.string().optional(),
+      /** Stars around a phrase set it in the handwritten font, as in other headings. */
       quotesTitle: z.string(),
       stylistQuotes: z.array(z.object({ quote: z.string(), name: z.string() })).default([]),
-      apply: textBlock,
+      /** The steps are the "what happens next" list beside the form (or beside the phone number, until a form is connected). */
+      apply: textBlock.extend({
+        stepsTitle: label('What happens next'),
+        steps: z.array(z.object({ title: z.string(), text: z.string() })).default([]),
+      }),
     }),
 });
 

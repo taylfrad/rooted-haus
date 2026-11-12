@@ -45,14 +45,23 @@ import { ChevronUp } from '@lucide/astro';
 </script>
 
 <style>
-  .totop { position: fixed; z-index: 15; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom));
-    width: 48px; height: 48px; padding: 0; display: grid; place-items: center; cursor: pointer;
-    border: 1px solid var(--border-on-dark); border-radius: var(--radius-pill);
-    background: var(--rh-chocolate); color: var(--rh-ivory); box-shadow: var(--shadow-lift);
-    opacity: 0; visibility: hidden;
-    transition: opacity var(--dur-base) var(--ease-soft), visibility 0s linear var(--dur-base), background var(--dur-base) var(--ease-soft); }
-  .totop.is-shown { opacity: 1; visibility: visible; transition-delay: 0s; }
-  .totop:hover { background: var(--rh-espresso); }
+  /* A light disc with a fine chocolate ring, like the outlined buttons: it reads on the pale sections and on the dark
+     ones, and fills with chocolate on hover. It sits in from the corner, clear of the scrollbar, and rises a little
+     as it appears (translate) and on hover (transform), the same gestures as the rest of the site. */
+  .totop { position: fixed; z-index: 15; right: max(clamp(16px, 1.6vw, 24px), env(safe-area-inset-right)); bottom: max(28px, env(safe-area-inset-bottom));
+    width: 52px; height: 52px; padding: 0; display: grid; place-items: center; cursor: pointer;
+    border: 1px solid var(--rh-chocolate); border-radius: var(--radius-pill);
+    background: rgba(242, 228, 209, .97); color: var(--rh-chocolate); box-shadow: var(--shadow-soft);
+    opacity: 0; visibility: hidden; translate: 0 8px;
+    transition: opacity var(--dur-base) var(--ease-soft), translate var(--dur-base) var(--ease-soft), visibility 0s linear var(--dur-base),
+      transform var(--dur-base) var(--ease-soft), background var(--dur-base) var(--ease-soft), color var(--dur-base) var(--ease-soft); }
+  .totop.is-shown { opacity: 1; visibility: visible; translate: none; transition-delay: 0s; }
+  .totop:hover { background: var(--rh-chocolate); color: var(--rh-ivory); transform: translateY(calc(-1 * var(--lift))); }
+  /* Phones: a little smaller, and above the call-and-book bar (BookBar, about 71px tall) so the two never overlap. */
+  @media (max-width: 700px) {
+    .totop { width: 46px; height: 46px; right: max(14px, env(safe-area-inset-right)); bottom: calc(env(safe-area-inset-bottom) + 71px + 14px); }
+    .totop:hover { transform: none; }
+  }
 
   .totop__tip { position: absolute; right: calc(100% + 12px); top: 50%; translate: 0 -50%;
     padding: 8px 14px; border-radius: var(--radius-pill); white-space: nowrap; pointer-events: none;

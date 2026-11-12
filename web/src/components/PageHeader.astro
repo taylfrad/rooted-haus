@@ -29,7 +29,7 @@ const wide = landscape && !beside;
 const side = !!image && !wide;
 const position = cropPosition(focus);
 // The photo's own height as a share of its width: the header is never taller than the whole photo.
-const photoVars = wide ? `;--ph-ratio:${(image.height / image.width).toFixed(4)}${position ? `;--ph-focus:${position}` : ''}` : '';
+const photoVars = image ? `;--ph-ratio:${(image.height / image.width).toFixed(4)}${position ? `;--ph-focus:${position}` : ''}` : '';
 ---
 
 <header class:list={['ph', { 'on-olive': bg.includes('olive'), 'ph--side': side, 'ph--beside': landscape && beside, 'ph--over': wide, 'ph--right': wide && textSide === 'right' }]} style={`background:${bg}${photoVars}`}>
@@ -58,6 +58,18 @@ const photoVars = wide ? `;--ph-ratio:${(image.height / image.width).toFixed(4)}
   .ph__photo { width: 100%; max-width: 480px; justify-self: end; }
   .ph--beside .ph__inner { grid-template-columns: 1fr 1.25fr; }
   .ph--beside .ph__photo { max-width: none; }
+  /* A page's main heading is a step larger than a section heading, on every page and screen size. */
+  .ph :global(.sh__title) { font-size: clamp(36px, 3.9vw, 56px); }
+  .ph--side :global(.wm) { height: clamp(96px, 14vh, 136px); }
+  /* Wide screens, photo beside the heading: the header is the first screen, like the headers with a photo across
+     them, and a tall photo is narrowed until it fits that screen whole. */
+  @media (min-width: 901px) {
+    .ph--side { --header-h: 73px; --ph-pad: clamp(40px, 5vw, 64px); }
+    .ph--side .ph__band { box-sizing: border-box; min-height: min(100svh - var(--header-h), 780px); display: flex; align-items: center;
+      padding-top: var(--ph-pad); padding-bottom: var(--ph-pad); }
+    .ph--side .ph__inner { width: 100%; }
+    .ph--side:not(.ph--beside) .ph__photo { max-width: min(480px, max(280px, (100svh - var(--header-h) - 2 * var(--ph-pad)) / var(--ph-ratio))); }
+  }
   @media (max-width: 900px) {
     .ph--side .ph__inner, .ph--beside .ph__inner { grid-template-columns: 1fr; }
     .ph__photo { max-width: none; justify-self: stretch; }

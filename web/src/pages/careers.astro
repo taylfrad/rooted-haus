@@ -9,7 +9,8 @@ import Field from '../components/forms/Field.astro';
 import FileField from '../components/forms/FileField.astro';
 import Button from '../components/core/Button.astro';
 import Badge from '../components/content/Badge.astro';
-import { Check } from '@lucide/astro';
+import SectionHeading from '../components/content/SectionHeading.astro';
+import { Check, Phone } from '@lucide/astro';
 import { site } from '../lib/site';
 import { url } from '../lib/paths';
 import { getPage } from '../lib/pages';
@@ -22,6 +23,7 @@ const interests = ['Commission', 'Booth rental', ...c.hourlyRoles, 'Not sure yet
 const applyOnline = site.careersFormEndpoint !== '';
 const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
 ---
+
 
 <BaseLayout title={c.seo.title} description={c.seo.description}>
   <PageHeader {...c.header} bg="var(--surface-chocolate)" />
@@ -68,7 +70,8 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
   </Section>
 
   <Section bg="var(--surface-olive)" curve>
-    <h2 class="title-m title-m--dark h2 h2--dark">{c.quotesTitle}</h2>
+    <!-- The same heading as the love letters on the home page: small label, then the title with a handwritten phrase. -->
+    <SectionHeading tone="dark" eyebrow={c.quotesEyebrow} title={c.quotesTitle} />
     <div class="quotes">
       {c.stylistQuotes.map((q) => (
         <figure class="quote">
@@ -85,6 +88,20 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
       <div class="apply__intro">
         <h2 class="title-m h2">{c.apply.title}</h2>
         {c.apply.text && <p>{c.apply.text}</p>}
+        {c.apply.steps.length > 0 && (
+        <div class="next">
+          <span class="next__label">{c.apply.stepsTitle}</span>
+          <ol class="next__list">
+            {c.apply.steps.map((st, i) => (
+              <li class="next__step">
+                <span class="next__n">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="next__title">{st.title}</h3>
+                <p class="next__text">{st.text}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
       </div>
       <ContactForm
         subject="Careers application"
@@ -103,10 +120,27 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
     </div>
     ) : (
     <div class="apply apply--offline">
-      <h2 class="title-m h2">{c.apply.title}</h2>
-      <p class="apply__call">
-        To apply, call us at <a href={tel}>{site.phone}</a>{site.email && <> or email <a href={`mailto:${site.email}`}>{site.email}</a></>}.
-      </p>
+      <div class="apply__intro">
+        <h2 class="title-m h2">{c.apply.title}</h2>
+        <p class="apply__call">
+          We would love to hear from you. Call us and tell us a little about yourself{site.email && <>, or email <a href={`mailto:${site.email}`}>{site.email}</a></>}.
+        </p>
+        <Button href={tel} size="lg"><Phone slot="icon" size={16} stroke-width={1.5} aria-hidden="true" />Call {site.phone}</Button>
+      </div>
+      {c.apply.steps.length > 0 && (
+        <div class="next">
+          <span class="next__label">{c.apply.stepsTitle}</span>
+          <ol class="next__list">
+            {c.apply.steps.map((st, i) => (
+              <li class="next__step">
+                <span class="next__n">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="next__title">{st.title}</h3>
+                <p class="next__text">{st.text}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
     </div>
     )}
   </Section>
@@ -118,7 +152,7 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
   .split__photo { width: 100%; }
   .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; margin-top: clamp(48px, 6vw, 80px); }
   .lead { margin: 0; font-size: var(--fs-body-l); }
-  .offer { margin: 0; font-family: var(--font-display); font-size: 24px; color: var(--text-strong); }
+  .offer { margin: 0; font-family: var(--font-display); font-size: 24px; line-height: 1.4; color: var(--text-strong); }
   .h2 { margin-bottom: 32px; }
   .h2--dark { text-align: center; }
   .ticks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
@@ -128,18 +162,29 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
   .ticks--cols li { break-inside: avoid; margin-bottom: 10px; }
   .paths { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
   .path { padding: 32px 28px; border-radius: var(--radius-lg); background: var(--surface-sand); display: flex; flex-direction: column; gap: 14px; }
-  .path__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 26px; color: var(--text-strong); }
-  .path__price { margin: 0; font-family: var(--font-display); font-size: 22px; color: var(--rh-chocolate); }
-  .quotes { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; max-width: 1000px; margin: 0 auto; }
+  .path__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: var(--lh-snug); color: var(--text-strong); }
+  .path__price { margin: 0; font-family: var(--font-display); font-size: 22px; line-height: var(--lh-snug); color: var(--rh-chocolate); }
+  .quotes { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; max-width: 1000px; margin: 48px auto 0; }
   .quote { margin: 0; display: flex; flex-direction: column; gap: 14px; color: var(--rh-ivory); }
-  .quote blockquote { margin: 0; font-family: var(--font-display); font-size: 22px; line-height: 1.45; }
+  .quote blockquote { margin: 0; font-family: var(--font-display); font-size: clamp(22px, 2vw, 26px); line-height: 1.45; text-wrap: pretty; }
   .quote figcaption { font-size: 12px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; }
   .apply { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
+  .apply__intro { display: flex; flex-direction: column; align-items: flex-start; }
   .apply__intro p { margin: 0; }
-  .apply--offline { display: block; }
-  .apply__call { margin: 0; font-size: var(--fs-body-l); }
+  .apply--offline { grid-template-columns: 1fr 1fr; align-items: center; }
+  .apply__intro .apply__call { margin-bottom: 28px; font-size: var(--fs-body-l); }
+  /* What happens next: numbered like the groups on The Experience, with a fine line between steps like the price list. */
+  .next { align-self: stretch; }
+  .apply__intro .next { margin-top: 40px; }
+  .next__label { display: block; margin-bottom: 14px; font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
+  .next__list { list-style: none; margin: 0; padding: 0; }
+  .next__step { display: grid; grid-template-columns: 56px 1fr; gap: 4px 12px; padding: 22px 0; border-top: 1px solid var(--border-hairline); }
+  .next__step:last-child { border-bottom: 1px solid var(--border-hairline); }
+  .next__n { grid-row: span 2; font-family: var(--font-display); font-size: 32px; line-height: 1; color: var(--rh-terracotta); }
+  .next__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-title); line-height: var(--lh-snug); color: var(--text-strong); }
+  .next__text { margin: 0; color: var(--text-muted); text-wrap: pretty; }
   @media (max-width: 900px) {
-    .split, .apply, .pair { grid-template-columns: 1fr; }
+    .split, .apply, .apply--offline, .pair { grid-template-columns: 1fr; }
     .paths { grid-template-columns: 1fr; }
     .quotes { grid-template-columns: 1fr; }
   }

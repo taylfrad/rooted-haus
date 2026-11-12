@@ -2,6 +2,8 @@ title: "Cuts & styling"
 order: 1
 items:
   - name: "Women's Haircut"
+    description: "A cut shaped to your texture and routine, finished with a blowout."
     price: "$55–$75"
   - name: "Special Occasion Styling"
+    description: "Waves, curls or an updo for weddings, photos and nights out."
     price: "$40–$120"

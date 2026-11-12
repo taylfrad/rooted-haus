@@ -108,12 +108,11 @@ const rows = groups.map(({ data }) => ({ g: data, pairing: data.image2 ? pairing
   .point__title { margin: 0 0 8px; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-title); line-height: var(--lh-snug); color: var(--rh-ivory); }
   .point__text { margin: 0; color: var(--rh-ivory); text-wrap: pretty; }
   .closing { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 20px; }
-  .closing__script { font-family: var(--font-script); font-size: var(--fs-script-s); color: var(--rh-caramel-soft); }
+  .closing__script { font-family: var(--font-script); font-size: var(--fs-script-s); line-height: 1.1; color: var(--rh-caramel-soft); text-wrap: balance; }
   .closing__line { margin: 0; font-family: var(--font-display); font-size: clamp(24px, 2.8vw, 34px); line-height: 1.35; color: var(--rh-ivory); text-wrap: balance; }
   .closing__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 8px; }
   @media (max-width: 900px) {
     .row, .row--large, .row--large.row--flip { grid-template-columns: 1fr; }
-    .closing__script { font-size: 40px; line-height: 1.15; text-wrap: balance; }
     .row--flip .row__photo { order: 0; }
     .row__photo, .row--flip .row__photo { position: static; max-width: 380px; justify-self: center; }
     .row--large .row__photo, .row--large.row--flip .row__photo { max-width: none; justify-self: stretch; }

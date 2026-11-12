@@ -1,6 +1,5 @@
 ---
 import { Image } from 'astro:assets';
-import { Menu, X } from '@lucide/astro';
 import logo from '../assets/logo-wordmark-chocolate.png';
 import logoIvory from '../assets/logo-wordmark-ivory.png';
 import BookButton from './core/BookButton.astro';
@@ -22,16 +21,16 @@ const overlay = path === url();
     </a>
     <nav class="header__nav" aria-label="Main">
       <ul class="header__links" id="site-menu">
-        {nav.map((item) => (
-          <li>
+        {nav.map((item, i) => (
+          <li style={`--i:${i}`}>
             <a href={url(item.href)} aria-current={path === url(item.href) ? 'page' : undefined}>{item.label}</a>
           </li>
         ))}
       </ul>
       <BookButton size="sm">{site.bookLabel}</BookButton>
       <button class="header__toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu">
-        <span class="icon-open"><Menu size={20} stroke-width={1.5} /></span>
-        <span class="icon-close"><X size={20} stroke-width={1.5} /></span>
+        <!-- Three lines that fold into an X when the menu opens (styles below). -->
+        <span class="burger" aria-hidden="true"><i></i><i></i><i></i></span>
       </button>
     </nav>
   </div>
@@ -46,8 +45,7 @@ const overlay = path === url();
     toggle.setAttribute('aria-expanded', String(open));
   });
 
-  // At the very top of a page the logo is shown larger; once the page scrolls it eases down to its working size.
-  // Home also turns its see-through header solid at the same moment.
+  // Home turns its see-through header solid once the page scrolls.
   const syncHeader = () => {
     const h = document.querySelector('.header');
     if (!h) return;
@@ -67,11 +65,10 @@ const overlay = path === url();
   .header__inner { max-width: var(--container-max); margin: 0 auto; padding: 14px var(--gutter); display: flex;
     align-items: center; justify-content: space-between; gap: 24px; }
   .header__logo { display: flex; flex-shrink: 0; } /* the logo never shrinks; the menu collapses first */
-  /* The size change is a scale, not a height: the header bar keeps its height, so nothing below it moves, and the
-     browser can animate it without re-laying out the page. The larger logo fits inside the bar's own padding. */
+  /* The logo is one size everywhere: at the top of a page, scrolled, and with the menu open. It is drawn larger
+     than its box with a scale, so it fills the bar's own padding without making the bar taller. */
   .header__logo :global(img) { height: 44px; width: auto; max-width: 100%; object-fit: contain;
-    transform: scale(var(--logo-scale, 1.42)); transform-origin: left center; transition: transform var(--dur-base) var(--ease-glide); }
-  .header.is-scrolled .header__logo :global(img), .header.is-open .header__logo :global(img) { transform: none; }
+    transform: scale(var(--logo-scale, 1.42)); transform-origin: left center; }
   .header__nav { display: flex; align-items: center; gap: 20px; }
   .header__links { display: flex; gap: 20px; margin: 0; padding: 0; list-style: none; }
   .header__links a { color: var(--rh-chocolate); text-decoration: none; white-space: nowrap; font-size: 12px;
@@ -80,9 +77,13 @@ const overlay = path === url();
   .header__links a:hover, .header__links a[aria-current='page'] { border-bottom-color: var(--rh-terracotta); }
   .header__toggle { display: none; width: 40px; height: 40px; border: 0; background: transparent;
     color: var(--rh-chocolate); border-radius: var(--radius-pill); cursor: pointer; place-items: center; }
-  .icon-close { display: none; }
-  .is-open .icon-open { display: none; }
-  .is-open .icon-close { display: inline; }
+  /* The menu icon: the outer lines meet in the middle and cross while the middle one fades out. */
+  .burger { display: grid; gap: 5px; width: 18px; }
+  .burger i { display: block; height: 1.5px; border-radius: 1px; background: currentColor;
+    transition: transform var(--dur-base) var(--ease-glide), opacity var(--dur-fast) var(--ease-soft); }
+  .is-open .burger i:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .is-open .burger i:nth-child(2) { opacity: 0; }
+  .is-open .burger i:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
   /* --- Home: see-through over the hero until scrolled (or the menu is opened) --- */
   .logo--light { display: none; }
@@ -102,10 +103,18 @@ const overlay = path === url();
     .header__logo :global(img) { height: 36px; --logo-scale: 1.3; }
     .header__nav { gap: 12px; }
     .header__toggle { display: grid; }
-    .header__links { display: none; position: absolute; left: 0; right: 0; top: 100%; flex-direction: column;
+    /* The menu fades in and settles down a few pixels, and its links follow one after another. Closed, it is
+       hidden from taps and from the keyboard (visibility), not just see-through. */
+    .header__links { position: absolute; left: 0; right: 0; top: 100%; flex-direction: column;
       gap: 18px; padding: 20px var(--gutter) 28px; background: var(--surface-page);
-      border-top: 1px solid var(--border-hairline); border-bottom: 1px solid var(--border-hairline); }
-    .is-open .header__links { display: flex; }
+      border-top: 1px solid var(--border-hairline); border-bottom: 1px solid var(--border-hairline);
+      opacity: 0; visibility: hidden; translate: 0 -8px;
+      transition: opacity var(--dur-fast) var(--ease-soft), translate var(--dur-fast) var(--ease-soft), visibility 0s linear var(--dur-fast); }
+    .is-open .header__links { opacity: 1; visibility: visible; translate: none;
+      transition: opacity var(--dur-base) var(--ease-glide), translate var(--dur-base) var(--ease-glide), visibility 0s; }
+    .header__links li { opacity: 0; translate: 0 -6px; }
+    .is-open .header__links li { opacity: 1; translate: none;
+      transition: opacity var(--dur-base) var(--ease-glide) calc(var(--i) * 40ms + 60ms), translate var(--dur-base) var(--ease-glide) calc(var(--i) * 40ms + 60ms); }
   }
   /* Phones: a more compact booking button leaves the logo room to stay readable. */
   @media (max-width: 560px) {

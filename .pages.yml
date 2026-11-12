@@ -610,7 +610,8 @@ content:
       - { name: hourlyTitle, label: Hourly heading, type: string }
       - { name: hourlyPrice, label: Hourly pay, type: string }
       - { name: hourlyRoles, label: "Hourly roles (also offered as choices in the application form)", type: string, list: true }
-      - { name: quotesTitle, label: Stylist quotes heading, type: string }
+      - { name: quotesEyebrow, label: Small label above the stylist quotes heading, type: string }
+      - { name: quotesTitle, label: "Stylist quotes heading (put *stars* around a phrase to handwrite it)", type: string }
       - name: stylistQuotes
         label: What our stylists say
         type: object
@@ -624,3 +625,11 @@ content:
         fields:
           - { name: title, label: Heading, type: string }
           - { name: text, label: Text, type: text }
+          - { name: stepsTitle, label: "Small heading above the steps (e.g. What happens next)", type: string }
+          - name: steps
+            label: What happens after someone applies
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Step, type: string }
+              - { name: text, label: A sentence about it, type: text }
