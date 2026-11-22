@@ -103,7 +103,9 @@ const recent = (await getCollection('gallery'))
       </div>
     </div>
     <div class="hero__dots">
+      <button type="button" class="hero__arrow" data-hero-prev aria-label="Previous photo"><ChevronLeft size={18} stroke-width={1.5} /></button>
       {slides.map((_, i) => <button type="button" data-dot aria-label={`Show photo ${i + 1} of ${slides.length}`} data-active={i === 0}></button>)}
+      <button type="button" class="hero__arrow" data-hero-next aria-label="Next photo"><ChevronRight size={18} stroke-width={1.5} /></button>
     </div>
     <!-- Runs as the page is read, before anything is painted. data-astro-rerun: it also runs when a guest comes
          back to the home page from another page without a full reload. -->
@@ -308,10 +310,37 @@ const recent = (await getCollection('gallery'))
     else window.addEventListener('load', idle, { once: true });
   };
 
+  // Every phrase stays on one line, so the phrase area is always one line tall and the small label above it never
+  // floats over an empty line. When the longest phrase (they are edited in the panel) would be wider than the room
+  // beside the photo, all phrases shrink together until it fits.
+  const MAX_PHRASE_WIDTH = 820; // px: wide enough for the phrases, narrow enough to stay off the faces
+  function fitPhrases(hero: HTMLElement) {
+    const area = hero.querySelector<HTMLElement>('.hero__scripts');
+    if (!area) return;
+    hero.style.setProperty('--script-fit', '1');
+    const range = document.createRange();
+    const widest = Math.max(...[...area.querySelectorAll<HTMLElement>('[data-phrase]')].map((p) => {
+      range.selectNodeContents(p);
+      return range.getBoundingClientRect().width;
+    }));
+    const room = Math.min(hero.querySelector<HTMLElement>('.hero__content')!.clientWidth, MAX_PHRASE_WIDTH);
+    if (widest > room) hero.style.setProperty('--script-fit', (room / widest).toFixed(3));
+  }
+  let fitWait: number | undefined;
+  window.addEventListener('resize', () => {
+    window.clearTimeout(fitWait);
+    fitWait = window.setTimeout(() => {
+      const hero = document.querySelector<HTMLElement>('.hero');
+      if (hero) fitPhrases(hero);
+    }, 150);
+  });
+
   document.addEventListener('astro:page-load', () => {
     window.clearInterval(timer);
     const hero = document.querySelector<HTMLElement>('.hero');
     if (!hero) return; // not the home page
+    fitPhrases(hero);
+    document.fonts?.ready.then(() => fitPhrases(hero)); // measure again once the handwriting font has loaded
     whenSettled(() => {
       const more = hero.querySelector<HTMLTemplateElement>('template[data-more-slides]');
       if (more) {
@@ -364,6 +393,8 @@ const recent = (await getCollection('gallery'))
       start();
     }
     dots.forEach((d, i) => d.addEventListener('click', () => go(i)));
+    hero.querySelector('[data-hero-prev]')?.addEventListener('click', () => go(current - 1));
+    hero.querySelector('[data-hero-next]')?.addEventListener('click', () => go(current + 1));
 
     // Swipe left for the next photo, right for the previous one. Mouse drags are ignored, and so are
     // touches that start on a button, so the booking buttons and dots still work normally.
@@ -442,9 +473,9 @@ const recent = (await getCollection('gallery'))
   .hero__eyebrow { display: inline-flex; padding: 7px 16px; border-radius: var(--radius-pill);
     background: rgba(59, 40, 25, .82); font-size: 12px; font-weight: 500;
     letter-spacing: .32em; text-transform: uppercase; color: var(--rh-ivory); }
-  /* Wider than the rest of the text, but capped so a long phrase wraps instead of running across a face. */
-  .hero__content > .hero__scripts { display: grid; max-width: 640px; align-items: end; }
-  .hero__script { grid-area: 1 / 1; font-family: var(--font-script); font-size: clamp(50px, 7vw, 96px); text-wrap: balance;
+  /* One line per phrase; the script on this page scales them down together if the longest would not fit (--script-fit). */
+  .hero__content > .hero__scripts { display: grid; max-width: 100%; align-items: end; }
+  .hero__script { grid-area: 1 / 1; font-family: var(--font-script); font-size: calc(clamp(50px, 7vw, 96px) * var(--script-fit, 1)); white-space: nowrap;
     line-height: 1; color: var(--rh-caramel-soft); opacity: 0; transition: opacity var(--dur-slow) var(--ease-soft);
     text-shadow: 0 2px 16px rgba(59, 40, 25, .7); }
   .hero__script[data-active='true'] { opacity: 1; }
@@ -459,6 +490,13 @@ const recent = (await getCollection('gallery'))
   .hero__dots button { min-width: 28px; height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
   .hero__dots button::before { content: ''; width: 10px; height: 10px; border-radius: 999px; background: var(--rh-ivory-30); transition: width var(--dur-base) var(--ease-soft), background var(--dur-base) var(--ease-soft); }
   .hero__dots button[data-active='true']::before { width: 36px; background: var(--rh-sand); }
+  .hero__dots { align-items: center; }
+  /* Small arrows either side of the dots: step one photo back or forward. */
+  .hero__dots .hero__arrow { width: 36px; min-width: 36px; height: 36px; margin: 0 6px; border-radius: 50%; color: var(--rh-ivory);
+    border: 1px solid var(--rh-ivory-30); background: rgba(59, 40, 25, .35);
+    transition: background var(--dur-base) var(--ease-soft), border-color var(--dur-base) var(--ease-soft); }
+  .hero__dots .hero__arrow::before { content: none; }
+  .hero__dots .hero__arrow:hover { background: rgba(59, 40, 25, .7); border-color: var(--rh-ivory); }
 
   .steps { list-style: none; margin: 48px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px 28px; }
   .step { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; }
@@ -537,7 +575,7 @@ const recent = (await getCollection('gallery'))
   /* Short screens (laptops with a small window, phones turned sideways): tighten the text so it fits. */
   @media (max-height: 640px) {
     .hero__content { gap: 10px; padding-bottom: 56px; }
-    .hero__script { font-size: min(clamp(44px, 9vh, 76px), 13vw); }
+    .hero__script { font-size: calc(min(clamp(44px, 9vh, 76px), 13vw) * var(--script-fit, 1)); }
     .hero__title { font-size: clamp(22px, 5.5vh, 34px); }
     .hero__actions { margin-top: 2px; gap: 10px; }
     .hero__actions :global(.btn--lg) { padding: 12px 26px; font-size: 12px; }
