@@ -2,9 +2,10 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-// The deploy workflow sets SITE_URL + BASE_PATH from GitHub's Pages settings (staging sub-path, or the custom
-// domain at the root); other hosts only need those two values.
-const site = process.env.SITE_URL ?? 'http://localhost:4321';
+// Cloudflare Pages sets SITE_URL=https://rooted-haus.com for production builds. Preview builds (other branches) leave
+// it unset and fall back to their own *.pages.dev address, which Cloudflare provides as CF_PAGES_URL. BASE_PATH is
+// only needed when the site is served under a sub-path.
+const site = process.env.SITE_URL ?? process.env.CF_PAGES_URL ?? 'http://localhost:4321';
 const base = process.env.BASE_PATH ?? '/';
 // Redirect targets are not prefixed with the base automatically, so add it here.
 const to = (/** @type {string} */ path) => `${base.replace(/\/$/, '')}${path}`;

@@ -2,8 +2,7 @@ name: CI
 
 on:
   pull_request:
-  push:
-    branches-ignore: [main] # main is checked by the deploy workflow
+  push: # every branch, main included (Cloudflare Pages builds main itself, this is the readable check)
 
 jobs:
   check:
@@ -20,9 +19,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter web check
       - run: pnpm --filter web build
-        env: # a staging-style build for whichever account owns the repo (deploy.yml asks GitHub for the real address)
-          SITE_URL: https://${{ github.repository_owner }}.github.io
-          BASE_PATH: /${{ github.event.repository.name }}
+        env: # same settings as the Cloudflare Pages production build
+          SITE_URL: https://rooted-haus.com
       - name: No pure black or white colors
         run: |
           if grep -rEn '#000\b|#fff\b|#000000|#ffffff|:\s*(black|white)\b' web/src --include=*.astro --include=*.css --include=*.ts; then
