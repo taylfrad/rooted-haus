@@ -188,6 +188,10 @@ const teamPage = defineCollection({
       seo,
       header: pageHeader(image),
       mission: z.object({ label: z.string().optional(), text: z.string() }),
+      /** Shown right under the mission, in the same style. */
+      vision: z.object({ label: z.string().optional(), text: z.string() }).optional(),
+      /** A short "about us" between the mission and the stylists. */
+      about: z.object({ label: z.string().optional(), paragraphs: z.array(z.string()).default([]) }).optional(),
       band: z.object({ image: image().optional(), alt: z.string().default('') }).optional(),
       /** Buttons and small headings here and on each stylist's page; {name} becomes the stylist's first name. */
       labels: z.object({
@@ -273,6 +277,8 @@ const careersPage = defineCollection({
       photo2: z.object(photo(image)).optional(),
       /** Shown large, side by side, under the intro. */
       photos: z.array(z.object(photo(image))).default([]),
+      /** Culture and core values, shown numbered before the perks. */
+      values: z.object({ title: z.string(), items: z.array(z.object({ title: z.string(), text: z.string() })).default([]) }).optional(),
       perksTitle: z.string(),
       perks: z.array(z.string()).default([]),
       commissionTitle: z.string(),

@@ -14,6 +14,14 @@ band:
 mission:
   label: "Our roots · our mission"
   text: "We help natural minded women nurture their low-tox dream lifestyles by offering personalized hair care services rooted in wellness and centered by faith while making each guest feel like they have stepped into an extension of their home."
+vision:
+  label: "Our vision"
+  text: "To lead a movement toward intentional, wellness-centered beauty, where women never have to sacrifice their health to feel beautiful, cared for, and confident."
+about:
+  label: "A little about us"
+  paragraphs:
+    - "At the Rooted Haus we believe in wellness through mind, body, and spirit. When you look amazing, you feel amazing. Here beauty is more than a service, it’s an experience rooted in wellness, authenticity, and faith. We wanted this salon to be a sanctuary for women to feel not only cared for on the outside, but nourished on the inside. Our hearts have always been to combine our love for the industry with the deeper calling to serve: to encourage, uplift, and create a space where our clients feel nurtured and valued."
+    - "Every detail of our salon is inspired by the beauty of nature in a way that feels like home. Here, self care is sacred. Whether you are looking for an elevated color service, low-tox hair products and methods, or time to unwind with one of our rejuvenating scalp rituals, we promise you’ll leave feeling lighter, more radiant, and more rooted in who you are."
 labels:
   book: "Book with us"
   story: "Read {name}’s story"

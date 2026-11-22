@@ -47,6 +47,21 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
     )}
   </Section>
 
+  {c.values && c.values.items.length > 0 && (
+    <Section bg="var(--surface-sand)">
+      <h2 class="title-m h2 h2--center">{c.values.title}</h2>
+      <ol class="values">
+        {c.values.items.map((v, i) => (
+          <li class="value">
+            <span class="value__n">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="value__title">{v.title}</h3>
+            <p class="value__text">{v.text}</p>
+          </li>
+        ))}
+      </ol>
+    </Section>
+  )}
+
   <Section bg="var(--surface-raised)">
     <h2 class="title-m h2">{c.perksTitle}</h2>
     <ul class="ticks ticks--cols">{c.perks.map((p) => <li><Check size={18} stroke-width={1.5} />{p}</li>)}</ul>
@@ -154,7 +169,12 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
   .lead { margin: 0; font-size: var(--fs-body-l); }
   .offer { margin: 0; font-family: var(--font-display); font-size: 24px; line-height: 1.4; color: var(--text-strong); }
   .h2 { margin-bottom: 32px; }
-  .h2--dark { text-align: center; }
+  .h2--dark, .h2--center { text-align: center; }
+  .values { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(28px, 4vw, 56px); }
+  .value { display: flex; flex-direction: column; gap: 12px; padding-top: 22px; border-top: 1px solid var(--border-hairline); }
+  .value__n { font-family: var(--font-display); font-size: 32px; line-height: 1; color: var(--rh-terracotta); }
+  .value__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-title); line-height: var(--lh-snug); color: var(--text-strong); }
+  .value__text { margin: 0; text-wrap: pretty; }
   .ticks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
   .ticks li { display: flex; gap: 12px; align-items: flex-start; }
   .ticks li :global(svg) { flex-shrink: 0; margin-top: 4px; color: var(--text-accent); }
@@ -185,7 +205,7 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
   .next__text { margin: 0; color: var(--text-muted); text-wrap: pretty; }
   @media (max-width: 900px) {
     .split, .apply, .apply--offline, .pair { grid-template-columns: 1fr; }
-    .paths { grid-template-columns: 1fr; }
+    .paths, .values { grid-template-columns: 1fr; }
     .quotes { grid-template-columns: 1fr; }
   }
   @media (max-width: 560px) { .ticks--cols { columns: 1; } }

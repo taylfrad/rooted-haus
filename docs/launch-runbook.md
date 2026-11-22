@@ -42,7 +42,7 @@ own `*.pages.dev` preview address, which Cloudflare keeps out of search engines.
 ## Go live
 
 1. **Content is real.** Walk `content-checklist.md`; search the site for "Placeholder", "from $—", "Client name", "coming soon", "TODO".
-2. **Boulevard overlay.** Paste the owner's snippet at the marked TODO in `web/src/layouts/BaseLayout.astro`. Test: every "Book" button opens booking on top of the site; with the script blocked it opens the Boulevard page.
+2. **Boulevard overlay.** The owner's snippet is in `web/src/layouts/BaseLayout.astro`. Test: every "Book" button opens booking on top of the site; with the script blocked it opens the Boulevard page.
 3. **Forms.** Put the form service address in the panel (Studio details, Contact form address). For resume uploads, also set the Job application form address to a service that accepts files (see `docs/forms.md`). Send a test from Contact, Careers (once with a PDF, once without) and the newsletter box.
 4. **Domain.** rooted-haus.com is connected to Cloudflare Pages (setup step 4 above). Check https://rooted-haus.com
    and https://www.rooted-haus.com both load, the second redirecting to the first.

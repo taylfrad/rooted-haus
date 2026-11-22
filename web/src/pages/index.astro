@@ -17,7 +17,7 @@ import { ChevronLeft, ChevronRight } from '@lucide/astro';
 import { emphasis } from '../lib/emphasis';
 import logoIvory from '../assets/logo-wordmark-ivory.png';
 import { url } from '../lib/paths';
-import { site } from '../lib/site';
+import { sentences, site } from '../lib/site';
 import { getPage } from '../lib/pages';
 import { cropPosition } from '../lib/crop';
 
@@ -96,6 +96,7 @@ const recent = (await getCollection('gallery'))
         {slides.map((s, i) => <span class="hero__script" data-phrase data-active={i === 0}>{s.phrase}</span>)}
       </div>
       <h1 class="hero__title" data-lines>{emphasis(home.hero.title).map((p) => (p.accent ? <em class="accent">{p.text}</em> : p.text))}</h1>
+      {site.brandLine && <p class="hero__brand">{sentences(site.brandLine).map((t) => <><span class="nowrap">{t}</span>{' '}</>)}</p>}
       <div class="hero__actions">
         <BookButton variant="ivory" size="lg">{site.bookLabel}</BookButton>
         <Button variant="outline" tone="dark" size="lg" href={url('services/')}>{home.hero.ritualsButton}</Button>
@@ -449,6 +450,8 @@ const recent = (await getCollection('gallery'))
   .hero__content > .hero__title { max-width: 760px; }
   .hero__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 4.2vw, 56px);
     line-height: 1.12; text-wrap: balance; text-shadow: 0 1px 18px rgba(59, 40, 25, .45); }
+  .hero__brand { margin: 0; max-width: 560px; font-size: 13px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase;
+    line-height: 1.7; color: var(--rh-ivory); text-wrap: balance; text-shadow: 0 1px 12px rgba(59, 40, 25, .6); }
   .hero__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 8px; }
   .hero__dots { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); display: none; }
   .hero.has-slides .hero__dots { display: flex; }
@@ -520,6 +523,7 @@ const recent = (await getCollection('gallery'))
   }
   @media (max-width: 560px) {
     .hero__eyebrow { font-size: 10.5px; letter-spacing: .2em; padding: 7px 14px; }
+    .hero__brand { font-size: 11px; letter-spacing: .16em; }
     /* Stacked buttons share the width of the wider one, so the pair reads as one block. */
     .hero__actions { display: grid; justify-content: start; }
     .hero__content { padding-bottom: 72px; }
@@ -539,7 +543,7 @@ const recent = (await getCollection('gallery'))
     .hero__dots { bottom: 2px; }
   }
   @media (max-height: 440px) {
-    .hero__eyebrow { display: none; }
+    .hero__eyebrow, .hero__brand { display: none; }
     .hero__content { padding-bottom: 44px; }
   }
 </style>

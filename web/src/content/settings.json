@@ -1,6 +1,7 @@
 {
   "name": "The Rooted Haus",
   "tagline": "Holistic Hair Studio",
+  "brandLine": "Rooted in Beauty. Grounded by Faith. Crafted with Intention.",
   "bookingUrl": "https://www.joinblvd.com/b/rosebeauty/widget#/visit-type",
   "bookLabel": "Get Rooted",
   "addressLine1": "1685 North Causeway Blvd., Suite A",
@@ -21,5 +22,5 @@
   "giftCardsUrl": "",
   "footerScript": "come as you are",
   "footerNewsletter": "News, openings and product drops.",
-  "websiteName": "rootedhaus.com"
+  "websiteName": "rooted-haus.com"
 }

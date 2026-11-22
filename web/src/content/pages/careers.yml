@@ -25,6 +25,15 @@ photos:
   - image: "../../assets/photos/salon/color-bar.jpg"
     alt: "The color bar: tall wooden shelves of color tubes, baskets, books and trailing greenery."
     focus: "50% 45%"
+values:
+  title: "Culture and core values"
+  items:
+    - title: "Faith at our foundation"
+      text: "At the Rooted Haus we believe true beauty begins within. Our faith in Christ is the foundation of our business, guiding us to serve others with grace, integrity, humility, and most importantly, love."
+    - title: "Beauty without compromise"
+      text: "We believe beauty and wellness should go hand in hand and are committed to thoughtful ingredients, transparency, low-tox alternatives, and intentional practices that prioritize the well-being of our guests and our stylists."
+    - title: "Growth with purpose"
+      text: "We believe growth is a lifelong journey, in our faith, in our health, and in our careers. Through continued education, encouragement, and community, we strive to create an environment where our stylists can flourish personally, professionally, and spiritually. We recognize that growth looks different for everyone and are dedicated to nurture each stylist’s unique path through mentorship and support in pursuing their individual goals."
 perksTitle: "Perks of working in our salon"
 perks:
   - "Flexibility in choosing schedule"
