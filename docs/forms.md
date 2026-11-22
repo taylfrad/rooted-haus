@@ -23,9 +23,10 @@ Which services accept uploads (from vendor help pages and comparison sites; plan
 |---|---|---|
 | Web3Forms | No. Pro plan only (about $149 a year) | Single file up to 5 MB on Pro. Free plan covers plain forms (about 250 a month). |
 | Formspree | No. Paid plans only | Up to 25 MB per file on paid plans. Free plan is 50 submissions a month. |
-| Netlify Forms | Yes | Only if the site is hosted on Netlify; request size limit of about 8 MB. Needs the form marked up for Netlify, which would be a small change here. |
 
-Recommended path: use a free service for the contact and newsletter forms, and decide on the careers upload when the host is chosen. If the host ends up being Netlify, uploads cost nothing extra. If not, a paid Web3Forms or Formspree plan for one form is the simplest fix. Until the job application address is set, applications go through the contact address without the resume box, so no file can be dropped by a service that does not accept uploads.
+The site is hosted on Cloudflare Pages, so host-specific form services (such as Netlify Forms) do not apply.
+
+Recommended path: use a free service for the contact and newsletter forms. For resume uploads, a paid Web3Forms or Formspree plan for the one careers form is the simplest fix. Until the job application address is set, applications go through the contact address without the resume box, so no file can be dropped by a service that does not accept uploads.
 
 ## Privacy
 
