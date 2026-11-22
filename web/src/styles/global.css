@@ -73,10 +73,12 @@ main:focus{outline:none}
 
 /* Scroll reveal: blocks start hidden (and a little low) only when JS is running. Photos never animate, so any
    part of a block that holds a photo stays put and only the photo-free parts rise in (REVEAL in lib/motion.ts).
+   A box marked data-still is treated like a photo: the box stays, the words inside it rise in.
    `translate` rather than `transform`, so hover lifts on the same elements keep working. */
 @media (prefers-reduced-motion:no-preference){
-  .js [data-reveal]:not(:has(img)),
-  .js :is([data-reveal],[data-reveal] *):has(img) > :not(:has(img),img){opacity:0;translate:0 var(--rise-reveal)}
+  /* :where() keeps these weaker than the .is-revealing/.is-revealed rule below, which must win to show the block. */
+  .js [data-reveal]:where(:not(:has(img,[data-still]))),
+  .js :is([data-reveal],[data-reveal] *):where(:has(img,[data-still]),[data-still]) > :not(img):where(:not(:has(img,[data-still]),[data-still])){opacity:0;translate:0 var(--rise-reveal)}
   /* lib/motion.ts adds .is-revealing when a block comes into view, then swaps it for .is-revealed once it has
      arrived. Only .is-revealing carries a transition, so afterwards the block's own hover transitions apply again.
      The doubled class outranks the hidden-state rule above. Opacity and translate run on the compositor. */

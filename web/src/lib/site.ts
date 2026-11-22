@@ -21,14 +21,12 @@ export const site = {
   formEndpoint: settings.formEndpoint,
   /** Online forms show only once a form address is set in the panel; until then they are hidden, not half-working. */
   formsReady: settings.formEndpoint !== '',
-  /** Where job applications go: the job application address if set, otherwise the contact form address. */
-  careersFormEndpoint: settings.careersFormEndpoint || settings.formEndpoint,
-  /** The resume box shows only with a job application address of its own, which must accept file uploads. */
-  uploadsReady: settings.careersFormEndpoint !== '',
+  /** Public key for the "verify you are human" check on the careers form (Cloudflare Turnstile widget
+   *  "rooted-haus careers form"). Kept here, not in the panel: it is set once and a typo would break applications. */
+  turnstileSiteKey: '0x4AAAAAAGNwi7zHeJ1N_ZLw',
   /** Some form services (Web3Forms) need a public access key sent with every submission. */
   formAccessKey: settings.formAccessKey,
   giftCardsUrl: settings.giftCardsUrl,
-  footerScript: settings.footerScript,
   footerNewsletter: settings.footerNewsletter,
   /** Shown at the bottom of every page; plain text, not a link. */
   websiteName: settings.websiteName,

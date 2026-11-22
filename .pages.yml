@@ -38,11 +38,9 @@ content:
       - { name: instagram, label: Instagram link, type: string }
       - { name: facebook, label: Facebook link, type: string }
       - { name: giftCardsUrl, label: "Gift cards link (leave empty to hide the gift card buttons)", type: string }
-      - { name: footerScript, label: Handwritten line in the footer, type: string }
       - { name: footerNewsletter, label: Newsletter line in the footer, type: string }
       - { name: websiteName, label: Web address shown at the bottom of every page, type: string }
       - { name: formEndpoint, label: "Contact form address (set up by your web person; the message, newsletter and application forms stay hidden until it is filled in)", type: string }
-      - { name: careersFormEndpoint, label: "Job application form address (only for a service that accepts resume uploads; it turns on the resume box. Leave empty to send applications through the contact form address, without a resume box)", type: string }
       - { name: formAccessKey, label: Form service access key (only if your form service gives you one), type: string }
 
   - name: deals
@@ -674,6 +672,14 @@ content:
           - { name: title, label: Heading, type: string }
           - { name: text, label: Text, type: text }
           - { name: stepsTitle, label: "Small heading above the steps (e.g. What happens next)", type: string }
+          - { name: startScript, label: "Handwritten line on the card before the form opens", type: string }
+          - { name: startTitle, label: "Heading on that card", type: string }
+          - { name: startText, label: "Sentence on that card", type: text }
+          - { name: startButton, label: "Button that opens the form", type: string }
+          - { name: thanksTitle, label: "Thank-you heading after sending", type: string }
+          - { name: thanksText, label: "Thank-you message after sending", type: text }
+          - { name: experienceOptions, label: "Choices for \"Years of experience\"", type: string, list: true }
+          - { name: licenseOptions, label: "Choices for \"Cosmetology license\"", type: string, list: true }
           - name: steps
             label: What happens after someone applies
             type: object

@@ -10,7 +10,7 @@ import FileField from '../components/forms/FileField.astro';
 import Button from '../components/core/Button.astro';
 import Badge from '../components/content/Badge.astro';
 import SectionHeading from '../components/content/SectionHeading.astro';
-import { Check, Phone } from '@lucide/astro';
+import { Check } from '@lucide/astro';
 import { site } from '../lib/site';
 import { url } from '../lib/paths';
 import { getPage } from '../lib/pages';
@@ -19,9 +19,9 @@ import { getPage } from '../lib/pages';
 const c = await getPage('careersPage');
 // The form's choices follow the page: both stylist paths, every hourly role, and an open option.
 const interests = ['Commission', 'Booth rental', ...c.hourlyRoles, 'Not sure yet'];
-// Until a form address is set in the panel, applicants are asked to call (or email, if one is set) instead.
-const applyOnline = site.careersFormEndpoint !== '';
-const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
+// Applications go to the site's own address (functions/api/apply.js), which emails them to the studio with the
+// resume attached. No outside form service is needed.
+const applyEndpoint = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/api/apply`;
 ---
 
 
@@ -98,68 +98,86 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
   </Section>
 
   <Section>
-    {applyOnline ? (
-    <div class="apply">
+    <div class="apply" id="apply">
       <div class="apply__intro">
         <h2 class="title-m h2">{c.apply.title}</h2>
         {c.apply.text && <p>{c.apply.text}</p>}
         {c.apply.steps.length > 0 && (
-        <div class="next">
-          <span class="next__label">{c.apply.stepsTitle}</span>
-          <ol class="next__list">
-            {c.apply.steps.map((st, i) => (
-              <li class="next__step">
-                <span class="next__n">{String(i + 1).padStart(2, '0')}</span>
-                <h3 class="next__title">{st.title}</h3>
-                <p class="next__text">{st.text}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      )}
+          <div class="next">
+            <span class="next__label">{c.apply.stepsTitle}</span>
+            <ol class="next__list">
+              {c.apply.steps.map((st, i) => (
+                <li class="next__step">
+                  <span class="next__n">{String(i + 1).padStart(2, '0')}</span>
+                  <h3 class="next__title">{st.title}</h3>
+                  <p class="next__text">{st.text}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
       </div>
+      <div class="apply__panel">
+      <!-- The form stays folded away until "Start your application" is pressed, so applying is a deliberate choice.
+           Links to careers/#apply open it straight away. -->
+      <div class="invite" data-apply-invite>
+        <span class="invite__script">{c.apply.startScript}</span>
+        <h3 class="invite__title">{c.apply.startTitle}</h3>
+        {c.apply.startText && <p class="invite__text">{c.apply.startText}</p>}
+        <Button size="lg" type="button" data-apply-open aria-controls="apply-form" aria-expanded="false">{c.apply.startButton}</Button>
+      </div>
+      <div class="apply__form" id="apply-form" data-apply-form hidden>
       <ContactForm
         subject="Careers application"
         submitLabel="Send application"
-        endpoint={site.careersFormEndpoint}
+        endpoint={applyEndpoint}
         multipart
-        success="Thank you for applying. We have your application and will be in touch soon."
+        turnstileSiteKey={site.turnstileSiteKey}
+        successTitle={c.apply.thanksTitle}
+        success={c.apply.thanksText}
       >
-        <Field label="Name" name="name" required />
-        <Field label="Email" name="email" type="email" required />
-        <Field label="Phone" name="phone" type="tel" />
-        <Field label="I'm interested in" name="interest" type="select" options={interests} required />
-        <Field label="Tell us about yourself" name="message" type="textarea" required />
-        {site.uploadsReady && <FileField label="Resume" name="resume" hint="Optional. PDF, DOC or DOCX, up to 5 MB. We use it only to consider your application." />}
-      </ContactForm>
-    </div>
-    ) : (
-    <div class="apply apply--offline">
-      <div class="apply__intro">
-        <h2 class="title-m h2">{c.apply.title}</h2>
-        <p class="apply__call">
-          We would love to hear from you. Call us and tell us a little about yourself{site.email && <>, or email <a href={`mailto:${site.email}`}>{site.email}</a></>}.
-        </p>
-        <Button href={tel} size="lg"><Phone slot="icon" size={16} stroke-width={1.5} aria-hidden="true" />Call {site.phone}</Button>
-      </div>
-      {c.apply.steps.length > 0 && (
-        <div class="next">
-          <span class="next__label">{c.apply.stepsTitle}</span>
-          <ol class="next__list">
-            {c.apply.steps.map((st, i) => (
-              <li class="next__step">
-                <span class="next__n">{String(i + 1).padStart(2, '0')}</span>
-                <h3 class="next__title">{st.title}</h3>
-                <p class="next__text">{st.text}</p>
-              </li>
-            ))}
-          </ol>
+        <div class="row">
+          <Field label="Name" name="name" required />
+          <Field label="Email" name="email" type="email" required />
         </div>
-      )}
+        <div class="row">
+          <Field label="Phone" name="phone" type="tel" />
+          <Field label="I'm interested in" name="interest" type="select" options={interests} required />
+        </div>
+        <div class="row">
+          <Field label="Years of experience" name="experience" type="select" options={c.apply.experienceOptions} />
+          <Field label="Cosmetology license" name="license" type="select" options={c.apply.licenseOptions} />
+        </div>
+        <Field label="Instagram or portfolio" name="portfolio" placeholder="@yourhandle or a link to your work" />
+        <Field label="Tell us about yourself" name="message" type="textarea" required />
+        <FileField label="Resume" name="resume" hint="Optional. PDF, DOC or DOCX, up to 5 MB. We use it only to consider your application." />
+      </ContactForm>
+      </div>
+      </div>
     </div>
-    )}
   </Section>
 </BaseLayout>
+
+<script>
+  // "Start your application": swap the invitation for the form, then start the visitor in the first field.
+  function openApply(focus: boolean) {
+    const form = document.querySelector<HTMLElement>('[data-apply-form]');
+    const invite = document.querySelector<HTMLElement>('[data-apply-invite]');
+    if (!form || !invite || !form.hidden) return;
+    form.hidden = false;
+    invite.hidden = true;
+    document.querySelector('[data-apply-open]')?.setAttribute('aria-expanded', 'true');
+    document.dispatchEvent(new Event('rh:form-shown')); // draws the "verify you are human" check now it can be seen
+    if (focus) form.querySelector<HTMLElement>('input:not([type=hidden]):not([tabindex="-1"])')?.focus({ preventScroll: true });
+    form.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }
+  document.addEventListener('click', (e) => {
+    if ((e.target as Element).closest('[data-apply-open]')) openApply(true);
+  });
+  document.addEventListener('astro:page-load', () => {
+    if (location.hash === '#apply') openApply(false);
+  });
+</script>
 
 <style>
   .split { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
@@ -170,17 +188,26 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
   .offer { margin: 0; font-family: var(--font-display); font-size: 24px; line-height: 1.4; color: var(--text-strong); }
   .h2 { margin-bottom: 32px; }
   .h2--dark, .h2--center { text-align: center; }
-  .values { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(28px, 4vw, 56px); }
-  .value { display: flex; flex-direction: column; gap: 12px; padding-top: 22px; border-top: 1px solid var(--border-hairline); }
+  /* One full-width row per value (number, name, then the words), so values of different lengths never leave
+     ragged columns: each row is as tall as its own text, and the hairlines keep them in step. */
+  .values { list-style: none; margin: 0 auto; padding: 0; max-width: 1040px; }
+  .value { display: grid; grid-template-columns: 64px minmax(0, 1fr) minmax(0, 1.5fr); gap: 10px clamp(24px, 4vw, 56px); align-items: baseline;
+    padding: 30px 0; border-top: 1px solid var(--border-hairline); }
+  .value:last-child { border-bottom: 1px solid var(--border-hairline); }
   .value__n { font-family: var(--font-display); font-size: 32px; line-height: 1; color: var(--rh-terracotta); }
-  .value__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-title); line-height: var(--lh-snug); color: var(--text-strong); }
+  .value__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: var(--lh-snug); color: var(--text-strong); }
   .value__text { margin: 0; text-wrap: pretty; }
   .ticks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
   .ticks li { display: flex; gap: 12px; align-items: flex-start; }
   .ticks li :global(svg) { flex-shrink: 0; margin-top: 4px; color: var(--text-accent); }
   .ticks--cols { display: block; columns: 2; column-gap: 48px; margin-bottom: 56px; }
   .ticks--cols li { break-inside: avoid; margin-bottom: 10px; }
-  .paths { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  /* The longest list (commission) takes the left column; the two shorter ones stack on the right, so both sides end
+     at about the same height instead of three cards with very different amounts of empty space. */
+  .paths { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; align-items: stretch; }
+  .path:first-child { grid-row: span 2; }
+  /* Its list spreads a little to fill the taller card, so it does not end in a block of empty space. */
+  .path:first-child .ticks { flex: 1; justify-content: space-evenly; max-height: 460px; }
   .path { padding: 32px 28px; border-radius: var(--radius-lg); background: var(--surface-sand); display: flex; flex-direction: column; gap: 14px; }
   .path__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: var(--lh-snug); color: var(--text-strong); }
   .path__price { margin: 0; font-family: var(--font-display); font-size: 22px; line-height: var(--lh-snug); color: var(--rh-chocolate); }
@@ -191,8 +218,19 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
   .apply { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
   .apply__intro { display: flex; flex-direction: column; align-items: flex-start; }
   .apply__intro p { margin: 0; }
-  .apply--offline { grid-template-columns: 1fr 1fr; align-items: center; }
-  .apply__intro .apply__call { margin-bottom: 28px; font-size: var(--fs-body-l); }
+  .apply__panel { min-width: 0; }
+  .apply__form { scroll-margin-top: 120px; animation: apply-in .45s var(--ease-soft) both; }
+  .apply__form[hidden], .invite[hidden] { display: none; }
+  @keyframes apply-in { from { opacity: 0; transform: translateY(10px); } }
+  /* The invitation in place of the form: sand card, handwritten line, one clear button. */
+  .invite { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: clamp(36px, 5vw, 64px);
+    border-radius: var(--radius-lg); background: var(--surface-sand); }
+  .invite__script { font-family: var(--font-script); font-size: clamp(34px, 3.4vw, 46px); line-height: 1; color: var(--rh-terracotta); }
+  .invite__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 3vw, 38px); line-height: var(--lh-snug); color: var(--text-strong); }
+  .invite__text { margin: 0 0 10px; max-width: 460px; font-size: var(--fs-body-l); text-wrap: pretty; }
+  @media (prefers-reduced-motion: reduce) { .apply__form { animation: none; } }
+  /* Short answers sit two to a row on wide screens. */
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   /* What happens next: numbered like the groups on The Experience, with a fine line between steps like the price list. */
   .next { align-self: stretch; }
   .apply__intro .next { margin-top: 40px; }
@@ -204,9 +242,13 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
   .next__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-title); line-height: var(--lh-snug); color: var(--text-strong); }
   .next__text { margin: 0; color: var(--text-muted); text-wrap: pretty; }
   @media (max-width: 900px) {
-    .split, .apply, .apply--offline, .pair { grid-template-columns: 1fr; }
-    .paths, .values { grid-template-columns: 1fr; }
+    .split, .apply, .pair { grid-template-columns: 1fr; }
+    .paths { grid-template-columns: 1fr; }
+    .path:first-child { grid-row: auto; }
+    .path:first-child .ticks { justify-content: flex-start; }
+    .value { grid-template-columns: 52px minmax(0, 1fr); }
+    .value__text { grid-column: 2; }
     .quotes { grid-template-columns: 1fr; }
   }
-  @media (max-width: 560px) { .ticks--cols { columns: 1; } }
+  @media (max-width: 560px) { .ticks--cols { columns: 1; } .row { grid-template-columns: 1fr; } }
 </style>
