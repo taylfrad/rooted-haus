@@ -492,11 +492,11 @@ const recent = (await getCollection('gallery'))
   .hero__dots button[data-active='true']::before { width: 36px; background: var(--rh-sand); }
   .hero__dots { align-items: center; }
   /* Small arrows either side of the dots: step one photo back or forward. */
-  .hero__dots .hero__arrow { width: 36px; min-width: 36px; height: 36px; margin: 0 6px; border-radius: 50%; color: var(--rh-ivory);
-    border: 1px solid var(--rh-ivory-30); background: rgba(59, 40, 25, .35);
-    transition: background var(--dur-base) var(--ease-soft), border-color var(--dur-base) var(--ease-soft); }
+  /* Just the chevrons, no circle: 44px of tap space around each, the icon itself small. */
+  .hero__dots .hero__arrow { width: 44px; min-width: 44px; height: 44px; margin: 0 2px; color: var(--rh-ivory); opacity: .8;
+    filter: drop-shadow(0 1px 4px rgba(59, 40, 25, .6)); transition: opacity var(--dur-base) var(--ease-soft); }
   .hero__dots .hero__arrow::before { content: none; }
-  .hero__dots .hero__arrow:hover { background: rgba(59, 40, 25, .7); border-color: var(--rh-ivory); }
+  .hero__dots .hero__arrow:hover { opacity: 1; }
 
   .steps { list-style: none; margin: 48px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px 28px; }
   .step { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; }
