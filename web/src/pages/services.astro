@@ -48,8 +48,10 @@ const categories = (await getCollection('services')).sort((a, b) => a.data.order
       </div>
     ))}
     </div>
-    <div class="photo-col">
-      {photos.map((p) => <PhotoFrame framed="light" src={p.image} alt={p.alt} focus={p.focus} shape={p.shape} ratio="4 / 5" sizes="(min-width: 900px) 30vw, 33vw" />)}
+    <!-- The photos run the full height of the menu beside them, sharing it evenly, so both columns start and end
+         together and scroll as one. Adding photos in the panel makes each one shorter. -->
+    <div class="photo-col" style={`--photos:${Math.max(photos.length, 1)}`}>
+      {photos.map((p) => <PhotoFrame framed="light" fill src={p.image} alt={p.alt} focus={p.focus} shape={p.shape} sizes="(min-width: 900px) 30vw, 33vw" />)}
     </div>
     </div>
     <div class="cta">
@@ -60,10 +62,17 @@ const categories = (await getCollection('services')).sort((a, b) => a.data.order
 </BaseLayout>
 
 <style>
-  .layout { display: grid; grid-template-columns: 1fr minmax(240px, 0.55fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
+  .layout { display: grid; grid-template-columns: 1fr minmax(240px, 0.55fr); gap: clamp(32px, 6vw, 96px); align-items: stretch; }
   .menu-col { min-width: 0; }
-  .photo-col { display: flex; flex-direction: column; gap: 24px; position: sticky; top: 110px; }
-  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .photo-col { position: static; flex-direction: row; order: -1; } .photo-col > :global(*) { flex: 1; } }
+  /* contain: size stops the photos from adding height of their own: the column takes the menu's height, then splits it. */
+  .photo-col { display: grid; grid-template-rows: repeat(var(--photos), minmax(0, 1fr)); gap: 28px; contain: size; }
+  .cat:last-child { margin-bottom: 0; } /* so the menu's last line and the last photo end level */
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .photo-col { contain: none; display: flex; flex-direction: row; gap: 16px; order: -1; }
+    .photo-col > :global(.pf) { flex: 1; height: auto; aspect-ratio: 4 / 5; }
+    .cat:last-child { margin-bottom: 64px; }
+  }
   .jump { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 56px; }
   .cat { margin-bottom: 64px; scroll-margin-top: 100px; max-width: var(--container-narrow); }
   .cat__title { margin-bottom: 8px; }

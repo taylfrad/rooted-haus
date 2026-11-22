@@ -171,7 +171,8 @@ const recent = (await getCollection('gallery'))
         </li>
       ))}
       <li class="sp sp--cta">
-        <a class="sp__cta" href={url('services/')}>
+        <!-- data-still: the card stays put like the photos beside it, and only its words rise in (lib/motion.ts). -->
+        <a class="sp__cta" href={url('services/')} data-still>
           {home.specialties.card.script && <span class="sp__cta-script">{home.specialties.card.script}</span>}
           <span class="sp__cta-title">{home.specialties.card.title}</span>
           {home.specialties.card.text && <span class="sp__cta-text">{home.specialties.card.text}</span>}

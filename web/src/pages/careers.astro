@@ -188,17 +188,26 @@ const applyEndpoint = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/api/apply`
   .offer { margin: 0; font-family: var(--font-display); font-size: 24px; line-height: 1.4; color: var(--text-strong); }
   .h2 { margin-bottom: 32px; }
   .h2--dark, .h2--center { text-align: center; }
-  .values { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(28px, 4vw, 56px); }
-  .value { display: flex; flex-direction: column; gap: 12px; padding-top: 22px; border-top: 1px solid var(--border-hairline); }
+  /* One full-width row per value (number, name, then the words), so values of different lengths never leave
+     ragged columns: each row is as tall as its own text, and the hairlines keep them in step. */
+  .values { list-style: none; margin: 0 auto; padding: 0; max-width: 1040px; }
+  .value { display: grid; grid-template-columns: 64px minmax(0, 1fr) minmax(0, 1.5fr); gap: 10px clamp(24px, 4vw, 56px); align-items: baseline;
+    padding: 30px 0; border-top: 1px solid var(--border-hairline); }
+  .value:last-child { border-bottom: 1px solid var(--border-hairline); }
   .value__n { font-family: var(--font-display); font-size: 32px; line-height: 1; color: var(--rh-terracotta); }
-  .value__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-title); line-height: var(--lh-snug); color: var(--text-strong); }
+  .value__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: var(--lh-snug); color: var(--text-strong); }
   .value__text { margin: 0; text-wrap: pretty; }
   .ticks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
   .ticks li { display: flex; gap: 12px; align-items: flex-start; }
   .ticks li :global(svg) { flex-shrink: 0; margin-top: 4px; color: var(--text-accent); }
   .ticks--cols { display: block; columns: 2; column-gap: 48px; margin-bottom: 56px; }
   .ticks--cols li { break-inside: avoid; margin-bottom: 10px; }
-  .paths { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  /* The longest list (commission) takes the left column; the two shorter ones stack on the right, so both sides end
+     at about the same height instead of three cards with very different amounts of empty space. */
+  .paths { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; align-items: stretch; }
+  .path:first-child { grid-row: span 2; }
+  /* Its list spreads a little to fill the taller card, so it does not end in a block of empty space. */
+  .path:first-child .ticks { flex: 1; justify-content: space-evenly; max-height: 460px; }
   .path { padding: 32px 28px; border-radius: var(--radius-lg); background: var(--surface-sand); display: flex; flex-direction: column; gap: 14px; }
   .path__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: var(--lh-snug); color: var(--text-strong); }
   .path__price { margin: 0; font-family: var(--font-display); font-size: 22px; line-height: var(--lh-snug); color: var(--rh-chocolate); }
@@ -234,7 +243,11 @@ const applyEndpoint = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/api/apply`
   .next__text { margin: 0; color: var(--text-muted); text-wrap: pretty; }
   @media (max-width: 900px) {
     .split, .apply, .pair { grid-template-columns: 1fr; }
-    .paths, .values { grid-template-columns: 1fr; }
+    .paths { grid-template-columns: 1fr; }
+    .path:first-child { grid-row: auto; }
+    .path:first-child .ticks { justify-content: flex-start; }
+    .value { grid-template-columns: 52px minmax(0, 1fr); }
+    .value__text { grid-column: 2; }
     .quotes { grid-template-columns: 1fr; }
   }
   @media (max-width: 560px) { .ticks--cols { columns: 1; } .row { grid-template-columns: 1fr; } }

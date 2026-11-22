@@ -11,8 +11,11 @@
 const REVEAL_LINE = 12; // a block starts once its top is this many percent above the bottom of the screen
 
 // Photos never animate: inside a `[data-reveal]` block, reveal only the largest parts that hold no image.
+// A box marked `data-still` is treated like a photo: it stays put and only the words inside it rise in (the "full menu"
+// card among the specialty photos on Home, so it arrives the same way as the photo tiles beside it).
 // Keep in sync with the hidden-state rule in styles/global.css.
-const REVEAL = '[data-reveal]:not(:has(img)), :is([data-reveal], [data-reveal] *):has(img) > :not(:has(img), img)';
+const STILL = 'img, [data-still]';
+const REVEAL = `[data-reveal]:not(:has(${STILL})), :is([data-reveal], [data-reveal] *):is(:has(${STILL}), [data-still]) > :not(:has(${STILL}), ${STILL})`;
 
 /** A time token such as `--dur-reveal:800ms`, in milliseconds. */
 function ms(token: string, fallback: number): number {
