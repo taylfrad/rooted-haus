@@ -50,6 +50,8 @@ img{max-width:100%;display:block}
   border:1px solid var(--rh-chocolate);background:transparent;color:var(--rh-chocolate);
   transition:background var(--dur-base) var(--ease-soft),color var(--dur-base) var(--ease-soft)}
 .pill:hover,.pill[aria-pressed='true']{background:var(--rh-chocolate);color:var(--rh-ivory)}
+/* Keeps a phrase on one line; the brand line wraps only between its sentences. */
+.nowrap{white-space:nowrap}
 
 /* Small capitals text link whose underline fades in on hover ("Read Shelby's story", the back link, text buttons). */
 .caps-link{font-size:12px;font-weight:500;letter-spacing:var(--ls-button);text-transform:uppercase;color:inherit;

@@ -7,6 +7,7 @@ import PhotoFrame from '../components/content/PhotoFrame.astro';
 import BookButton from '../components/core/BookButton.astro';
 import { url } from '../lib/paths';
 import { getPage } from '../lib/pages';
+import { sentences, site } from '../lib/site';
 
 const page = await getPage('teamPage');
 const bandPhoto = page.band?.image;
@@ -24,9 +25,25 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
       <div class="mission">
         {page.mission.label && <span class="mission__label">{page.mission.label}</span>}
         <p class="mission__text">{page.mission.text}</p>
+        {page.vision && (
+          <>
+            <span class="mission__rule" aria-hidden="true"></span>
+            {page.vision.label && <span class="mission__label">{page.vision.label}</span>}
+            <p class="mission__text">{page.vision.text}</p>
+          </>
+        )}
       </div>
     </div>
   </Section>
+  {page.about && page.about.paragraphs.length > 0 && (
+    <Section bg="var(--surface-raised)">
+      <div class="about">
+        {page.about.label && <span class="mission__label">{page.about.label}</span>}
+        {page.about.paragraphs.map((t) => <p>{t}</p>)}
+        {site.brandLine && <p class="about__brand">{sentences(site.brandLine).map((t) => <><span class="nowrap">{t}</span>{' '}</>)}</p>}
+      </div>
+    </Section>
+  )}
   <Section bg="var(--surface-olive)" curve>
     <ul class="team">
       {team.map((m) => (
@@ -54,6 +71,10 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
   .story--photo .mission { margin: 0; text-align: left; align-items: flex-start; }
   .mission__label { font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
   .mission__text { margin: 0; font-family: var(--font-display); font-size: clamp(22px, 2.4vw, 30px); line-height: 1.4; color: var(--text-strong); text-wrap: balance; }
+  .mission__rule { width: 48px; height: 1px; margin: 12px 0; background: var(--border-hairline); }
+  .about { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center; }
+  .about p { margin: 0; font-size: var(--fs-body-l); text-wrap: pretty; }
+  .about .about__brand { margin-top: 12px; font-family: var(--font-display); font-size: clamp(20px, 2vw, 26px); line-height: 1.4; color: var(--text-strong); text-wrap: balance; }
   .team { list-style: none; margin: 0 0 56px; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 56px 40px; }
   .member { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; color: var(--rh-ivory); text-decoration: none; }
   .member__photo { width: min(320px, 100%); margin-bottom: 22px; border-radius: var(--radius-arch); }

@@ -21,6 +21,7 @@ content:
     fields:
       - { name: name, label: Studio name, type: string }
       - { name: tagline, label: Tagline, type: string }
+      - { name: brandLine, label: "Brand line (on the home photo, in the footer and on Meet the Haus)", type: string }
       - { name: bookingUrl, label: Booking link (Boulevard), type: string }
       - { name: bookLabel, label: "Words on the main booking buttons (e.g. Get Rooted)", type: string }
       - { name: addressLine1, label: Street address, type: string }
@@ -313,6 +314,18 @@ content:
         fields:
           - { name: label, label: Small line above, type: string }
           - { name: text, label: Mission statement, type: text }
+      - name: vision
+        label: Vision (right under the mission)
+        type: object
+        fields:
+          - { name: label, label: Small line above, type: string }
+          - { name: text, label: Vision statement, type: text }
+      - name: about
+        label: About us (between the mission and the stylists)
+        type: object
+        fields:
+          - { name: label, label: Small line above, type: string }
+          - { name: paragraphs, label: Paragraphs, type: text, list: true }
       - name: labels
         label: "Buttons and small headings (here and on each stylist's page). {name} is replaced by the stylist's first name."
         type: object
@@ -623,6 +636,18 @@ content:
           - { name: image, label: Photo, type: image }
           - { name: alt, label: Describe the photo (for people who cannot see it), type: string }
           - { name: focus, label: "Crop position (optional, e.g. 50% 30% keeps the upper middle)", type: string }
+      - name: values
+        label: Culture and core values (before the perks)
+        type: object
+        fields:
+          - { name: title, label: Heading, type: string }
+          - name: items
+            label: Values
+            type: object
+            list: true
+            fields:
+              - { name: title, label: Value, type: string }
+              - { name: text, label: What it means, type: text }
       - { name: perksTitle, label: Perks heading, type: string }
       - { name: perks, label: Perks, type: string, list: true }
       - { name: commissionTitle, label: Commission heading, type: string }

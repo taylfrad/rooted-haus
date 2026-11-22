@@ -7,6 +7,8 @@ import settings from '../content/settings.json';
 export const site = {
   name: settings.name,
   tagline: settings.tagline,
+  /** The brand line: on the home photo, in the footer and on Meet the Haus. */
+  brandLine: settings.brandLine,
   bookingUrl: settings.bookingUrl,
   /** Words on the main booking buttons (header, hero, Connect...). Falls back if left empty in the panel. */
   bookLabel: settings.bookLabel || 'Get Rooted',
@@ -46,6 +48,9 @@ export const maps = {
 };
 
 /** "Tue to Fri: 9am to 5pm", or just the text when there is no time (used for the placeholder). */
+/** Splits a line into its sentences, so each can be kept on one line ("Rooted in Beauty." never breaks in half). */
+export const sentences = (text: string) => text.split(/(?<=[.!?])\s+/).filter(Boolean);
+
 export const hoursLine = (h: { days: string; time?: string }) => (h.time ? `${h.days}: ${h.time}` : h.days);
 
 export const nav = [
@@ -54,4 +59,5 @@ export const nav = [
   { href: 'experience/', label: 'The Experience' },
   { href: 'gallery/', label: 'Gallery' },
   { href: 'contact/', label: 'Connect' },
+  { href: 'careers/', label: 'Careers' },
 ];
