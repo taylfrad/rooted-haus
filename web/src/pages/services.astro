@@ -62,29 +62,30 @@ const categories = (await getCollection('services')).sort((a, b) => a.data.order
 </BaseLayout>
 
 <style>
-  .layout { display: grid; grid-template-columns: 1fr minmax(240px, 0.55fr); gap: clamp(32px, 6vw, 96px); align-items: stretch; }
+  .layout { display: grid; grid-template-columns: 1fr minmax(240px, 0.55fr); gap: var(--gap-split); align-items: stretch; }
   .menu-col { min-width: 0; }
   /* contain: size stops the photos from adding height of their own: the column takes the menu's height, then splits it. */
-  .photo-col { display: grid; grid-template-rows: repeat(var(--photos), minmax(0, 1fr)); gap: 28px; contain: size; }
+  .photo-col { display: grid; grid-template-rows: repeat(var(--photos), minmax(0, 1fr)); gap: var(--gap-grid); contain: size; }
   .cat:last-child { margin-bottom: 0; } /* so the menu's last line and the last photo end level */
   @media (max-width: 900px) {
     .layout { grid-template-columns: 1fr; }
-    .photo-col { contain: none; display: flex; flex-direction: row; gap: 16px; order: -1; }
+    .photo-col { contain: none; display: flex; flex-direction: row; gap: var(--space-4); order: -1; }
     .photo-col > :global(.pf) { flex: 1; height: auto; aspect-ratio: 4 / 5; }
-    .cat:last-child { margin-bottom: 64px; }
+    .cat:last-child { margin-bottom: var(--space-8); }
   }
-  .jump { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 56px; }
-  .cat { margin-bottom: 64px; scroll-margin-top: 100px; max-width: var(--container-narrow); }
-  .cat__title { margin-bottom: 8px; }
-  .cat__blurb { margin: 0 0 24px; color: var(--text-muted); }
+  .jump { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-head); }
+  .cat { margin-bottom: var(--space-8); scroll-margin-top: 100px; max-width: var(--container-narrow); }
+  .cat__title { margin-bottom: var(--space-head-sub); }
+  .cat__title:has(+ .cat__blurb) { margin-bottom: var(--space-2); }
+  .cat__blurb { margin: 0 0 var(--space-head-sub); color: var(--text-muted); }
   .menu { list-style: none; margin: 0; padding: 0; }
-  .menu__row { display: flex; justify-content: space-between; gap: 24px; padding: 22px 0;
+  .menu__row { display: flex; justify-content: space-between; gap: var(--space-5); padding: var(--row-y) 0;
     border-top: 1px solid var(--border-hairline); }
   .menu__row:last-child { border-bottom: 1px solid var(--border-hairline); }
-  .menu__name { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 22px; line-height: var(--lh-snug); color: var(--text-strong); }
-  .menu__desc { margin: 6px 0 0; font-size: 15px; color: var(--text-muted); }
+  .menu__name { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-title); line-height: var(--lh-snug); color: var(--text-strong); }
+  .menu__desc { margin: 6px 0 0; font-size: var(--fs-body-s); color: var(--text-muted); }
   .menu__meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; white-space: nowrap; }
-  .menu__price { font-family: var(--font-display); font-size: 20px; color: var(--text-strong); }
-  .menu__dur { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted); }
+  .menu__price { font-family: var(--font-display); font-size: var(--fs-price); color: var(--text-strong); }
+  .menu__dur { font-size: var(--fs-eyebrow); font-weight: 500; letter-spacing: var(--ls-label); text-transform: uppercase; color: var(--text-muted); }
   .cta { margin-top: 8px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
 </style>

@@ -26,17 +26,19 @@ const { surface = 'ivory', eyebrow, title, price, interactive = false } = Astro.
 
 <style>
   .card { --fg: var(--text-body); --head: var(--text-strong); background: var(--surface-raised); color: var(--fg);
-    border-radius: var(--radius-lg); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow-card); }
+    border-radius: var(--radius-lg); display: flex; flex-direction: column; box-shadow: var(--shadow-card); }
+  /* No overflow clip on the card (it would cut off the .lift hover shadow); the photo slot rounds its own top corners. */
+  .card > :global([slot='media']), .card > :global(:first-child:not(.card__body)) { border-radius: var(--radius-lg) var(--radius-lg) 0 0; overflow: hidden; }
   .card--sand { background: var(--surface-sand); }
   .card--sage { background: var(--surface-sage); --fg: var(--rh-espresso); --head: var(--rh-espresso); }
   .card--olive { background: var(--surface-olive); --fg: var(--rh-ivory); --head: var(--rh-ivory); }
   .card--terracotta { background: var(--surface-terracotta); --fg: var(--text-on-dark-muted); --head: var(--rh-ivory); }
   .card--espresso { background: var(--surface-moody); --fg: var(--text-on-dark-muted); --head: var(--rh-ivory); }
   .card__body { padding: 28px 28px 30px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
-  .card__eyebrow { font-size: 11px; font-weight: 500; letter-spacing: .24em; text-transform: uppercase; opacity: .85; }
+  .card__eyebrow { font-size: var(--fs-eyebrow); font-weight: 500; letter-spacing: var(--ls-label); text-transform: uppercase; opacity: .85; }
   .card__head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
-  .card__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: 1.15; color: var(--head); }
-  .card__price { font-family: var(--font-display); font-size: 20px; color: var(--head); white-space: nowrap; }
-  .card__content { font-size: 15px; line-height: 1.7; }
+  .card__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h3); line-height: var(--lh-snug); color: var(--head); }
+  .card__price { font-family: var(--font-display); font-size: var(--fs-price); color: var(--head); white-space: nowrap; }
+  .card__content { font-size: var(--fs-body-s); line-height: var(--lh-body); }
   .card__footer { margin-top: auto; padding-top: 12px; }
 </style>

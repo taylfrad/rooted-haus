@@ -87,7 +87,7 @@ const rows = groups.map(({ data }) => ({ g: data, pairing: data.image2 ? pairing
   .rows { display: flex; flex-direction: column; gap: clamp(72px, 9vw, 128px); margin-top: calc(var(--section-y) * -.5); }
   .opening { display: flex; justify-content: center; }
   .opening :global(.sh__intro) { max-width: 720px; }
-  .row { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
+  .row { display: grid; grid-template-columns: 1fr 1.1fr; gap: var(--gap-split); align-items: start; }
   .row--flip .row__photo { order: 2; }
   /* Photos sit on the outer content edge (left, or right on flipped rows) so every row shares the page grid. */
   .row__photo { max-width: 460px; width: 100%; justify-self: start; position: sticky; top: 118px; }
@@ -96,21 +96,22 @@ const rows = groups.map(({ data }) => ({ g: data, pairing: data.image2 ? pairing
   .row--large .row__photo { max-width: none; }
   .row--flip .row__photo { justify-self: end; }
   .row__text { display: flex; flex-direction: column; gap: 12px; }
-  .row__n { display: flex; align-items: center; gap: 16px; font-family: var(--font-display); font-size: 40px; line-height: 1; color: var(--rh-caramel-soft); }
+  .row__n { display: flex; align-items: center; gap: 16px; font-family: var(--font-display); font-size: var(--fs-num); line-height: 1; color: var(--rh-caramel-soft); }
   .row__n::after { content: ''; width: 56px; height: 1px; background: var(--rh-sand); }
-  .row__eyebrow { font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--rh-ivory); }
-  .row__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 3.6vw, var(--fs-display-l)); line-height: var(--lh-tight); color: var(--rh-ivory); }
+  .row__eyebrow { font-size: var(--fs-eyebrow); font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--rh-ivory); }
+  .row__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h2); line-height: var(--lh-tight); letter-spacing: var(--ls-display); color: var(--rh-ivory); }
   .row__body { margin: 0; font-size: var(--fs-body-l); color: var(--rh-ivory); }
   /* The points read like the price list on The Rituals: a fine line between each. */
   .points { list-style: none; margin: 16px 0 0; padding: 0; }
-  .point { padding: 22px 0; border-top: 1px solid var(--border-on-dark); }
+  .point { padding: var(--row-y) 0; border-top: 1px solid var(--border-on-dark); }
   .point:last-child { border-bottom: 1px solid var(--border-on-dark); }
   .point__title { margin: 0 0 8px; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-title); line-height: var(--lh-snug); color: var(--rh-ivory); }
   .point__text { margin: 0; color: var(--rh-ivory); text-wrap: pretty; }
-  .closing { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 20px; }
-  .closing__script { font-family: var(--font-script); font-size: var(--fs-script-s); line-height: 1.1; color: var(--rh-caramel-soft); text-wrap: balance; }
-  .closing__line { margin: 0; font-family: var(--font-display); font-size: clamp(24px, 2.8vw, 34px); line-height: 1.35; color: var(--rh-ivory); text-wrap: balance; }
-  .closing__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 8px; }
+  /* The same closing as Connect: handwriting, one large line, then the buttons. */
+  .closing { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: clamp(16px, 2.2vw, 28px); }
+  .closing__script { font-family: var(--font-script); font-size: var(--fs-script-closing); line-height: 1; color: var(--rh-caramel-soft); text-wrap: balance; }
+  .closing__line { margin: 0; font-family: var(--font-display); font-size: var(--fs-closing); line-height: 1.2; color: var(--rh-ivory); text-wrap: balance; }
+  .closing__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: clamp(8px, 1.5vw, 20px); }
   @media (max-width: 900px) {
     .row, .row--large, .row--large.row--flip { grid-template-columns: 1fr; }
     .row--flip .row__photo { order: 0; }

@@ -174,7 +174,7 @@ const recent = (await getCollection('gallery'))
       ))}
       <li class="sp sp--cta">
         <!-- data-still: the card stays put like the photos beside it, and only its words rise in (lib/motion.ts). -->
-        <a class="sp__cta" href={url('services/')} data-still>
+        <a class="sp__cta lift" href={url('services/')} data-still>
           {home.specialties.card.script && <span class="sp__cta-script">{home.specialties.card.script}</span>}
           <span class="sp__cta-title">{home.specialties.card.title}</span>
           {home.specialties.card.text && <span class="sp__cta-text">{home.specialties.card.text}</span>}
@@ -231,7 +231,7 @@ const recent = (await getCollection('gallery'))
     </div>
     <div class="work__grid">
       {recent.map((g) => (
-        <PhotoFrame src={g.data.image} alt={g.data.alt ?? g.data.label} label={g.data.label} shape="soft" ratio="3 / 4" sizes="(min-width: 900px) 25vw, 50vw" />
+        <PhotoFrame src={g.data.image} alt={g.data.alt ?? g.data.label} label={g.data.label} shape="rounded" ratio="3 / 4" sizes="(min-width: 900px) 25vw, 50vw" />
       ))}
     </div>
   </Section>
@@ -471,8 +471,8 @@ const recent = (await getCollection('gallery'))
   .hero[data-align='right'] .hero__actions { justify-content: flex-end; }
   /* Small text over a changing photo: a translucent espresso pill keeps it readable on every slide. */
   .hero__eyebrow { display: inline-flex; padding: 7px 16px; border-radius: var(--radius-pill);
-    background: rgba(59, 40, 25, .82); font-size: 12px; font-weight: 500;
-    letter-spacing: .32em; text-transform: uppercase; color: var(--rh-ivory); }
+    background: rgba(59, 40, 25, .82); font-size: var(--fs-eyebrow); font-weight: 500;
+    letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--rh-ivory); }
   /* One line per phrase; the script on this page scales them down together if the longest would not fit (--script-fit). */
   .hero__content > .hero__scripts { display: grid; max-width: 100%; align-items: end; }
   .hero__script { grid-area: 1 / 1; font-family: var(--font-script); font-size: calc(clamp(50px, 7vw, 96px) * var(--script-fit, 1)); white-space: nowrap;
@@ -482,7 +482,7 @@ const recent = (await getCollection('gallery'))
   .hero__content > .hero__title { max-width: 760px; }
   .hero__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 4.2vw, 56px);
     line-height: 1.12; text-wrap: balance; text-shadow: 0 1px 18px rgba(59, 40, 25, .45); }
-  .hero__brand { margin: 0; max-width: 560px; font-size: 13px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase;
+  .hero__brand { margin: 0; max-width: 560px; font-size: var(--fs-eyebrow); font-weight: 500; letter-spacing: var(--ls-label); text-transform: uppercase;
     line-height: 1.7; color: var(--rh-ivory); text-wrap: balance; text-shadow: 0 1px 12px rgba(59, 40, 25, .6); }
   .hero__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 8px; }
   .hero__dots { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); display: none; }
@@ -498,7 +498,7 @@ const recent = (await getCollection('gallery'))
   .hero__dots .hero__arrow::before { content: none; }
   .hero__dots .hero__arrow:hover { opacity: 1; }
 
-  .steps { list-style: none; margin: 48px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px 28px; }
+  .steps { list-style: none; margin: var(--space-head) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-7) var(--gap-grid); }
   .step { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; }
   /* The label sits half on the photo and half below it. */
   .step__photo { position: relative; align-self: stretch; margin-bottom: 36px; }
@@ -506,31 +506,31 @@ const recent = (await getCollection('gallery'))
   .step__tab { position: absolute; left: 50%; bottom: 0; transform: translate(-50%, 50%); max-width: 92%; box-sizing: border-box; display: flex; align-items: baseline; gap: 12px;
     padding: 14px 26px; border-radius: var(--radius-pill); background: var(--rh-ivory); box-shadow: var(--shadow-soft); white-space: nowrap; }
   .step__n { font-family: var(--font-display); font-size: 18px; line-height: 1; color: var(--rh-terracotta); }
-  .step__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(18px, 1.7vw, 22px); line-height: 1.2; color: var(--text-strong); }
+  .step__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-title); line-height: var(--lh-snug); color: var(--text-strong); }
   .step__text { margin: 0 0 2px; max-width: 30ch; color: var(--text-muted); }
 
-  .split { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
+  .split { display: grid; grid-template-columns: 1fr 1.1fr; gap: var(--gap-split); align-items: center; }
   .split--flip { grid-template-columns: 1.1fr 1fr; }
-  .split__text { display: flex; flex-direction: column; gap: 28px; align-items: flex-start; }
+  .split__text { display: flex; flex-direction: column; gap: var(--space-5); align-items: flex-start; }
   .split__photo { max-width: 560px; width: 100%; justify-self: center; }
   .split--flip .split__photo { justify-self: end; } /* on the content edge, in line with the sections around it */
-  .specialties { list-style: none; margin: 48px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px 20px; }
+  .specialties { list-style: none; margin: var(--space-head) 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--gap-grid); }
   .sp__link { display: flex; flex-direction: column; gap: 14px; text-decoration: none; color: var(--text-strong); }
   .sp__photo { border-radius: var(--radius-lg); }
-  .sp__label { font-family: var(--font-display); font-size: 21px; line-height: 1.2; }
+  .sp__label { font-family: var(--font-display); font-size: var(--fs-title); line-height: var(--lh-snug); }
   .sp__link:hover .sp__label { color: var(--text-accent); }
   .sp__cta { height: 100%; min-height: 220px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; gap: 8px;
-    padding: 28px; border-radius: var(--radius-lg); background: var(--surface-terracotta); color: var(--rh-ivory); text-decoration: none;
-    transition: background var(--dur-base) var(--ease-soft); }
+    padding: var(--pad-card); border-radius: var(--radius-lg); background: var(--surface-terracotta); color: var(--rh-ivory); text-decoration: none;
+    box-shadow: var(--shadow-card); transition: background var(--dur-base) var(--ease-soft), transform var(--dur-base) var(--ease-soft); }
   .sp__cta:hover { background: var(--rh-chocolate); color: var(--rh-ivory); }
   .sp__cta-script { font-family: var(--font-script); font-size: var(--fs-script-s); line-height: 1; color: var(--rh-caramel-soft); }
-  .sp__cta-title { font-family: var(--font-display); font-size: 28px; line-height: 1.15; }
-  .sp__cta-text { font-size: 15px; color: var(--text-on-dark-muted); }
+  .sp__cta-title { font-family: var(--font-display); font-size: var(--fs-h3); line-height: var(--lh-snug); }
+  .sp__cta-text { font-size: var(--fs-body-s); color: var(--text-on-dark-muted); }
 
-  .letters { max-width: 860px; margin: 48px auto 0; text-align: center; }
+  .letters { max-width: 860px; margin: var(--space-head) auto 0; text-align: center; }
   .letter + .letter { margin-top: 48px; }
   .letter :global(.review) { align-items: center; gap: 22px; }
-  .letter :global(.review__quote) { font-size: clamp(22px, 2.5vw, 32px); line-height: 1.45; text-wrap: balance; }
+  .letter :global(.review__quote) { font-size: var(--fs-statement); line-height: 1.45; text-wrap: balance; }
   .letter :global(.review__by) { align-items: center; }
   .letters__nav { display: none; }
   /* With JavaScript the letters share one spot (as tall as the longest), and only the current one shows. */
@@ -549,8 +549,8 @@ const recent = (await getCollection('gallery'))
   .letters__dots button[data-active='true']::before { width: 36px; background: var(--rh-sand); }
   .center { display: flex; justify-content: center; }
 
-  .work__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 36px; flex-wrap: wrap; }
-  .work__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .work__head { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--space-5); margin-bottom: var(--space-head); flex-wrap: wrap; }
+  .work__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--gap-grid); }
   .hiring { display: flex; flex-direction: column; align-items: center; gap: 24px; }
 
   @media (max-width: 900px) {
@@ -561,8 +561,8 @@ const recent = (await getCollection('gallery'))
     .work__grid { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 560px) {
-    .hero__eyebrow { font-size: 10.5px; letter-spacing: .2em; padding: 7px 14px; }
-    .hero__brand { font-size: 11px; letter-spacing: .16em; }
+    .hero__eyebrow { font-size: var(--fs-micro); letter-spacing: var(--ls-label); padding: 7px 14px; }
+    .hero__brand { font-size: var(--fs-micro); letter-spacing: .16em; }
     /* Stacked buttons share the width of the wider one, so the pair reads as one block. */
     .hero__actions { display: grid; justify-content: start; }
     .hero__content { padding-bottom: 72px; }

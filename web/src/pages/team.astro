@@ -66,29 +66,28 @@ const team = (await getCollection('team')).sort((a, b) => a.data.order - b.data.
 
 <style>
   /* Group photos are always shown whole: a crop that suits one screen width cuts through faces at another. */
-  .story--photo { display: grid; grid-template-columns: 1.25fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: center; }
-  .mission { max-width: 860px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .story--photo { display: grid; grid-template-columns: 1.25fr 1fr; gap: var(--gap-split); align-items: center; }
+  .mission { max-width: 860px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; align-items: center; gap: var(--space-5); }
   .story--photo .mission { margin: 0; text-align: left; align-items: flex-start; }
-  .mission__label { font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
-  .mission__text { margin: 0; font-family: var(--font-display); font-size: clamp(22px, 2.4vw, 30px); line-height: 1.4; color: var(--text-strong); text-wrap: balance; }
+  .mission__label { font-size: var(--fs-eyebrow); font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
+  .mission__text { margin: 0; font-family: var(--font-display); font-size: var(--fs-statement); line-height: 1.4; color: var(--text-strong); text-wrap: balance; }
   .mission__rule { width: 48px; height: 1px; margin: 12px 0; background: var(--border-hairline); }
-  .about { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center; }
+  .about { max-width: var(--container-narrow); margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: var(--space-5); text-align: center; }
   .about p { margin: 0; font-size: var(--fs-body-l); text-wrap: pretty; }
-  .about .about__brand { margin-top: 12px; font-family: var(--font-display); font-size: clamp(20px, 2vw, 26px); line-height: 1.4; color: var(--text-strong); text-wrap: balance; }
-  .team { list-style: none; margin: 0 0 56px; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 56px 40px; }
+  .about .about__brand { margin-top: 12px; font-family: var(--font-display); font-size: var(--fs-statement); line-height: 1.4; color: var(--text-strong); text-wrap: balance; }
+  .team { list-style: none; margin: 0 0 var(--space-head); padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-7) var(--space-6); }
   .member { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; color: var(--rh-ivory); text-decoration: none; }
   .member__photo { width: min(320px, 100%); margin-bottom: 22px; border-radius: var(--radius-arch); }
-  .member__name { font-family: var(--font-display); font-size: 30px; line-height: 1.1; }
-  .member__role { font-size: 12px; font-weight: 500; letter-spacing: .24em; text-transform: uppercase; }
-  .member__exp { font-size: 15px; }
+  .member__name { font-family: var(--font-display); font-size: var(--fs-h3); line-height: var(--lh-snug); }
+  .member__role { font-size: var(--fs-eyebrow); font-weight: 500; letter-spacing: var(--ls-label); text-transform: uppercase; }
+  .member__exp { font-size: var(--fs-body-s); }
   .member__more { margin-top: 6px; }
   .member:hover { color: var(--rh-ivory); }
   .cta { display: flex; justify-content: center; }
   @media (max-width: 900px) {
     .story--photo { grid-template-columns: 1fr; }
-    .team { grid-template-columns: repeat(2, 1fr); gap: 40px 20px; }
-    .member__name { font-size: 24px; }
-    .member__exp { font-size: 14px; line-height: 1.4; }
-    .member__more { letter-spacing: .12em; font-size: 11px; }
+    .team { grid-template-columns: repeat(2, 1fr); gap: var(--space-6) var(--space-5); }
+    .member__exp { font-size: var(--fs-small); line-height: 1.4; }
+    .member__more { letter-spacing: .12em; font-size: var(--fs-micro); } /* two portraits side by side: the link must fit its column */
   }
 </style>

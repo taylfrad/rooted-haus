@@ -40,7 +40,10 @@ const position = cropPosition(focus);
 </div>
 
 <style>
-  .pf { position: relative; overflow: hidden; aspect-ratio: var(--ratio);
+  /* Every contained photo floats a little off the page with the shared card shadow (static, never animated). Full-width
+     header and slideshow photos are not PhotoFrames, so they stay flat. The shadow sits on the frame itself, which its
+     own overflow clip does not cut. */
+  .pf { position: relative; overflow: hidden; aspect-ratio: var(--ratio); box-shadow: var(--shadow-card);
     background: linear-gradient(160deg, var(--rh-sand), var(--rh-caramel-soft)); }
   .pf--framed { outline: 1px solid var(--rh-chocolate-50); outline-offset: 8px; }
   .pf--framed-dark { outline-color: var(--border-on-dark); }

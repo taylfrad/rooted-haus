@@ -28,8 +28,8 @@ const id = `f-${name}`;
 
 <style>
   .field { display: flex; flex-direction: column; gap: 8px; }
-  label { font-size: 12px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--text-strong); }
-  input, select, textarea { font: inherit; font-size: 16px; color: var(--text-strong); background: var(--surface-raised);
+  label { font-size: var(--fs-eyebrow); font-weight: 500; letter-spacing: var(--ls-label); text-transform: uppercase; color: var(--text-strong); }
+  input, select, textarea { font: inherit; font-size: var(--fs-body); color: var(--text-strong); background: var(--surface-raised);
     border: 1px solid var(--border-hairline); padding: 14px 22px; box-sizing: border-box; width: 100%;
     border-radius: var(--radius-pill); transition: border-color var(--dur-base) var(--ease-soft); }
   textarea { border-radius: var(--radius-lg); resize: vertical; }
@@ -55,7 +55,7 @@ const id = `f-${name}`;
     .select:has(select:open)::after { transform: rotate(180deg); }
     select::picker(select) { margin-top: 6px; padding: 6px; border: 1px solid var(--border-hairline); border-radius: 22px;
       background: var(--surface-raised); box-shadow: var(--shadow-soft); }
-    select option { padding: 11px 18px; border-radius: var(--radius-pill); font-size: 15px; color: var(--text-strong); cursor: pointer;
+    select option { padding: 11px 18px; border-radius: var(--radius-pill); font-size: var(--fs-body-s); color: var(--text-strong); cursor: pointer;
       transition: background var(--dur-base) var(--ease-soft); }
     select option:hover, select option:focus-visible { background: var(--surface-sand); outline: none; }
     select option:checked { background: var(--rh-olive); color: var(--rh-ivory); }

@@ -35,11 +35,11 @@ const { eyebrow, script, title, intro, align = 'center', tone = 'light', ruled =
   /* The eyebrow row sizes itself to its content. Rule widths and margins (unlike flex-basis and gap) count
      toward that size in every browser, so Safari no longer squeezes the label onto two lines. The label
      never wraps; on very narrow screens the rules shrink first. */
-  .sh__eyebrow { display: flex; align-items: center; max-width: 100%; font-size: 12px; font-weight: 500;
+  .sh__eyebrow { display: flex; align-items: center; max-width: 100%; font-size: var(--fs-eyebrow); font-weight: 500;
     letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
   /* letter-spacing also follows the last letter; cancel it so the label sits centered between its rules */
   .sh__label { white-space: nowrap; margin-right: calc(-1 * var(--ls-eyebrow)); }
-  @media (max-width: 480px) { .sh__label { white-space: normal; text-align: center; } .sh--left .sh__label { text-align: left; } }
+  @media (max-width: 560px) { .sh__label { white-space: normal; text-align: center; } .sh--left .sh__label { text-align: left; } }
   .sh__rule:first-child { margin-right: 16px; }
   .sh__rule:last-child { margin-left: 16px; }
   .sh--dark .sh__eyebrow { color: var(--rh-ivory); }
@@ -54,7 +54,7 @@ const { eyebrow, script, title, intro, align = 'center', tone = 'light', ruled =
     color: var(--text-script); margin-bottom: -8px; }
   .sh--dark .sh__script { color: var(--rh-caramel-soft); }
   .sh__title { margin: 0; font-family: var(--font-display); font-weight: 400;
-    font-size: clamp(30px, 4vw, var(--fs-display-l)); line-height: var(--lh-tight);
+    font-size: var(--fs-h2); line-height: var(--lh-tight);
     letter-spacing: var(--ls-display); color: var(--text-strong); text-wrap: balance; }
   .sh--dark .sh__title { color: var(--rh-ivory); }
   /* Room under the heading for the handwritten phrase's tails (g, y), so they do not touch the line below. */
