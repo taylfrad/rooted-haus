@@ -78,6 +78,12 @@ apply:
   title: "Apply to join the Haus"
   text: "Tell us about yourself and what you are looking for. A resume is welcome but not required."
   stepsTitle: "What happens next"
+  startScript: "come grow with us"
+  startTitle: "Ready to plant your roots?"
+  startText: "It takes about five minutes, and you can attach your resume if you have one."
+  startButton: "Start your application"
+  thanksTitle: "Thank you for applying!"
+  thanksText: "We have your application and will be in touch shortly."
   experienceOptions:
     - "Student"
     - "Less than 2 years"

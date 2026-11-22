@@ -297,6 +297,13 @@ const careersPage = defineCollection({
       /** The steps are the "what happens next" list beside the form (or beside the phone number, until a form is connected). */
       apply: textBlock.extend({
         stepsTitle: label('What happens next'),
+        /** The card shown before the form opens, and the thank-you shown after sending. */
+        startScript: label('come grow with us'),
+        startTitle: label('Ready to plant your roots?'),
+        startText: z.string().optional(),
+        startButton: label('Start your application'),
+        thanksTitle: label('Thank you for applying!'),
+        thanksText: label('We have your application and will be in touch shortly.'),
         /** Choices in the form's "Years of experience" and "Cosmetology license" menus. */
         experienceOptions: z.array(z.string()).default(['Student', 'Less than 2 years', '2 to 5 years', '6 or more years']),
         licenseOptions: z.array(z.string()).default(['Licensed', 'In school', 'Not yet']),

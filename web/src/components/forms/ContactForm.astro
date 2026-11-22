@@ -11,6 +11,8 @@ interface Props {
   /** Set when the form contains a file field. */
   multipart?: boolean;
   success?: string;
+  /** Optional heading shown large above the success message (the careers form uses one). */
+  successTitle?: string;
   /** Cloudflare Turnstile site key: shows the "verify you are human" check (the built-in careers form needs it). */
   turnstileSiteKey?: string;
 }
@@ -20,13 +22,17 @@ const {
   endpoint = site.formEndpoint,
   multipart = false,
   success = 'Thank you. We have your message and will be in touch soon.',
+  successTitle,
   turnstileSiteKey,
 } = Astro.props;
 const ready = endpoint !== '';
 ---
 
-<!-- Without JavaScript this is an ordinary form post. With it, the form submits in place and shows the result below. -->
+<!-- Without JavaScript this is an ordinary form post. With it, the form submits in place and shows the result below.
+     data-astro-reload keeps Astro's page-transition router from taking over the submit: it would post the form itself
+     and then navigate away from the page, instead of letting the script below show the thank-you in place. -->
 <form
+  data-astro-reload
   class="form"
   action={ready ? endpoint : undefined}
   method="POST"
@@ -49,6 +55,14 @@ const ready = endpoint !== '';
     </p>
   )}
   <p class="form__status" role="status" aria-live="polite" tabindex="-1" hidden></p>
+  <!-- Replaces the form once it has sent. -->
+  <div class="form__thanks" tabindex="-1" hidden>
+    <span class="form__thanks-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+    </span>
+    {successTitle && <h3 class="form__thanks-title">{successTitle}</h3>}
+    <p class="form__thanks-text">{success}</p>
+  </div>
 </form>
 
 {ready && turnstileSiteKey && (
@@ -62,7 +76,8 @@ const ready = endpoint !== '';
   // Draw the "verify you are human" check on each page that has one. Pages change without a full reload (Astro's
   // page transitions), so this runs on every page load, and waits for Cloudflare's script if it is still loading.
   function drawHumanChecks(tries = 0) {
-    const boxes = document.querySelectorAll<HTMLElement>('[data-turnstile]:not([data-drawn])');
+    // Only checks that can be seen: one inside a form still folded away is drawn when it opens (rh:form-shown).
+    const boxes = [...document.querySelectorAll<HTMLElement>('[data-turnstile]:not([data-drawn])')].filter((el) => !el.closest('[hidden]'));
     if (!boxes.length) return;
     const ts = turnstile();
     if (!ts) { if (tries < 50) setTimeout(() => drawHumanChecks(tries + 1), 200); return; }
@@ -72,6 +87,7 @@ const ready = endpoint !== '';
     });
   }
   document.addEventListener('astro:page-load', () => drawHumanChecks());
+  document.addEventListener('rh:form-shown', () => drawHumanChecks());
 
   // Delegated on document so it survives page transitions.
   document.addEventListener('submit', async (e) => {
@@ -97,8 +113,12 @@ const ready = endpoint !== '';
       if (!res.ok || body.success === false) throw Object.assign(new Error(body.message ?? `HTTP ${res.status}`), { shown: body.message });
       form.reset();
       form.classList.add('form--done');
-      status.textContent = form.dataset.success ?? 'Thank you.';
-      status.dataset.state = 'ok';
+      const thanks = form.querySelector<HTMLElement>('.form__thanks')!;
+      thanks.hidden = false;
+      // The form folds away, so bring the thank-you into view and move focus to it for screen readers.
+      thanks.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      thanks.focus({ preventScroll: true });
+      return;
     } catch (err) {
       // Show the server's own reason when it gave one (a missing field, a file that is not a resume).
       const reason = (err as { shown?: string }).shown;
@@ -123,5 +143,19 @@ const ready = endpoint !== '';
   .form__status { margin: 0; padding: 18px 22px; border-radius: var(--radius-lg); font-size: 16px; outline: none; }
   .form__status[data-state='ok'] { background: var(--rh-olive); color: var(--rh-ivory); }
   .form__status[data-state='error'] { background: var(--rh-ivory); color: var(--status-error); border: 1px solid var(--status-error); }
-  .form--done .form__fields, .form--done .form__actions, .form--done .form__human { display: none; }
+  .form--done .form__fields, .form--done .form__actions, .form--done .form__human, .form--done .form__status { display: none; }
+  /* The thank-you: a calm card in the site's olive, with a drawn check mark. */
+  .form__thanks { display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; outline: none;
+    padding: clamp(36px, 5vw, 56px) clamp(24px, 4vw, 48px); border-radius: var(--radius-lg); background: var(--rh-olive); color: var(--rh-ivory);
+    animation: thanks-in .5s var(--ease-soft) both; }
+  .form__thanks[hidden] { display: none; }
+  .form__thanks-mark { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 999px; border: 1px solid var(--rh-ivory-30); }
+  .form__thanks-mark path { stroke-dasharray: 24; stroke-dashoffset: 24; animation: thanks-tick .6s .25s var(--ease-soft) forwards; }
+  .form__thanks-title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(26px, 3vw, 34px); line-height: var(--lh-snug); }
+  .form__thanks-text { margin: 0; max-width: 420px; font-size: var(--fs-body-l); text-wrap: pretty; }
+  @keyframes thanks-in { from { opacity: 0; transform: translateY(8px); } }
+  @keyframes thanks-tick { to { stroke-dashoffset: 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .form__thanks, .form__thanks-mark path { animation: none; stroke-dashoffset: 0; }
+  }
 </style>

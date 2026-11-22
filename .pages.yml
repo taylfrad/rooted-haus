@@ -673,6 +673,12 @@ content:
           - { name: title, label: Heading, type: string }
           - { name: text, label: Text, type: text }
           - { name: stepsTitle, label: "Small heading above the steps (e.g. What happens next)", type: string }
+          - { name: startScript, label: "Handwritten line on the card before the form opens", type: string }
+          - { name: startTitle, label: "Heading on that card", type: string }
+          - { name: startText, label: "Sentence on that card", type: text }
+          - { name: startButton, label: "Button that opens the form", type: string }
+          - { name: thanksTitle, label: "Thank-you heading after sending", type: string }
+          - { name: thanksText, label: "Thank-you message after sending", type: text }
           - { name: experienceOptions, label: "Choices for \"Years of experience\"", type: string, list: true }
           - { name: licenseOptions, label: "Choices for \"Cosmetology license\"", type: string, list: true }
           - name: steps

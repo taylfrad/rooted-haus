@@ -98,7 +98,7 @@ const applyEndpoint = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/api/apply`
   </Section>
 
   <Section>
-    <div class="apply">
+    <div class="apply" id="apply">
       <div class="apply__intro">
         <h2 class="title-m h2">{c.apply.title}</h2>
         {c.apply.text && <p>{c.apply.text}</p>}
@@ -117,13 +117,24 @@ const applyEndpoint = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/api/apply`
           </div>
         )}
       </div>
+      <div class="apply__panel">
+      <!-- The form stays folded away until "Start your application" is pressed, so applying is a deliberate choice.
+           Links to careers/#apply open it straight away. -->
+      <div class="invite" data-apply-invite>
+        <span class="invite__script">{c.apply.startScript}</span>
+        <h3 class="invite__title">{c.apply.startTitle}</h3>
+        {c.apply.startText && <p class="invite__text">{c.apply.startText}</p>}
+        <Button size="lg" type="button" data-apply-open aria-controls="apply-form" aria-expanded="false">{c.apply.startButton}</Button>
+      </div>
+      <div class="apply__form" id="apply-form" data-apply-form hidden>
       <ContactForm
         subject="Careers application"
         submitLabel="Send application"
         endpoint={applyEndpoint}
         multipart
         turnstileSiteKey={site.turnstileSiteKey}
-        success="Thank you for applying. We have your application and will be in touch soon."
+        successTitle={c.apply.thanksTitle}
+        success={c.apply.thanksText}
       >
         <div class="row">
           <Field label="Name" name="name" required />
@@ -141,9 +152,32 @@ const applyEndpoint = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/api/apply`
         <Field label="Tell us about yourself" name="message" type="textarea" required />
         <FileField label="Resume" name="resume" hint="Optional. PDF, DOC or DOCX, up to 5 MB. We use it only to consider your application." />
       </ContactForm>
+      </div>
+      </div>
     </div>
   </Section>
 </BaseLayout>
+
+<script>
+  // "Start your application": swap the invitation for the form, then start the visitor in the first field.
+  function openApply(focus: boolean) {
+    const form = document.querySelector<HTMLElement>('[data-apply-form]');
+    const invite = document.querySelector<HTMLElement>('[data-apply-invite]');
+    if (!form || !invite || !form.hidden) return;
+    form.hidden = false;
+    invite.hidden = true;
+    document.querySelector('[data-apply-open]')?.setAttribute('aria-expanded', 'true');
+    document.dispatchEvent(new Event('rh:form-shown')); // draws the "verify you are human" check now it can be seen
+    if (focus) form.querySelector<HTMLElement>('input:not([type=hidden]):not([tabindex="-1"])')?.focus({ preventScroll: true });
+    form.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }
+  document.addEventListener('click', (e) => {
+    if ((e.target as Element).closest('[data-apply-open]')) openApply(true);
+  });
+  document.addEventListener('astro:page-load', () => {
+    if (location.hash === '#apply') openApply(false);
+  });
+</script>
 
 <style>
   .split { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
@@ -175,6 +209,17 @@ const applyEndpoint = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/api/apply`
   .apply { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
   .apply__intro { display: flex; flex-direction: column; align-items: flex-start; }
   .apply__intro p { margin: 0; }
+  .apply__panel { min-width: 0; }
+  .apply__form { scroll-margin-top: 120px; animation: apply-in .45s var(--ease-soft) both; }
+  .apply__form[hidden], .invite[hidden] { display: none; }
+  @keyframes apply-in { from { opacity: 0; transform: translateY(10px); } }
+  /* The invitation in place of the form: sand card, handwritten line, one clear button. */
+  .invite { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: clamp(36px, 5vw, 64px);
+    border-radius: var(--radius-lg); background: var(--surface-sand); }
+  .invite__script { font-family: var(--font-script); font-size: clamp(34px, 3.4vw, 46px); line-height: 1; color: var(--rh-terracotta); }
+  .invite__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 3vw, 38px); line-height: var(--lh-snug); color: var(--text-strong); }
+  .invite__text { margin: 0 0 10px; max-width: 460px; font-size: var(--fs-body-l); text-wrap: pretty; }
+  @media (prefers-reduced-motion: reduce) { .apply__form { animation: none; } }
   /* Short answers sit two to a row on wide screens. */
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   /* What happens next: numbered like the groups on The Experience, with a fine line between steps like the price list. */

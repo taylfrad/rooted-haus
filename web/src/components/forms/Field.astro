@@ -14,11 +14,14 @@ const id = `f-${name}`;
 <div class="field">
   <label for={id}>{label}{required && <span aria-hidden="true"> *</span>}</label>
   {type === 'textarea' && <textarea id={id} name={name} rows="5" required={required} placeholder={placeholder} />}
+  {/* Dropdowns get a wrapper that draws the chevron, so it sits centred and matches the site in every browser. */}
   {type === 'select' && (
-    <select id={id} name={name} required={required}>
-      <option value="" disabled selected>Choose one</option>
-      {options.map((o) => <option value={o}>{o}</option>)}
-    </select>
+    <span class="select">
+      <select id={id} name={name} required={required}>
+        <option value="" disabled selected>Choose one</option>
+        {options.map((o) => <option value={o}>{o}</option>)}
+      </select>
+    </span>
   )}
   {type !== 'textarea' && type !== 'select' && <input id={id} name={name} type={type} required={required} placeholder={placeholder} />}
 </div>
@@ -32,4 +35,31 @@ const id = `f-${name}`;
   textarea { border-radius: var(--radius-lg); resize: vertical; }
   input:hover, select:hover, textarea:hover { border-color: var(--rh-chocolate-50); }
   input:focus-visible, select:focus-visible, textarea:focus-visible { border-color: var(--focus-ring); }
+  input::placeholder, textarea::placeholder { color: var(--text-muted); opacity: .8; }
+
+  /* Dropdowns: our own chevron, vertically centred, in place of the browser's arrow. */
+  .select { position: relative; display: block; }
+  .select::after { content: ''; position: absolute; right: 22px; top: 50%; width: 14px; height: 14px; margin-top: -7px; pointer-events: none;
+    background: var(--rh-chocolate);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+    transition: transform var(--dur-base) var(--ease-soft); }
+  select { appearance: none; -webkit-appearance: none; padding-right: 52px; cursor: pointer; }
+  select:invalid { color: var(--text-muted); } /* "Choose one" reads as a prompt, not an answer */
+
+  /* Browsers that let a dropdown's list be styled (Chrome and Edge today) get a rounded list in the site's colours
+     instead of the plain system box. Others keep their own list, with the styled field above. */
+  @supports (appearance: base-select) {
+    select, select::picker(select) { appearance: base-select; }
+    select::picker-icon { display: none; } /* the wrapper's chevron is used instead */
+    .select:has(select:open)::after { transform: rotate(180deg); }
+    select::picker(select) { margin-top: 6px; padding: 6px; border: 1px solid var(--border-hairline); border-radius: 22px;
+      background: var(--surface-raised); box-shadow: var(--shadow-soft); }
+    select option { padding: 11px 18px; border-radius: var(--radius-pill); font-size: 15px; color: var(--text-strong); cursor: pointer;
+      transition: background var(--dur-base) var(--ease-soft); }
+    select option:hover, select option:focus-visible { background: var(--surface-sand); outline: none; }
+    select option:checked { background: var(--rh-olive); color: var(--rh-ivory); }
+    select option::checkmark { display: none; }
+    select option[disabled] { display: none; } /* "Choose one" is the field's prompt, not a choice in the list */
+  }
 </style>
