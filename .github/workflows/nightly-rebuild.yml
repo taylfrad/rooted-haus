@@ -1,0 +1,26 @@
+name: Nightly rebuild on Cloudflare Pages
+
+# Cloudflare Pages builds and publishes every push to main by itself (Git integration, set up in the Cloudflare
+# dashboard). Pages has no scheduled builds, so this asks it for one fresh build each night so dated deals start and
+# expire on time. CF_DEPLOY_HOOK is the Deploy Hook URL from the Pages project (Settings > Builds > Deploy hooks).
+
+on:
+  schedule:
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Cloudflare Pages build
+        env:
+          HOOK: ${{ secrets.CF_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "CF_DEPLOY_HOOK secret is not set; add the Pages deploy hook URL under repo Settings > Secrets > Actions."
+            exit 1
+          fi
+          curl --fail --silent --show-error -X POST "$HOOK"

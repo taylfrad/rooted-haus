@@ -13,9 +13,10 @@ pnpm check      # type-check
 pnpm build      # static site in web/dist
 ```
 
-Hosted on GitHub Pages. The deploy workflow asks GitHub for the site address, so it builds under `/rooted-haus/` (staging,
-hidden from search) until a custom domain is connected, then at the domain root. Transfer and domain steps: `docs/launch-runbook.md`.
-Any other host needs `SITE_URL` set (and `BASE_PATH` only when served under a sub-path).
+Hosted on Cloudflare Pages at https://rooted-haus.com. Every push to `main` builds and goes live on its own; other
+branches get their own preview address. A nightly GitHub Action asks Cloudflare for one extra build so dated deals start
+and expire on time. Setup and domain steps: `docs/launch-runbook.md`.
+Builds need `SITE_URL` set (and `BASE_PATH` only when served under a sub-path).
 
 ## Layout
 
