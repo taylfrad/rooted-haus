@@ -26,7 +26,7 @@ const { surface = 'ivory', eyebrow, title, price, interactive = false } = Astro.
 
 <style>
   .card { --fg: var(--text-body); --head: var(--text-strong); background: var(--surface-raised); color: var(--fg);
-    border-radius: var(--radius-lg); overflow: hidden; display: flex; flex-direction: column; }
+    border-radius: var(--radius-lg); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow-card); }
   .card--sand { background: var(--surface-sand); }
   .card--sage { background: var(--surface-sage); --fg: var(--rh-espresso); --head: var(--rh-espresso); }
   .card--olive { background: var(--surface-olive); --fg: var(--rh-ivory); --head: var(--rh-ivory); }

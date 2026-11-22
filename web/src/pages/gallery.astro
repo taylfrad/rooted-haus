@@ -212,7 +212,8 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
   .mosaic.is-swapping .tile { animation: tile-in var(--dur-reveal) var(--ease-glide) both; }
   @keyframes tile-in { from { opacity: 0; } }
   /* No overflow clip here: it would cut off the hover shadow. The photo and the caption round their own corners. */
-  .tile__link { display: block; height: 100%; cursor: zoom-in; border-radius: var(--radius-lg); }
+  /* The same resting shadow as the cards elsewhere (static, never animated); hovering fades in the deeper .lift shadow. */
+  .tile__link { display: block; height: 100%; cursor: zoom-in; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); }
   /* The caption rises over the foot of the photo on hover or keyboard focus. */
   .tile__caption { position: absolute; left: 0; right: 0; bottom: 0; padding: 48px 20px 18px; border-radius: 0 0 var(--radius-lg) var(--radius-lg);
     background: linear-gradient(0deg, rgba(59, 40, 25, .82) 0%, rgba(59, 40, 25, 0) 100%);
