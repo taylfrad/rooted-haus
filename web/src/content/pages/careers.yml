@@ -78,6 +78,15 @@ apply:
   title: "Apply to join the Haus"
   text: "Tell us about yourself and what you are looking for. A resume is welcome but not required."
   stepsTitle: "What happens next"
+  experienceOptions:
+    - "Student"
+    - "Less than 2 years"
+    - "2 to 5 years"
+    - "6 or more years"
+  licenseOptions:
+    - "Licensed"
+    - "In school"
+    - "Not yet"
   steps:
     - title: "Say hello"
       text: "Reach out and tell us a little about yourself and the role you are interested in."

@@ -1,0 +1,14 @@
+// Careers application mailer (see src/index.js). Deployed on its own, reached only through the Pages project's
+// CAREERS service binding. TO_ADDRESS (var) and TURNSTILE_SECRET (secret) are set in Cloudflare, not here, so no
+// email address or secret is stored in this public repository. Deploy changes with: npx wrangler deploy
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "rooted-haus-careers",
+  "main": "src/index.js",
+  "compatibility_date": "2026-11-15",
+  "workers_dev": false,
+  "preview_urls": false,
+  "keep_vars": true,
+  "send_email": [{ "name": "EMAIL", "allowed_sender_addresses": ["careers@rooted-haus.com"] }],
+  "observability": { "enabled": true }
+}

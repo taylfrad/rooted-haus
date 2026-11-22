@@ -10,7 +10,7 @@ import FileField from '../components/forms/FileField.astro';
 import Button from '../components/core/Button.astro';
 import Badge from '../components/content/Badge.astro';
 import SectionHeading from '../components/content/SectionHeading.astro';
-import { Check, Phone } from '@lucide/astro';
+import { Check } from '@lucide/astro';
 import { site } from '../lib/site';
 import { url } from '../lib/paths';
 import { getPage } from '../lib/pages';
@@ -19,9 +19,9 @@ import { getPage } from '../lib/pages';
 const c = await getPage('careersPage');
 // The form's choices follow the page: both stylist paths, every hourly role, and an open option.
 const interests = ['Commission', 'Booth rental', ...c.hourlyRoles, 'Not sure yet'];
-// Until a form address is set in the panel, applicants are asked to call (or email, if one is set) instead.
-const applyOnline = site.careersFormEndpoint !== '';
-const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
+// Applications go to the site's own address (functions/api/apply.js), which emails them to the studio with the
+// resume attached. No outside form service is needed.
+const applyEndpoint = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/api/apply`;
 ---
 
 
@@ -98,66 +98,50 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
   </Section>
 
   <Section>
-    {applyOnline ? (
     <div class="apply">
       <div class="apply__intro">
         <h2 class="title-m h2">{c.apply.title}</h2>
         {c.apply.text && <p>{c.apply.text}</p>}
         {c.apply.steps.length > 0 && (
-        <div class="next">
-          <span class="next__label">{c.apply.stepsTitle}</span>
-          <ol class="next__list">
-            {c.apply.steps.map((st, i) => (
-              <li class="next__step">
-                <span class="next__n">{String(i + 1).padStart(2, '0')}</span>
-                <h3 class="next__title">{st.title}</h3>
-                <p class="next__text">{st.text}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      )}
+          <div class="next">
+            <span class="next__label">{c.apply.stepsTitle}</span>
+            <ol class="next__list">
+              {c.apply.steps.map((st, i) => (
+                <li class="next__step">
+                  <span class="next__n">{String(i + 1).padStart(2, '0')}</span>
+                  <h3 class="next__title">{st.title}</h3>
+                  <p class="next__text">{st.text}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
       </div>
       <ContactForm
         subject="Careers application"
         submitLabel="Send application"
-        endpoint={site.careersFormEndpoint}
+        endpoint={applyEndpoint}
         multipart
+        turnstileSiteKey={site.turnstileSiteKey}
         success="Thank you for applying. We have your application and will be in touch soon."
       >
-        <Field label="Name" name="name" required />
-        <Field label="Email" name="email" type="email" required />
-        <Field label="Phone" name="phone" type="tel" />
-        <Field label="I'm interested in" name="interest" type="select" options={interests} required />
+        <div class="row">
+          <Field label="Name" name="name" required />
+          <Field label="Email" name="email" type="email" required />
+        </div>
+        <div class="row">
+          <Field label="Phone" name="phone" type="tel" />
+          <Field label="I'm interested in" name="interest" type="select" options={interests} required />
+        </div>
+        <div class="row">
+          <Field label="Years of experience" name="experience" type="select" options={c.apply.experienceOptions} />
+          <Field label="Cosmetology license" name="license" type="select" options={c.apply.licenseOptions} />
+        </div>
+        <Field label="Instagram or portfolio" name="portfolio" placeholder="@yourhandle or a link to your work" />
         <Field label="Tell us about yourself" name="message" type="textarea" required />
-        {site.uploadsReady && <FileField label="Resume" name="resume" hint="Optional. PDF, DOC or DOCX, up to 5 MB. We use it only to consider your application." />}
+        <FileField label="Resume" name="resume" hint="Optional. PDF, DOC or DOCX, up to 5 MB. We use it only to consider your application." />
       </ContactForm>
     </div>
-    ) : (
-    <div class="apply apply--offline">
-      <div class="apply__intro">
-        <h2 class="title-m h2">{c.apply.title}</h2>
-        <p class="apply__call">
-          We would love to hear from you. Call us and tell us a little about yourself{site.email && <>, or email <a href={`mailto:${site.email}`}>{site.email}</a></>}.
-        </p>
-        <Button href={tel} size="lg"><Phone slot="icon" size={16} stroke-width={1.5} aria-hidden="true" />Call {site.phone}</Button>
-      </div>
-      {c.apply.steps.length > 0 && (
-        <div class="next">
-          <span class="next__label">{c.apply.stepsTitle}</span>
-          <ol class="next__list">
-            {c.apply.steps.map((st, i) => (
-              <li class="next__step">
-                <span class="next__n">{String(i + 1).padStart(2, '0')}</span>
-                <h3 class="next__title">{st.title}</h3>
-                <p class="next__text">{st.text}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      )}
-    </div>
-    )}
   </Section>
 </BaseLayout>
 
@@ -191,8 +175,8 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
   .apply { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
   .apply__intro { display: flex; flex-direction: column; align-items: flex-start; }
   .apply__intro p { margin: 0; }
-  .apply--offline { grid-template-columns: 1fr 1fr; align-items: center; }
-  .apply__intro .apply__call { margin-bottom: 28px; font-size: var(--fs-body-l); }
+  /* Short answers sit two to a row on wide screens. */
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   /* What happens next: numbered like the groups on The Experience, with a fine line between steps like the price list. */
   .next { align-self: stretch; }
   .apply__intro .next { margin-top: 40px; }
@@ -204,9 +188,9 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
   .next__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-title); line-height: var(--lh-snug); color: var(--text-strong); }
   .next__text { margin: 0; color: var(--text-muted); text-wrap: pretty; }
   @media (max-width: 900px) {
-    .split, .apply, .apply--offline, .pair { grid-template-columns: 1fr; }
+    .split, .apply, .pair { grid-template-columns: 1fr; }
     .paths, .values { grid-template-columns: 1fr; }
     .quotes { grid-template-columns: 1fr; }
   }
-  @media (max-width: 560px) { .ticks--cols { columns: 1; } }
+  @media (max-width: 560px) { .ticks--cols { columns: 1; } .row { grid-template-columns: 1fr; } }
 </style>

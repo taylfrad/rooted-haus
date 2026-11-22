@@ -37,7 +37,7 @@ Send these in any format (photos, a text message, a voice memo all work). "Not s
 - [ ] Domain: rooted-haus.com is live on Cloudflare; move it into her own Cloudflare account (see `launch-runbook.md`)
 - [ ] GitHub: a free account; the site's repository is transferred to it so she owns it (we stay on as a helper), and she signs in to the editing panel with it
 - [ ] Contact form service (Web3Forms or Formspree): free account, we set it up together
-- [ ] Resume uploads on the Careers page need a form service that accepts files, which is a paid plan on Web3Forms or Formspree. See `docs/forms.md` and decide together.
+- [ ] Careers applications: click the Cloudflare verification email sent to the inbox that receives them (one time). Applications, with resumes, then arrive from careers@rooted-haus.com. See `docs/forms.md`.
 - [ ] Optional: a business email at the new domain (hello@rooted-haus.com). It is for looking professional and keeping personal and business mail separate; she can decide later.
 
 ## Decisions to make together
