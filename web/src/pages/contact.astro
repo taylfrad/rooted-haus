@@ -200,9 +200,10 @@ const studio = (await getCollection('gallery'))
   .news { max-width: 480px; margin: 0 auto; text-align: left; }
   .news .h, .news p { text-align: center; }
 
-  .closing { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 20px; }
-  .closing__script { font-family: var(--font-script); font-size: var(--fs-script-s); line-height: 1.1; color: var(--rh-caramel-soft); }
-  .closing__line { margin: 0 0 8px; font-family: var(--font-display); font-size: clamp(24px, 2.8vw, 34px); line-height: 1.35; color: var(--rh-ivory); text-wrap: balance; }
+  /* The page's last words, set large so they fill the band: handwriting about the size of the Home photo's phrase. */
+  .closing { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: clamp(20px, 3vw, 40px); padding: clamp(8px, 2vw, 24px) 0; }
+  .closing__script { font-family: var(--font-script); font-size: clamp(58px, 9vw, 128px); line-height: 1; color: var(--rh-caramel-soft); }
+  .closing__line { margin: 0 0 clamp(8px, 1.5vw, 20px); font-family: var(--font-display); font-size: clamp(34px, 4.8vw, 64px); line-height: 1.15; color: var(--rh-ivory); text-wrap: balance; }
 
   @media (max-width: 900px) {
     .ways, .message, .split { grid-template-columns: 1fr; }

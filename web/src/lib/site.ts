@@ -27,7 +27,6 @@ export const site = {
   /** Some form services (Web3Forms) need a public access key sent with every submission. */
   formAccessKey: settings.formAccessKey,
   giftCardsUrl: settings.giftCardsUrl,
-  footerScript: settings.footerScript,
   footerNewsletter: settings.footerNewsletter,
   /** Shown at the bottom of every page; plain text, not a link. */
   websiteName: settings.websiteName,

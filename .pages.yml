@@ -38,7 +38,6 @@ content:
       - { name: instagram, label: Instagram link, type: string }
       - { name: facebook, label: Facebook link, type: string }
       - { name: giftCardsUrl, label: "Gift cards link (leave empty to hide the gift card buttons)", type: string }
-      - { name: footerScript, label: Handwritten line in the footer, type: string }
       - { name: footerNewsletter, label: Newsletter line in the footer, type: string }
       - { name: websiteName, label: Web address shown at the bottom of every page, type: string }
       - { name: formEndpoint, label: "Contact form address (set up by your web person; the message, newsletter and application forms stay hidden until it is filled in)", type: string }
