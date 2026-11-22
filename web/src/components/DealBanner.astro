@@ -28,6 +28,6 @@ const deals = (await getCollection('deals')).filter((d) => isDealActive(d.data))
   .deal { max-width: var(--container-max); margin: 0 auto; width: 100%; display: flex; align-items: center;
     gap: 24px; flex-wrap: wrap; }
   .deal__text { flex: 1 1 320px; }
-  .deal__title { margin: 0 0 4px; font-family: var(--font-display); font-weight: 400; font-size: 26px; }
+  .deal__title { margin: 0 0 4px; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h3); line-height: var(--lh-snug); }
   .deal__body { margin: 0; color: var(--text-on-dark-muted); }
 </style>

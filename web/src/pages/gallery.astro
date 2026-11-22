@@ -64,8 +64,9 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
 
       <div class="mosaic-wrap">
         <div class="mosaic">
-          {tiles.map(({ entry: i, alt, full }) => {
-            const frame = <PhotoFrame fill shape="rounded" label={i.data.label} src={i.data.image} alt={alt} sizes={sizesFor(i.data.size)} />;
+          {tiles.map(({ entry: i, alt, full }, n) => {
+            // The first photos are on screen as the page opens: load them right away instead of lazily.
+            const frame = <PhotoFrame fill shape="rounded" label={i.data.label} src={i.data.image} alt={alt} sizes={sizesFor(i.data.size)} eager={n < 2} />;
             return (
               <div class={`tile tile--${i.data.size}`} data-tag={i.data.tag}>
                 {full ? (
@@ -182,12 +183,12 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
 <style>
   /* --- Top: a large heading on the page color --- */
   /* No background of their own: the page color and its grain show through, so the grain is not laid on twice. */
-  .top { padding: clamp(56px, 8vw, 112px) var(--gutter) clamp(28px, 4vw, 48px); }
-  .top__inner { max-width: var(--container-max); margin: 0 auto; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px clamp(32px, 6vw, 96px); flex-wrap: wrap; }
+  .top { padding: clamp(56px, 8vw, 104px) var(--gutter) clamp(28px, 4vw, 48px); } /* same top as the page headers */
+  .top__inner { max-width: var(--container-max); margin: 0 auto; display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-5) var(--gap-split); flex-wrap: wrap; }
   .top__head { display: flex; flex-direction: column; gap: 18px; }
-  .top__eyebrow { display: flex; align-items: center; gap: 16px; font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
+  .top__eyebrow { display: flex; align-items: center; gap: 16px; font-size: var(--fs-eyebrow); font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
   .top__eyebrow::after { content: ''; width: 48px; height: 1px; background: var(--rh-terracotta); }
-  .top__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(44px, 6vw, 80px); line-height: 1; letter-spacing: var(--ls-display); color: var(--text-strong); }
+  .top__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h1); line-height: var(--lh-tight); letter-spacing: var(--ls-display); color: var(--text-strong); }
   .top__intro { margin: 0 0 10px; max-width: 34ch; font-size: var(--fs-body-l); color: var(--text-muted); text-wrap: balance; }
 
   /* --- The wall of photos --- */
@@ -212,20 +213,21 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
   .mosaic.is-swapping .tile { animation: tile-in var(--dur-reveal) var(--ease-glide) both; }
   @keyframes tile-in { from { opacity: 0; } }
   /* No overflow clip here: it would cut off the hover shadow. The photo and the caption round their own corners. */
+  /* The photo inside carries the resting shadow (PhotoFrame); hovering fades in the deeper .lift shadow on this link. */
   .tile__link { display: block; height: 100%; cursor: zoom-in; border-radius: var(--radius-lg); }
   /* The caption rises over the foot of the photo on hover or keyboard focus. */
   .tile__caption { position: absolute; left: 0; right: 0; bottom: 0; padding: 48px 20px 18px; border-radius: 0 0 var(--radius-lg) var(--radius-lg);
     background: linear-gradient(0deg, rgba(59, 40, 25, .82) 0%, rgba(59, 40, 25, 0) 100%);
-    font-family: var(--font-display); font-size: 18px; line-height: 1.25; color: var(--rh-ivory); text-align: left;
+    font-family: var(--font-display); font-size: var(--fs-body-l); line-height: var(--lh-snug); color: var(--rh-ivory); text-align: left;
     opacity: 0; transition: opacity var(--dur-base) var(--ease-soft); pointer-events: none; }
   .tile__link:hover .tile__caption, .tile__link:focus-visible .tile__caption { opacity: 1; }
   @media (hover: none) { .tile__caption { display: none; } } /* phones: the caption shows in the larger view instead */
 
-  .more { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 44px; }
+  .more { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: var(--space-head); }
   .more[hidden] { display: none; }
-  .more__status { font-size: 12px; font-weight: 500; letter-spacing: var(--ls-button); text-transform: uppercase; color: var(--text-muted); }
+  .more__status { font-size: var(--fs-eyebrow); font-weight: 500; letter-spacing: var(--ls-label); text-transform: uppercase; color: var(--text-muted); }
 
-  .closing { display: flex; flex-direction: column; align-items: center; gap: 28px; }
+  .closing { display: flex; flex-direction: column; align-items: center; gap: var(--space-5); }
   .closing__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
 
   /* Tablets use 2 columns too: with 2-cell-wide and 2-cell-tall photos, 3 columns cannot pack without holes. */
@@ -238,7 +240,6 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
     .filters { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
     .filters::-webkit-scrollbar { display: none; }
     .filters :global(.pill) { flex: none; }
-    .tile__link { border-radius: var(--radius-md); }
   }
 </style>
 
@@ -246,5 +247,5 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
   /* PhotoSwipe in the brand colors */
   .pswp { --pswp-bg: var(--rh-espresso); --pswp-icon-color: var(--rh-ivory); --pswp-icon-color-secondary: var(--rh-espresso); --pswp-icon-stroke-color: var(--rh-espresso); }
   .pswp__caption { position: absolute; left: 0; right: 0; bottom: 20px; padding: 0 24px; text-align: center;
-    font-family: var(--font-sans); font-size: 14px; line-height: 1.5; color: var(--rh-ivory); pointer-events: none; }
+    font-family: var(--font-sans); font-size: var(--fs-small); line-height: 1.5; color: var(--rh-ivory); pointer-events: none; }
 </style>

@@ -54,12 +54,12 @@ const photoVars = image ? `;--ph-ratio:${(image.height / image.width).toFixed(4)
   .ph__band { position: relative; overflow: hidden; padding: clamp(56px, 8vw, 104px) var(--gutter); }
   .ph__inner { position: relative; z-index: 1; max-width: var(--container-max); margin: 0 auto; }
   .ph--side .ph__band { padding-top: clamp(48px, 6vw, 80px); padding-bottom: clamp(48px, 6vw, 80px); }
-  .ph--side .ph__inner { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
+  .ph--side .ph__inner { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap-split); align-items: center; }
   .ph__photo { width: 100%; max-width: 480px; justify-self: end; }
   .ph--beside .ph__inner { grid-template-columns: 1fr 1.25fr; }
   .ph--beside .ph__photo { max-width: none; }
   /* A page's main heading is a step larger than a section heading, on every page and screen size. */
-  .ph :global(.sh__title) { font-size: clamp(36px, 3.9vw, 56px); }
+  .ph :global(.sh__title) { font-size: var(--fs-h1); }
   .ph--side :global(.wm) { height: clamp(96px, 14vh, 136px); }
   /* Wide screens, photo beside the heading: the header is the first screen, like the headers with a photo across
      them, and a tall photo is narrowed until it fits that screen whole. */
@@ -79,6 +79,7 @@ const photoVars = image ? `;--ph-ratio:${(image.height / image.width).toFixed(4)
      scrolling goes straight to the page and never to more photo. When the screen is shorter than the photo, the photo
      is cropped around its focus point. The heading is set over a lower corner on a soft espresso shade, as on the home
      page. Narrower screens keep the band below the photo, where the photo is too short to hold the words. */
+  /* 1000px, not the usual 900px: this layout also needs enough screen height for the words over the photo. */
   @media (min-width: 1000px) {
     .ph--over { --header-h: 73px; position: relative; overflow: hidden;
       height: min(100svh - var(--header-h), 100vw * var(--ph-ratio)); min-height: 440px; }
@@ -96,7 +97,6 @@ const photoVars = image ? `;--ph-ratio:${(image.height / image.width).toFixed(4)
     .ph--over .ph__text :global(.wm) { height: clamp(96px, 14vh, 136px); margin-left: 0; margin-bottom: var(--space-4); opacity: .85; }
     /* Larger words than a section heading: this is the first thing on the page. Sized by the screen's width and
        height together, so they still fit a short window. */
-    .ph--over .ph__text :global(.sh__eyebrow) { font-size: 14px; }
     .ph--over .ph__text :global(.sh__script) { font-size: clamp(56px, min(6vw, 10vh), var(--fs-script-l)); }
     .ph--over .ph__text :global(.sh__title) { font-size: clamp(44px, min(5.2vw, 9vh), 80px); }
     .ph--over .ph__text :global(.sh__intro) { font-size: clamp(18px, 1.5vw, 22px); color: var(--rh-ivory); }

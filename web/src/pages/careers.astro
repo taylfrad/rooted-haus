@@ -180,42 +180,43 @@ const applyEndpoint = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/api/apply`
 </script>
 
 <style>
-  .split { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
-  .split__text { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; }
+  .split { display: grid; grid-template-columns: 1.1fr 1fr; gap: var(--gap-split); align-items: center; }
+  .split__text { display: flex; flex-direction: column; gap: var(--space-5); align-items: flex-start; }
   .split__photo { width: 100%; }
-  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; margin-top: clamp(48px, 6vw, 80px); }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap-grid); margin-top: var(--space-head); }
   .lead { margin: 0; font-size: var(--fs-body-l); }
-  .offer { margin: 0; font-family: var(--font-display); font-size: 24px; line-height: 1.4; color: var(--text-strong); }
-  .h2 { margin-bottom: 32px; }
+  .offer { margin: 0; font-family: var(--font-display); font-size: var(--fs-statement); line-height: 1.4; color: var(--text-strong); }
+  .h2 { margin-bottom: var(--space-head-sub); }
+  .h2--center { margin-bottom: var(--space-head); }
   .h2--dark, .h2--center { text-align: center; }
   /* One full-width row per value (number, name, then the words), so values of different lengths never leave
      ragged columns: each row is as tall as its own text, and the hairlines keep them in step. */
   .values { list-style: none; margin: 0 auto; padding: 0; max-width: 1040px; }
   .value { display: grid; grid-template-columns: 64px minmax(0, 1fr) minmax(0, 1.5fr); gap: 10px clamp(24px, 4vw, 56px); align-items: baseline;
-    padding: 30px 0; border-top: 1px solid var(--border-hairline); }
+    padding: var(--row-y) 0; border-top: 1px solid var(--border-hairline); }
   .value:last-child { border-bottom: 1px solid var(--border-hairline); }
-  .value__n { font-family: var(--font-display); font-size: 32px; line-height: 1; color: var(--rh-terracotta); }
-  .value__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: var(--lh-snug); color: var(--text-strong); }
+  .value__n { font-family: var(--font-display); font-size: var(--fs-num); line-height: 1; color: var(--rh-terracotta); }
+  .value__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h3); line-height: var(--lh-snug); color: var(--text-strong); }
   .value__text { margin: 0; text-wrap: pretty; }
   .ticks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
   .ticks li { display: flex; gap: 12px; align-items: flex-start; }
   .ticks li :global(svg) { flex-shrink: 0; margin-top: 4px; color: var(--text-accent); }
-  .ticks--cols { display: block; columns: 2; column-gap: 48px; margin-bottom: 56px; }
+  .ticks--cols { display: block; columns: 2; column-gap: var(--space-7); margin-bottom: var(--space-head); }
   .ticks--cols li { break-inside: avoid; margin-bottom: 10px; }
   /* The longest list (commission) takes the left column; the two shorter ones stack on the right, so both sides end
      at about the same height instead of three cards with very different amounts of empty space. */
-  .paths { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; align-items: stretch; }
+  .paths { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--gap-grid); align-items: stretch; }
   .path:first-child { grid-row: span 2; }
   /* Its list spreads a little to fill the taller card, so it does not end in a block of empty space. */
   .path:first-child .ticks { flex: 1; justify-content: space-evenly; max-height: 460px; }
-  .path { padding: 32px 28px; border-radius: var(--radius-lg); background: var(--surface-sand); display: flex; flex-direction: column; gap: 14px; }
-  .path__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: var(--lh-snug); color: var(--text-strong); }
-  .path__price { margin: 0; font-family: var(--font-display); font-size: 22px; line-height: var(--lh-snug); color: var(--rh-chocolate); }
-  .quotes { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; max-width: 1000px; margin: 48px auto 0; }
+  .path { padding: var(--pad-card); border-radius: var(--radius-lg); background: var(--surface-sand); box-shadow: var(--shadow-card); display: flex; flex-direction: column; gap: 14px; }
+  .path__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h3); line-height: var(--lh-snug); color: var(--text-strong); }
+  .path__price { margin: 0; font-family: var(--font-display); font-size: var(--fs-price); line-height: var(--lh-snug); color: var(--rh-chocolate); }
+  .quotes { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-7); max-width: 1000px; margin: var(--space-head) auto 0; }
   .quote { margin: 0; display: flex; flex-direction: column; gap: 14px; color: var(--rh-ivory); }
-  .quote blockquote { margin: 0; font-family: var(--font-display); font-size: clamp(22px, 2vw, 26px); line-height: 1.45; text-wrap: pretty; }
-  .quote figcaption { font-size: 12px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; }
-  .apply { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
+  .quote blockquote { margin: 0; font-family: var(--font-display); font-size: var(--fs-statement); line-height: 1.45; text-wrap: pretty; }
+  .quote figcaption { font-size: var(--fs-eyebrow); font-weight: 500; letter-spacing: var(--ls-label); text-transform: uppercase; }
+  .apply { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: var(--gap-split); align-items: start; }
   .apply__intro { display: flex; flex-direction: column; align-items: flex-start; }
   .apply__intro p { margin: 0; }
   .apply__panel { min-width: 0; }
@@ -223,22 +224,22 @@ const applyEndpoint = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/api/apply`
   .apply__form[hidden], .invite[hidden] { display: none; }
   @keyframes apply-in { from { opacity: 0; transform: translateY(10px); } }
   /* The invitation in place of the form: sand card, handwritten line, one clear button. */
-  .invite { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: clamp(36px, 5vw, 64px);
-    border-radius: var(--radius-lg); background: var(--surface-sand); }
-  .invite__script { font-family: var(--font-script); font-size: clamp(34px, 3.4vw, 46px); line-height: 1; color: var(--rh-terracotta); }
-  .invite__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 3vw, 38px); line-height: var(--lh-snug); color: var(--text-strong); }
+  .invite { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: var(--pad-card);
+    border-radius: var(--radius-lg); background: var(--surface-sand); box-shadow: var(--shadow-card); }
+  .invite__script { font-family: var(--font-script); font-size: var(--fs-script-s); line-height: 1; color: var(--rh-terracotta); }
+  .invite__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h2-sub); line-height: var(--lh-snug); color: var(--text-strong); }
   .invite__text { margin: 0 0 10px; max-width: 460px; font-size: var(--fs-body-l); text-wrap: pretty; }
   @media (prefers-reduced-motion: reduce) { .apply__form { animation: none; } }
   /* Short answers sit two to a row on wide screens. */
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   /* What happens next: numbered like the groups on The Experience, with a fine line between steps like the price list. */
   .next { align-self: stretch; }
-  .apply__intro .next { margin-top: 40px; }
-  .next__label { display: block; margin-bottom: 14px; font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
+  .apply__intro .next { margin-top: var(--space-head); }
+  .next__label { display: block; margin-bottom: 14px; font-size: var(--fs-eyebrow); font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
   .next__list { list-style: none; margin: 0; padding: 0; }
-  .next__step { display: grid; grid-template-columns: 56px 1fr; gap: 4px 12px; padding: 22px 0; border-top: 1px solid var(--border-hairline); }
+  .next__step { display: grid; grid-template-columns: 56px 1fr; gap: 4px 12px; padding: var(--row-y) 0; border-top: 1px solid var(--border-hairline); }
   .next__step:last-child { border-bottom: 1px solid var(--border-hairline); }
-  .next__n { grid-row: span 2; font-family: var(--font-display); font-size: 32px; line-height: 1; color: var(--rh-terracotta); }
+  .next__n { grid-row: span 2; font-family: var(--font-display); font-size: var(--fs-num); line-height: 1; color: var(--rh-terracotta); }
   .next__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-title); line-height: var(--lh-snug); color: var(--text-strong); }
   .next__text { margin: 0; color: var(--text-muted); text-wrap: pretty; }
   @media (max-width: 900px) {

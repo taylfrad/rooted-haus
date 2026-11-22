@@ -1,3 +1,12 @@
+/* Design system: spacing. Section padding is --section-y; inside a section these roles keep rhythm the same everywhere.
+     --space-head      below a section heading (SectionHeading) before its content
+     --space-head-sub  below a sub-section title (.title-m)
+     --gap-split       between the two columns of a text-and-photo or text-and-form layout
+     --gap-grid        between cards or photos in a grid (the gallery mosaic keeps its own tighter gap)
+     --pad-card        inside a card;  --row-y  above and below each row of a hairline list
+   Breakpoints (CSS cannot share them as variables, so they are listed here): 560px phone, 700px small tablet,
+   900px layout switch (columns stack), 1100px navigation. PageHeader's photo-behind-the-words layout starts at 1000px
+   because it also depends on screen height. */
 :root{
 --space-1:4px;
 --space-2:8px;
@@ -14,6 +23,12 @@
 --container-narrow:760px;
 --gutter:clamp(20px,5vw,64px);
 --section-y:clamp(64px,9vw,128px);
+--space-head:48px;
+--space-head-sub:24px;
+--gap-split:clamp(32px,6vw,96px);
+--gap-grid:24px;
+--pad-card:clamp(28px,3vw,36px);
+--row-y:22px;
 
 --radius-sm:6px;
 --radius-md:14px;

@@ -43,7 +43,9 @@ const { src, alt = '', focus, src2, alt2 = '', focus2, side = 'start', shape = '
   /* The gap around the smaller photo is a band in the section's own color and grain, so it matches the section
      exactly and reads as cut out of the large photo. */
   .pair__second { position: absolute; left: 0; bottom: 0; width: 44%; box-sizing: border-box; padding: 10px;
-    border-radius: calc(var(--radius-lg) + 10px); background-color: var(--pair-ring); background-image: var(--grain); }
+    border-radius: calc(var(--radius-lg) + 10px); background-color: var(--pair-ring); background-image: var(--grain);
+    box-shadow: var(--shadow-card); }
+  .pair__second :global(.pf) { box-shadow: none; } /* the ring around it carries the shadow */
   .pair__second--arch { border-radius: var(--radius-arch); }
   .pair__second--circle { border-radius: 50%; }
   .pair--end .pair__main { margin-left: 0; margin-right: auto; }

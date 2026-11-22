@@ -61,8 +61,9 @@ const { compact = false } = Astro.props;
 
 <style>
   .dm { position: relative; aspect-ratio: 16 / 11; min-height: 300px; border-radius: var(--radius-lg); overflow: hidden;
-    background: var(--rh-sand); box-shadow: var(--shadow-soft); transition: box-shadow var(--dur-base) var(--ease-soft), transform var(--dur-base) var(--ease-soft); }
-  .dm:hover { box-shadow: var(--shadow-lift); transform: translateY(calc(-1 * var(--lift))); }
+    background: var(--rh-sand); box-shadow: var(--shadow-card); }
+  /* The hover lift comes from the .lift wrapper around the map (see contact.astro): transform plus a shadow layer
+     fading in, so the live map inside is never repainted frame by frame. */
   /* On narrow screens a fixed height replaces the ratio: ratio + min-height would force the map wider than the screen. */
   @media (max-width: 900px) { .dm { aspect-ratio: auto; height: 340px; min-height: 0; } }
 

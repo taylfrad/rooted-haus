@@ -74,26 +74,26 @@ const reviews = (await getCollection('reviews')).filter((r) => r.data.stylist ==
 </BaseLayout>
 
 <style>
-  .back { display: inline-block; margin-bottom: 32px; color: var(--rh-chocolate); }
-  .intro { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(32px, 6vw, 88px); align-items: start; }
+  .back { display: inline-block; margin-bottom: var(--space-6); color: var(--rh-chocolate); }
+  .intro { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: var(--gap-split); align-items: start; }
   .photos { width: 100%; justify-self: start; } /* in line with the back link above */
   .text { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
-  .role { font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
-  .name { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(40px, 5vw, var(--fs-display-xl)); line-height: 1; color: var(--text-strong); }
+  .role { font-size: var(--fs-eyebrow); font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
+  .name { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h1); line-height: var(--lh-tight); color: var(--text-strong); }
   .exp { margin: 0; font-family: var(--font-script); font-size: var(--fs-script-s); line-height: 1.2; color: var(--text-script); }
   .tags { display: flex; flex-wrap: wrap; gap: 8px; }
   .bio { max-width: 62ch; margin-bottom: 8px; }
   .bio :global(p) { margin: 0 0 1em; }
-  .quote { margin: 0 auto; max-width: 760px; display: flex; flex-direction: column; align-items: center; gap: 18px; color: var(--rh-ivory); }
+  .quote { margin: 0 auto; max-width: var(--container-narrow); display: flex; flex-direction: column; align-items: center; gap: var(--space-5); color: var(--rh-ivory); }
   .quote__script { font-family: var(--font-script); font-size: var(--fs-script-s); line-height: 1.1; color: var(--rh-caramel-soft); }
-  .quote blockquote { margin: 0; font-family: var(--font-display); font-size: clamp(22px, 2.4vw, 30px); line-height: 1.45; text-wrap: pretty; }
-  .quote figcaption { font-size: 12px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; }
-  .h2 { margin-bottom: 32px; }
-  .reviews { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 48px; }
+  .quote blockquote { margin: 0; font-family: var(--font-display); font-size: var(--fs-statement); line-height: 1.45; text-wrap: pretty; }
+  .quote figcaption { font-size: var(--fs-eyebrow); font-weight: 500; letter-spacing: var(--ls-label); text-transform: uppercase; }
+  .h2 { margin-bottom: var(--space-head-sub); }
+  .reviews { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-7); }
   .next { display: flex; flex-direction: column; align-items: center; gap: 16px; }
-  .next__label { font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
+  .next__label { font-size: var(--fs-eyebrow); font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
   @media (max-width: 900px) {
     .intro { grid-template-columns: 1fr; }
-    .photos { max-width: 420px; margin-bottom: 24px; }
+    .photos { max-width: 420px; margin-bottom: var(--space-5); }
   }
 </style>

@@ -48,8 +48,8 @@ const id = `f-${name}`;
 
 <style>
   .field { display: flex; flex-direction: column; gap: 8px; }
-  label { font-size: 12px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--text-strong); }
-  input[type='file'] { font: inherit; font-size: 15px; color: var(--text-body); background: var(--surface-raised); box-sizing: border-box; width: 100%;
+  label { font-size: var(--fs-eyebrow); font-weight: 500; letter-spacing: var(--ls-label); text-transform: uppercase; color: var(--text-strong); }
+  input[type='file'] { font: inherit; font-size: var(--fs-body-s); color: var(--text-body); background: var(--surface-raised); box-sizing: border-box; width: 100%;
     border: 1px dashed var(--rh-chocolate-50); border-radius: var(--radius-pill); padding: 8px; cursor: pointer;
     transition: border-color var(--dur-base) var(--ease-soft); }
   input[type='file']:hover { border-color: var(--rh-chocolate); }
@@ -58,6 +58,6 @@ const id = `f-${name}`;
     text-transform: uppercase; transition: background var(--dur-base) var(--ease-soft); }
   input[type='file']:hover::file-selector-button { background: var(--rh-chocolate); }
   input[aria-invalid] { border-color: var(--status-error); border-style: solid; }
-  .hint { margin: 0; font-size: 13px; color: var(--text-muted); }
-  .error { margin: 0; font-size: 14px; color: var(--status-error); }
+  .hint { margin: 0; font-size: var(--fs-small); color: var(--text-muted); }
+  .error { margin: 0; font-size: var(--fs-small); color: var(--status-error); }
 </style>

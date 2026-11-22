@@ -26,9 +26,15 @@ img{max-width:100%;display:block}
 /* Shared pieces. Astro keeps each component's styles to itself, so anything used on more than one page lives here. */
 
 /* Sub-section headings (a menu category, "Perks", "Questions, answered"). Pages set only the space around them. */
-.title-m{margin:0;font-family:var(--font-display);font-weight:400;font-size:clamp(28px,3.4vw,var(--fs-display-m));
+.title-m{margin:0;font-family:var(--font-display);font-weight:400;font-size:var(--fs-h2-sub);
   line-height:var(--lh-snug);color:var(--text-strong);text-wrap:balance}
 .title-m--dark{color:var(--rh-ivory)}
+
+/* Small capitals, two kinds. .eyebrow: the label over a section or block ("Our specialties", "Find us").
+   .label: names and field labels (form labels, a stylist's role, the name under a quote, footer column headings). */
+.eyebrow{font-family:var(--font-sans);font-size:var(--fs-eyebrow);font-weight:500;letter-spacing:var(--ls-eyebrow);
+  text-transform:uppercase;color:var(--text-accent)}
+.label{font-family:var(--font-sans);font-size:var(--fs-eyebrow);font-weight:500;letter-spacing:var(--ls-label);text-transform:uppercase}
 
 /* One phrase of a heading in the handwritten font (stars around it in the panel; see lib/emphasis.ts). */
 .accent{font-family:var(--font-script);font-style:normal;font-weight:400;font-size:1.3em;line-height:.7;letter-spacing:0;

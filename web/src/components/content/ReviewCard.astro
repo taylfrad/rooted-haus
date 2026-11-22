@@ -27,11 +27,11 @@ const { quote, name, detail, rating = 5, tone = 'light' } = Astro.props;
   .review--dark { color: var(--rh-ivory); }
   .review__stars { display: flex; gap: 4px; color: var(--text-script); }
   .review--dark .review__stars { color: var(--rh-caramel-soft); }
-  .review__quote { margin: 0; font-family: var(--font-display); font-size: 22px; line-height: 1.45;
+  .review__quote { margin: 0; font-family: var(--font-display); font-size: var(--fs-title); line-height: 1.45;
     color: var(--text-strong); text-wrap: pretty; }
   .review--dark .review__quote { color: var(--rh-ivory); }
   .review__by { display: flex; flex-direction: column; gap: 2px; }
-  .review__name { font-size: 12px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; }
-  .review__detail { font-size: 13px; color: var(--text-muted); }
+  .review__name { font-size: var(--fs-eyebrow); font-weight: 500; letter-spacing: var(--ls-label); text-transform: uppercase; }
+  .review__detail { font-size: var(--fs-small); color: var(--text-muted); }
   .review--dark .review__detail { color: var(--text-on-dark-muted); }
 </style>

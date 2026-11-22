@@ -139,19 +139,19 @@ const ready = endpoint !== '';
   .form__fields { display: flex; flex-direction: column; gap: 20px; }
   .honeypot { position: absolute; left: -9999px; }
   .form__human { min-height: 65px; }
-  .form__note { margin: 0; font-size: 14px; color: var(--text-muted); }
-  .form__status { margin: 0; padding: 18px 22px; border-radius: var(--radius-lg); font-size: 16px; outline: none; }
+  .form__note { margin: 0; font-size: var(--fs-small); color: var(--text-muted); }
+  .form__status { margin: 0; padding: 18px 22px; border-radius: var(--radius-lg); font-size: var(--fs-body); outline: none; box-shadow: var(--shadow-card); }
   .form__status[data-state='ok'] { background: var(--rh-olive); color: var(--rh-ivory); }
   .form__status[data-state='error'] { background: var(--rh-ivory); color: var(--status-error); border: 1px solid var(--status-error); }
   .form--done .form__fields, .form--done .form__actions, .form--done .form__human, .form--done .form__status { display: none; }
   /* The thank-you: a calm card in the site's olive, with a drawn check mark. */
   .form__thanks { display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; outline: none;
-    padding: clamp(36px, 5vw, 56px) clamp(24px, 4vw, 48px); border-radius: var(--radius-lg); background: var(--rh-olive); color: var(--rh-ivory);
+    padding: clamp(36px, 5vw, 56px) clamp(24px, 4vw, 48px); border-radius: var(--radius-lg); background: var(--rh-olive); color: var(--rh-ivory); box-shadow: var(--shadow-card);
     animation: thanks-in .5s var(--ease-soft) both; }
   .form__thanks[hidden] { display: none; }
   .form__thanks-mark { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 999px; border: 1px solid var(--rh-ivory-30); }
   .form__thanks-mark path { stroke-dasharray: 24; stroke-dashoffset: 24; animation: thanks-tick .6s .25s var(--ease-soft) forwards; }
-  .form__thanks-title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(26px, 3vw, 34px); line-height: var(--lh-snug); }
+  .form__thanks-title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h3); line-height: var(--lh-snug); }
   .form__thanks-text { margin: 0; max-width: 420px; font-size: var(--fs-body-l); text-wrap: pretty; }
   @keyframes thanks-in { from { opacity: 0; transform: translateY(8px); } }
   @keyframes thanks-tick { to { stroke-dashoffset: 0; } }

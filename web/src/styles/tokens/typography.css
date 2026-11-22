@@ -1,3 +1,15 @@
+/* Design system: type. Every page uses these roles instead of its own sizes, so a heading of one kind looks the same
+   everywhere and on every screen.
+     --fs-h1         page title in the coloured band under a header photo (PageHeader)
+     --fs-h2         section title (SectionHeading, The Experience rows, the Gallery header)
+     --fs-h2-sub     sub-section title inside a section (.title-m: a menu category, "Perks", "Questions, answered")
+     --fs-h3         card title (role cards, values, the start and thank-you cards, the menu card, stylist names)
+     --fs-title      list item title (menu items, steps, experience points, FAQ questions, specialty labels)
+     --fs-statement  a quote or a sentence set large (mission, vision, stylist quotes, reviews, the careers offer)
+     --fs-closing    the last line of a page (Connect, The Experience), with --fs-script-closing above it
+     --fs-body-l / --fs-body / --fs-body-s / --fs-small   lead text / body / descriptions and details / fine print
+     --fs-num        a large step or value number (01, 02...);  --fs-price  prices
+   Small capitals use the .eyebrow (section labels) and .label (field labels, roles, names) classes in global.css. */
 :root{
 --font-display:"Gilda Display","Cassy Vogue",Georgia,serif;
 --font-sans:"Montserrat Variable","Montserrat","Gotham Pro","Gotham",system-ui,sans-serif;
@@ -8,16 +20,26 @@
 --fs-display-l:48px;
 --fs-display-m:36px;
 --fs-display-s:28px;
+--fs-h1:clamp(36px,3.9vw,56px);
+--fs-h2:clamp(30px,4vw,48px);
+--fs-h2-sub:clamp(28px,3.4vw,36px);
+--fs-h3:clamp(22px,2.2vw,26px);
 --fs-title:22px;
+--fs-statement:clamp(22px,2.4vw,30px);
+--fs-closing:clamp(30px,3.2vw,46px);
+--fs-num:32px;
+--fs-price:20px;
 --fs-body-l:18px;
 --fs-body:16px;
---fs-body-s:14px;
+--fs-body-s:15px;
+--fs-small:14px;
 --fs-eyebrow:12px;
 --fs-micro:11px;
 --fs-script-l:92px;
 --fs-script-m:66px;
 /* Smaller on phones, so a short handwritten phrase stays on one line and does not outweigh the heading under it. */
 --fs-script-s:clamp(38px,10.5vw,52px);
+--fs-script-closing:clamp(48px,6.4vw,92px);
 
 --lh-tight:1.1;
 --lh-snug:1.25;
@@ -26,6 +48,7 @@
 --ls-display:.02em;
 --ls-eyebrow:.32em;
 --ls-button:.18em;
+--ls-label:.22em;
 
 --fw-light:300;
 --fw-regular:400;

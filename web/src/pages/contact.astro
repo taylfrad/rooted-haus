@@ -61,7 +61,7 @@ const studio = (await getCollection('gallery'))
         <div class="way__action"><BookButton>{site.bookLabel}</BookButton></div>
       </li>
     </ul>
-    <div class="map"><DirectionsMap /></div>
+    <div class="map lift-host"><div class="lift map__lift"><DirectionsMap /></div></div>
   </Section>
 
   {page.expect && (
@@ -139,7 +139,7 @@ const studio = (await getCollection('gallery'))
         </div>
       </div>
       <div class="inside__grid">
-        {studio.map((g) => <PhotoFrame src={g.data.image} alt={g.data.alt ?? g.data.label} label={g.data.label} shape="soft" ratio="3 / 4" sizes="(min-width: 900px) 25vw, 50vw" />)}
+        {studio.map((g) => <PhotoFrame src={g.data.image} alt={g.data.alt ?? g.data.label} label={g.data.label} shape="rounded" ratio="3 / 4" sizes="(min-width: 900px) 25vw, 50vw" />)}
       </div>
     </Section>
   )}
@@ -156,10 +156,10 @@ const studio = (await getCollection('gallery'))
 </BaseLayout>
 
 <style>
-  .ways { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-  .way { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: 36px 32px; border-radius: var(--radius-lg); background: var(--surface-sand); }
+  .ways { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap-grid); }
+  .way { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: var(--pad-card); border-radius: var(--radius-lg); background: var(--surface-sand); box-shadow: var(--shadow-card); }
   .ic { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: var(--rh-ivory); color: var(--rh-terracotta); }
-  .way__label { margin: 4px 0 0; font-family: var(--font-sans); font-size: 12px; font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
+  .way__label { margin: 4px 0 0; font-family: var(--font-sans); font-size: var(--fs-eyebrow); font-weight: 500; letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-accent); }
   .way__main { margin: 0; font-family: var(--font-display); font-size: var(--fs-title); line-height: 1.35; color: var(--text-strong); }
   .way__phone { font-size: var(--fs-display-s); text-decoration: none; font-variant-numeric: tabular-nums; }
   .way__phone:hover { color: var(--text-accent); }
@@ -167,43 +167,44 @@ const studio = (await getCollection('gallery'))
   .way__link, .way__action { margin-top: auto; }
   .way__link { color: var(--rh-chocolate); }
   .hours { margin: 0; align-self: stretch; display: flex; flex-direction: column; }
-  .hours__row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 9px 0; border-bottom: 1px solid var(--border-hairline); font-size: 15px; }
+  .hours__row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--border-hairline); font-size: var(--fs-body-s); }
   .hours__row:first-child { border-top: 1px solid var(--border-hairline); }
   .hours dd { margin: 0; color: var(--text-strong); font-variant-numeric: tabular-nums; white-space: nowrap; }
   /* A wide, shallow map: it shows the surrounding streets without pushing the rest of the page down. */
-  .map { margin-top: 24px; }
+  .map { margin-top: var(--gap-grid); }
+  .map__lift { border-radius: var(--radius-lg); }
   .map :global(.dm) { aspect-ratio: 21 / 8; min-height: 320px; }
 
   /* Your first visit: photos on the outer edge, words beside them, as on the home page. */
-  .split { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
+  .split { display: grid; grid-template-columns: 1fr 1.1fr; gap: var(--gap-split); align-items: center; }
   .split__photo { max-width: 520px; width: 100%; }
-  .split__text { display: flex; flex-direction: column; gap: 28px; align-items: flex-start; }
+  .split__text { display: flex; flex-direction: column; gap: var(--space-5); align-items: flex-start; }
   .split__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; }
   /* Step inside: the same heading row and photo row as "Recent work" on the home page. */
-  .inside__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 36px; flex-wrap: wrap; }
+  .inside__head { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--space-5); margin-bottom: var(--space-head); flex-wrap: wrap; }
   .inside__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; }
   .inside__ig { display: inline-flex; align-items: center; gap: 8px; color: var(--rh-chocolate); }
-  .inside__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .inside__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--gap-grid); }
 
-  .h { margin-bottom: 16px; }
-  .lead { margin: 0; color: var(--text-muted); }
-  .message { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
+  .h { margin-bottom: var(--space-head-sub); }
+  .lead { margin: 0; font-size: var(--fs-body-l); color: var(--text-muted); }
+  .message { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: var(--gap-split); align-items: start; }
   .faq { max-width: var(--container-narrow); }
   .faq__item { border-top: 1px solid var(--border-hairline); }
   .faq__item:last-child { border-bottom: 1px solid var(--border-hairline); }
   summary { list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 24px;
-    padding: 22px 0; cursor: pointer; font-family: var(--font-display); font-size: 22px; color: var(--text-strong); }
+    padding: var(--row-y) 0; cursor: pointer; font-family: var(--font-display); font-size: var(--fs-title); line-height: var(--lh-snug); color: var(--text-strong); }
   summary::-webkit-details-marker { display: none; }
   summary :global(.chev) { flex-shrink: 0; transition: transform var(--dur-base) var(--ease-soft); }
   details[open] summary :global(.chev) { transform: rotate(180deg); }
-  .faq__item p { margin: 0 0 22px; max-width: 60ch; }
+  .faq__item p { margin: 0 0 var(--row-y); max-width: 60ch; }
   .news { max-width: 480px; margin: 0 auto; text-align: left; }
   .news .h, .news p { text-align: center; }
 
-  /* The page's last words, set large so they fill the band: handwriting about the size of the Home photo's phrase. */
-  .closing { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: clamp(20px, 3vw, 40px); padding: clamp(8px, 2vw, 24px) 0; }
-  .closing__script { font-family: var(--font-script); font-size: clamp(58px, 9vw, 128px); line-height: 1; color: var(--rh-caramel-soft); }
-  .closing__line { margin: 0 0 clamp(8px, 1.5vw, 20px); font-family: var(--font-display); font-size: clamp(34px, 4.8vw, 64px); line-height: 1.15; color: var(--rh-ivory); text-wrap: balance; }
+  /* The page's last words: the same closing as The Experience (handwriting, one large line, the booking button). */
+  .closing { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: clamp(16px, 2.2vw, 28px); }
+  .closing__script { font-family: var(--font-script); font-size: var(--fs-script-closing); line-height: 1; color: var(--rh-caramel-soft); }
+  .closing__line { margin: 0 0 clamp(8px, 1.5vw, 20px); font-family: var(--font-display); font-size: var(--fs-closing); line-height: 1.2; color: var(--rh-ivory); text-wrap: balance; }
 
   @media (max-width: 900px) {
     .ways, .message, .split { grid-template-columns: 1fr; }
