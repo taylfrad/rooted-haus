@@ -45,10 +45,10 @@ export const maps = {
   apple: `https://maps.apple.com/?daddr=${q}&dirflg=d`,
 };
 
-/** "Tue to Fri: 9am to 5pm", or just the text when there is no time (used for the placeholder). */
 /** Splits a line into its sentences, so each can be kept on one line ("Rooted in Beauty." never breaks in half). */
 export const sentences = (text: string) => text.split(/(?<=[.!?])\s+/).filter(Boolean);
 
+/** "Tue to Fri: 9am to 5pm", or just the text when there is no time (used for the placeholder). */
 export const hoursLine = (h: { days: string; time?: string }) => (h.time ? `${h.days}: ${h.time}` : h.days);
 
 export const nav = [

@@ -121,7 +121,7 @@ const applyEndpoint = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/api/apply`
       <!-- The form stays folded away until "Start your application" is pressed, so applying is a deliberate choice.
            Links to careers/#apply open it straight away. -->
       <div class="invite" data-apply-invite>
-        <span class="invite__script">{c.apply.startScript}</span>
+        <span class="invite__script" data-fit>{c.apply.startScript}</span>
         <h3 class="invite__title">{c.apply.startTitle}</h3>
         {c.apply.startText && <p class="invite__text">{c.apply.startText}</p>}
         <Button size="lg" type="button" data-apply-open aria-controls="apply-form" aria-expanded="false">{c.apply.startButton}</Button>
@@ -188,7 +188,7 @@ const applyEndpoint = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/api/apply`
   .offer { margin: 0; font-family: var(--font-display); font-size: var(--fs-statement); line-height: 1.4; color: var(--text-strong); }
   .h2 { margin-bottom: var(--space-head-sub); }
   .h2--center { margin-bottom: var(--space-head); }
-  .h2--dark, .h2--center { text-align: center; }
+  .h2--center { text-align: center; }
   /* One full-width row per value (number, name, then the words), so values of different lengths never leave
      ragged columns: each row is as tall as its own text, and the hairlines keep them in step. */
   .values { list-style: none; margin: 0 auto; padding: 0; max-width: 1040px; }

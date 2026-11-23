@@ -43,7 +43,7 @@ const sizesFor = (size: string) => (size === 'wide' || size === 'large' ? '(min-
     <div class="top__inner" data-reveal>
       <div class="top__head">
         <span class="top__eyebrow">{page.header.eyebrow}</span>
-        <h1 class="top__title" data-lines>{emphasis(page.header.title).map((p) => (p.accent ? <em class="accent">{p.text}</em> : p.text))}</h1>
+        <h1 class="top__title" data-lines>{emphasis(page.header.title).map((p) => (p.accent ? <em class="accent" data-fit>{p.text}</em> : p.text))}</h1>
       </div>
       {page.header.intro && <p class="top__intro">{page.header.intro}</p>}
     </div>

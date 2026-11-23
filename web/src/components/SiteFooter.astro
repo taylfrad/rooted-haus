@@ -41,11 +41,11 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
             <span>{site.address.line1}</span>
             <span>{site.address.city}</span>
           </address>
-          <a class="footer__phone" href={tel}>{site.phone}</a>
           <!-- Opens the Apple Maps / Google Maps chooser (DirectionsDialog); without JavaScript it goes to Google Maps. -->
           <a class="footer__directions caps-link" href={maps.google} target="_blank" rel="noopener" data-directions-open aria-haspopup="dialog">
             <Navigation size={14} stroke-width={1.5} aria-hidden="true" /> Get directions
           </a>
+          <a class="footer__phone" href={tel}>{site.phone}</a>
         </div>
 
         <div class="footer__col">
@@ -81,9 +81,14 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
 
   /* One band: the logo block on the left, the three columns of details on the right. */
   .footer__main { display: grid; grid-template-columns: minmax(240px, 0.8fr) 2.2fr; gap: clamp(40px, 6vw, 96px); align-items: start; padding-bottom: 48px; }
-  .footer__lead { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+  /* The column is exactly as wide as the logo (min-content: the widest thing in it that cannot wrap), so the logo
+     keeps the left edge and the booking button and social links sit centered beneath it. */
+  .footer__lead { display: flex; flex-direction: column; align-items: center; gap: 18px; justify-self: start; width: min-content; }
+  .footer__news { text-align: center; }
   .footer__mark { display: block; }
-  .footer__mark :global(img) { display: block; height: clamp(64px, 6vw, 80px); width: auto; }
+  /* max-width: none: with the site-wide max-width:100%, the browser counts an image as squeezable to nothing when it
+     works out the column's min-content width, and the column (and logo) shrank to the width of the button. */
+  .footer__mark :global(img) { display: block; height: clamp(64px, 6vw, 80px); width: auto; max-width: none; }
   .footer__book { margin-top: 4px; }
   .footer__news { font-size: var(--fs-small); color: var(--text-on-dark-muted); }
 
@@ -93,9 +98,12 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
   .footer__col a:hover { color: var(--rh-ivory); text-decoration: underline; }
   .footer__h { font-size: var(--fs-eyebrow); font-weight: 500; letter-spacing: var(--ls-label); text-transform: uppercase; color: var(--rh-sand); margin-bottom: 6px; }
 
-  .footer__address { display: flex; flex-direction: column; gap: 2px; font-style: normal; font-size: var(--fs-body-s); color: var(--rh-ivory); }
+  /* balance: a line too long for a narrow column breaks in the middle ("1685 N Causeway / Blvd Ste A"), never leaving one word behind. */
+  .footer__address { display: flex; flex-direction: column; gap: 2px; font-style: normal; font-size: var(--fs-body-s); color: var(--rh-ivory); text-wrap: balance; }
   .footer__col .footer__phone { font-family: var(--font-display); font-size: var(--fs-title); color: var(--rh-ivory); font-variant-numeric: tabular-nums; }
-  .footer__col .footer__directions { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; margin-top: 6px; color: var(--rh-ivory); text-decoration: underline; text-decoration-color: transparent; }
+  /* Address, then the way there, then the phone number. */
+  .footer__col .footer__directions { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; margin-top: 4px; color: var(--rh-ivory); text-decoration: underline; text-decoration-color: transparent; }
+  .footer__col .footer__directions + .footer__phone { margin-top: 6px; }
   .footer__col .footer__directions:hover { text-decoration-color: currentColor; }
 
   /* Day on the left, time on the right, a fine line under each. */
@@ -113,19 +121,31 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
   .footer__legal { padding: 20px 0 32px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
     border-top: 1px solid var(--border-on-dark); font-size: var(--fs-micro); letter-spacing: .2em; text-transform: uppercase; color: var(--text-on-dark-muted); }
 
+  /* Scrolled to the very bottom, the back-to-top button (BackToTop.astro: 52px tall, 28px from the bottom; 46px and
+     20px on phones) sat on the end of this line wherever the line reaches under it (screens up to about 1220px wide).
+     The line stays clear above it instead: the button's offset, its height, and 12px of air. */
+  @media (max-width: 1239px) { .footer__legal { padding-bottom: calc(28px + 52px + 12px); } }
+
   /* Tablet: the logo block sits above the three columns. */
   @media (max-width: 900px) {
     .footer__main { grid-template-columns: 1fr; gap: 40px; }
-    .footer__lead { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
+    .footer__lead { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 16px 28px; justify-self: stretch; width: auto; }
     .footer__book { margin: 0 0 0 auto; }
   }
   @media (max-width: 700px) {
     .footer__grid { grid-template-columns: 1fr 1fr; gap: 40px 28px; }
     .footer__grid > .footer__col:nth-child(2) { grid-column: 1 / -1; grid-row: 1; } /* Hours first, full width */
+    .footer__legal { padding-bottom: calc(20px + 46px + 12px); }
   }
   @media (max-width: 560px) {
     .footer__inner { padding-top: 56px; }
-    .footer__lead { flex-direction: column; align-items: flex-start; }
+    /* Phones: Visit gets the full width too (half a phone screen broke the address into four lines and "Get
+       directions" into two), and the page links sit in two columns beneath it. */
+    .footer__grid > .footer__col:first-child { grid-column: 1 / -1; }
+    .footer__explore { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 28px; }
+    .footer__explore .footer__h { grid-column: 1 / -1; }
+    .footer__directions { white-space: nowrap; }
+    .footer__lead { flex-direction: column; align-items: center; justify-self: start; width: min-content; } /* as on wide screens */
     .footer__book { margin: 0; }
   }
 </style>
