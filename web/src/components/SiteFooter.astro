@@ -4,7 +4,7 @@ import { Navigation } from '@lucide/astro';
 import Button from './core/Button.astro';
 import BookButton from './core/BookButton.astro';
 import logo from '../assets/logo-wordmark-ivory.png';
-import { maps, nav, sentences, site } from '../lib/site';
+import { maps, nav, site } from '../lib/site';
 import { url } from '../lib/paths';
 
 const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
@@ -14,12 +14,11 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
 <footer class="footer" transition:persist>
   <div class="footer__inner">
     <div class="footer__main">
-      <!-- Left: the full logo, the brand line, the way to book, and the studio's social pages. -->
+      <!-- Left: the full logo, the way to book, and the studio's social pages. -->
       <div class="footer__lead">
         <a class="footer__mark" href={url()} aria-label={`${site.name} home`}>
           <Image src={logo} alt={`${site.name} — ${site.tagline}`} height={84} densities={[1, 2]} />
         </a>
-        {site.brandLine && <span class="footer__brand">{sentences(site.brandLine).map((t) => <><span class="nowrap">{t}</span>{' '}</>)}</span>}
         <div class="footer__book"><BookButton variant="ivory">{site.bookLabel}</BookButton></div>
         {/* The signup line and button appear with the newsletter form on Connect (once a form address is set). */}
         {site.formsReady && <span class="footer__news">{site.footerNewsletter}</span>}
@@ -85,8 +84,6 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
   .footer__lead { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
   .footer__mark { display: block; }
   .footer__mark :global(img) { display: block; height: clamp(64px, 6vw, 80px); width: auto; }
-  /* The brand line in the handwritten script, like "grow with us" in the band above the footer. */
-  .footer__brand { max-width: 320px; font-family: var(--font-script); font-size: clamp(24px, 2.2vw, 30px); line-height: 1.45; color: var(--rh-caramel-soft); }
   .footer__book { margin-top: 4px; }
   .footer__news { font-size: var(--fs-small); color: var(--text-on-dark-muted); }
 
@@ -120,7 +117,6 @@ const tel = `tel:${site.phone.replace(/[^\d+]/g, '')}`;
   @media (max-width: 900px) {
     .footer__main { grid-template-columns: 1fr; gap: 40px; }
     .footer__lead { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
-    .footer__brand { order: 1; flex-basis: 100%; max-width: none; }
     .footer__book { margin: 0 0 0 auto; }
   }
   @media (max-width: 700px) {

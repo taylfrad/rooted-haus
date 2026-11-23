@@ -7,7 +7,7 @@ import settings from '../content/settings.json';
 export const site = {
   name: settings.name,
   tagline: settings.tagline,
-  /** The brand line: on the home photo, in the footer and on Meet the Haus. */
+  /** The brand line: on the home photo and on Meet the Haus. */
   brandLine: settings.brandLine,
   bookingUrl: settings.bookingUrl,
   /** Words on the main booking buttons (header, hero, Connect...). Falls back if left empty in the panel. */

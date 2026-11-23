@@ -21,7 +21,7 @@ content:
     fields:
       - { name: name, label: Studio name, type: string }
       - { name: tagline, label: Tagline, type: string }
-      - { name: brandLine, label: "Brand line (on the home photo, in the footer and on Meet the Haus)", type: string }
+      - { name: brandLine, label: "Brand line (on the home photo and on Meet the Haus)", type: string }
       - { name: bookingUrl, label: Booking link (Boulevard), type: string }
       - { name: bookLabel, label: "Words on the main booking buttons (e.g. Get Rooted)", type: string }
       - { name: addressLine1, label: Street address, type: string }
