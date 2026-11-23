@@ -95,7 +95,7 @@ const recent = (await getCollection('gallery'))
       <div class="hero__scripts">
         {slides.map((s, i) => <span class="hero__script" data-phrase data-active={i === 0}>{s.phrase}</span>)}
       </div>
-      <h1 class="hero__title" data-lines>{emphasis(home.hero.title).map((p) => (p.accent ? <em class="accent">{p.text}</em> : p.text))}</h1>
+      <h1 class="hero__title" data-lines>{emphasis(home.hero.title).map((p) => (p.accent ? <em class="accent" data-fit>{p.text}</em> : p.text))}</h1>
       {site.brandLine && <p class="hero__brand">{sentences(site.brandLine).map((t) => <><span class="nowrap">{t}</span>{' '}</>)}</p>}
       <div class="hero__actions">
         <BookButton variant="ivory" size="lg">{site.bookLabel}</BookButton>
@@ -175,7 +175,7 @@ const recent = (await getCollection('gallery'))
       <li class="sp sp--cta">
         <!-- data-still: the card stays put like the photos beside it, and only its words rise in (lib/motion.ts). -->
         <a class="sp__cta lift" href={url('services/')} data-still>
-          {home.specialties.card.script && <span class="sp__cta-script">{home.specialties.card.script}</span>}
+          {home.specialties.card.script && <span class="sp__cta-script" data-fit>{home.specialties.card.script}</span>}
           <span class="sp__cta-title">{home.specialties.card.title}</span>
           {home.specialties.card.text && <span class="sp__cta-text">{home.specialties.card.text}</span>}
         </a>
@@ -323,7 +323,10 @@ const recent = (await getCollection('gallery'))
       range.selectNodeContents(p);
       return range.getBoundingClientRect().width;
     }));
-    const room = Math.min(hero.querySelector<HTMLElement>('.hero__content')!.clientWidth, MAX_PHRASE_WIDTH);
+    // The room inside the side padding: clientWidth includes the padding, which let the longest phrase run off a phone screen.
+    const content = hero.querySelector<HTMLElement>('.hero__content')!;
+    const pad = getComputedStyle(content);
+    const room = Math.min(content.clientWidth - parseFloat(pad.paddingLeft) - parseFloat(pad.paddingRight), MAX_PHRASE_WIDTH);
     if (widest > room) hero.style.setProperty('--script-fit', (room / widest).toFixed(3));
   }
   let fitWait: number | undefined;
@@ -479,7 +482,7 @@ const recent = (await getCollection('gallery'))
     line-height: 1; color: var(--rh-caramel-soft); opacity: 0; transition: opacity var(--dur-slow) var(--ease-soft);
     text-shadow: 0 2px 16px rgba(59, 40, 25, .7); }
   .hero__script[data-active='true'] { opacity: 1; }
-  .hero__content > .hero__title { max-width: 760px; }
+  .hero__content > .hero__title { max-width: min(760px, 100%); }
   .hero__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 4.2vw, 56px);
     line-height: 1.12; text-wrap: balance; text-shadow: 0 1px 18px rgba(59, 40, 25, .45); }
   .hero__brand { margin: 0; max-width: 560px; font-size: var(--fs-eyebrow); font-weight: 500; letter-spacing: var(--ls-label); text-transform: uppercase;
@@ -533,11 +536,14 @@ const recent = (await getCollection('gallery'))
   .letter :global(.review__quote) { font-size: var(--fs-statement); line-height: 1.45; text-wrap: balance; }
   .letter :global(.review__by) { align-items: center; }
   .letters__nav { display: none; }
-  /* With JavaScript the letters share one spot (as tall as the longest), and only the current one shows. */
+  /* With JavaScript the letters share one spot (as tall as the longest), and only the current one shows. They change
+     one after the other, like the page change: the old letter fades out, then the new one fades in. Cross-fading two
+     paragraphs in the same spot showed both on top of each other, unreadable, for most of a second. */
   :global(.js) .letters__stage { display: grid; align-items: center; }
   :global(.js) .letter { grid-area: 1 / 1; margin: 0; opacity: 0; visibility: hidden;
-    transition: opacity var(--dur-reveal) var(--ease-soft), visibility 0s linear var(--dur-reveal); }
-  :global(.js) .letter[data-active='true'] { opacity: 1; visibility: visible; transition-delay: 0s; }
+    transition: opacity var(--dur-base) var(--ease-soft), visibility 0s linear var(--dur-base); }
+  :global(.js) .letter[data-active='true'] { opacity: 1; visibility: visible;
+    transition: opacity var(--dur-reveal) var(--ease-soft) var(--dur-base), visibility 0s linear var(--dur-base); }
   :global(.js) .letters__nav { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 36px; }
   .letters__arrow { width: 44px; height: 44px; padding: 0; display: grid; place-items: center; cursor: pointer; border-radius: 50%;
     border: 1px solid var(--border-on-dark); background: transparent; color: var(--rh-ivory);
@@ -547,7 +553,6 @@ const recent = (await getCollection('gallery'))
   .letters__dots button { min-width: 28px; height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
   .letters__dots button::before { content: ''; width: 10px; height: 10px; border-radius: 999px; background: var(--rh-ivory-30); transition: width var(--dur-base) var(--ease-soft), background var(--dur-base) var(--ease-soft); }
   .letters__dots button[data-active='true']::before { width: 36px; background: var(--rh-sand); }
-  .center { display: flex; justify-content: center; }
 
   .work__head { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--space-5); margin-bottom: var(--space-head); flex-wrap: wrap; }
   .work__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--gap-grid); }
@@ -561,6 +566,12 @@ const recent = (await getCollection('gallery'))
     .work__grid { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 560px) {
+    /* The step label stays on one line: a little smaller and wider on phones, where "03 Book your appointment" ran
+       out of its pill. */
+    .step__tab { max-width: calc(100% - 16px); padding: 12px 18px; gap: 10px; }
+    .step__title { font-size: clamp(18px, 5.6vw, var(--fs-title)); }
+    /* The menu card is half a phone wide: slimmer sides leave its handwritten line room to stay on one line. */
+    .sp__cta { padding: var(--space-5) var(--space-4); }
     .hero__eyebrow { font-size: var(--fs-micro); letter-spacing: var(--ls-label); padding: 7px 14px; }
     .hero__brand { font-size: var(--fs-micro); letter-spacing: .16em; }
     /* Stacked buttons share the width of the wider one, so the pair reads as one block. */

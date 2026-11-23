@@ -147,7 +147,7 @@ const studio = (await getCollection('gallery'))
   {page.closing && (
     <Section bg="var(--surface-olive)" center curve>
         <div class="closing">
-          {page.closing.script && <span class="closing__script">{page.closing.script}</span>}
+          {page.closing.script && <span class="closing__script" data-fit>{page.closing.script}</span>}
           <p class="closing__line">{page.closing.text}</p>
           <BookButton variant="ivory" size="lg">{site.bookLabel}</BookButton>
         </div>

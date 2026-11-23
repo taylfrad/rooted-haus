@@ -54,7 +54,13 @@ const id = `f-${name}`;
     select::picker-icon { display: none; } /* the wrapper's chevron is used instead */
     .select:has(select:open)::after { transform: rotate(180deg); }
     select::picker(select) { margin-top: 6px; padding: 6px; border: 1px solid var(--border-hairline); border-radius: 22px;
-      background: var(--surface-raised); box-shadow: var(--shadow-soft); }
+      background: var(--surface-raised); box-shadow: var(--shadow-soft);
+      /* The list opens below its field whenever it fits there whole. The browser's own rule (most-block-size) opens it
+         on whichever side has more room, so a field a little below the middle of the screen opened upward even with
+         plenty of space beneath it. Its full height (no max) is what lets the browser tell when it does not fit. Then:
+         above, if it fits whole there; else below, then above, scrolling inside (--picker-scroll). */
+      max-block-size: none; position-try-order: normal;
+      position-try-fallbacks: flip-block, --picker-scroll, --picker-scroll flip-block; }
     select option { padding: 11px 18px; border-radius: var(--radius-pill); font-size: var(--fs-body-s); color: var(--text-strong); cursor: pointer;
       transition: background var(--dur-base) var(--ease-soft); }
     select option:hover, select option:focus-visible { background: var(--surface-sand); outline: none; }
@@ -62,4 +68,7 @@ const id = `f-${name}`;
     select option::checkmark { display: none; }
     select option[disabled] { display: none; } /* "Choose one" is the field's prompt, not a choice in the list */
   }
+  /* Last resort for a long list on a short screen: shrink to the room on that side and scroll, but only if that leaves
+     at least a few choices showing (otherwise this side "does not fit" and the other side is tried). */
+  @position-try --picker-scroll { min-block-size: 160px; max-block-size: stretch; }
 </style>

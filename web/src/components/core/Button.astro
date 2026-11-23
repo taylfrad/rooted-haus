@@ -37,6 +37,11 @@ const Tag = href ? 'a' : 'button';
   .btn--sm { padding: 10px 20px; font-size: 11px; }
   .btn--md { padding: 14px 30px; font-size: 12px; }
   .btn--lg { padding: 18px 40px; font-size: 13px; }
+  /* Phones: large buttons step down (with their desktop padding several were wider than the screen), and a label too
+     long for the space wraps onto a second line inside the pill instead of running out of it. */
+  @media (max-width: 560px) {
+    .btn--lg { padding: 16px 28px; font-size: 12px; max-width: 100%; white-space: normal; text-wrap: balance; text-align: center; }
+  }
 
   .btn--primary { background: var(--action-primary); color: var(--action-primary-text); }
   .btn--primary:hover { background: var(--action-primary-hover); color: var(--action-primary-text); }

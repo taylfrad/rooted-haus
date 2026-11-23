@@ -44,7 +44,7 @@ steps:
     alt: "A scalp ritual tray with wooden bowls of herbal masks, oils and massage tools."
     focus: "50% 55%"
   book:
-    title: "Book your Appointment"
+    title: "Book your appointment"
     text: "Choose a time that works for you, online."
     button: "Get Rooted"
     image: "../../assets/photos/salon/img-0180.jpg"

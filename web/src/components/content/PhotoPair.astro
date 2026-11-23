@@ -32,7 +32,7 @@ const { src, alt = '', focus, src2, alt2 = '', focus2, side = 'start', shape = '
   </div>
   {src2 && (
     <div class:list={['pair__second', `pair__second--${shape2}`]}>
-      <PhotoFrame src={src2} alt={alt2} focus={focus2} shape={shape2} ratio="4 / 5" sizes="(min-width: 900px) 20vw, 42vw" />
+      <PhotoFrame {framed} src={src2} alt={alt2} focus={focus2} shape={shape2} ratio="4 / 5" sizes="(min-width: 900px) 20vw, 42vw" />
     </div>
   )}
 </div>
@@ -40,12 +40,12 @@ const { src, alt = '', focus, src2, alt2 = '', focus2, side = 'start', shape = '
 <style>
   .pair { position: relative; padding-bottom: 14%; }
   .pair__main { width: 80%; margin-left: auto; }
-  /* The gap around the smaller photo is a band in the section's own color and grain, so it matches the section
-     exactly and reads as cut out of the large photo. */
-  .pair__second { position: absolute; left: 0; bottom: 0; width: 44%; box-sizing: border-box; padding: 10px;
-    border-radius: calc(var(--radius-lg) + 10px); background-color: var(--pair-ring); background-image: var(--grain);
-    box-shadow: var(--shadow-card); }
-  .pair__second :global(.pf) { box-shadow: none; } /* the ring around it carries the shadow */
+  /* The smaller photo is framed exactly like the large one: the photo with its own shadow, a gap, then the fine line.
+     The gap is a band in the section's own color and grain, so it reads as cut out of the large photo, and the line
+     sits on its outermost edge (padding = the frame's gap + the 1px line). The band itself casts no shadow: one there
+     darkened the page around it, so the band read as a lighter halo instead of part of the page. */
+  .pair__second { position: absolute; left: 0; bottom: 0; width: 44%; box-sizing: border-box; padding: calc(var(--frame-gap) + 1px);
+    border-radius: calc(var(--radius-lg) + var(--frame-gap) + 1px); background-color: var(--pair-ring); background-image: var(--grain); }
   .pair__second--arch { border-radius: var(--radius-arch); }
   .pair__second--circle { border-radius: 50%; }
   .pair--end .pair__main { margin-left: 0; margin-right: auto; }

@@ -57,9 +57,9 @@ import { ChevronUp } from '@lucide/astro';
       transform var(--dur-base) var(--ease-soft), background var(--dur-base) var(--ease-soft), color var(--dur-base) var(--ease-soft); }
   .totop.is-shown { opacity: 1; visibility: visible; translate: none; transition-delay: 0s; }
   .totop:hover { background: var(--rh-chocolate); color: var(--rh-ivory); transform: translateY(calc(-1 * var(--lift))); }
-  /* Phones: a little smaller, and above the call-and-book bar (BookBar, about 71px tall) so the two never overlap. */
+  /* Phones: a little smaller and a little closer to the corner. */
   @media (max-width: 700px) {
-    .totop { width: 46px; height: 46px; right: max(14px, env(safe-area-inset-right)); bottom: calc(env(safe-area-inset-bottom) + 71px + 14px); }
+    .totop { width: 46px; height: 46px; right: max(14px, env(safe-area-inset-right)); bottom: max(20px, env(safe-area-inset-bottom)); }
     .totop:hover { transform: none; }
   }
 

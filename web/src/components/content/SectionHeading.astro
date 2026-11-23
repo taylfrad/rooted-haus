@@ -23,8 +23,8 @@ const { eyebrow, script, title, intro, align = 'center', tone = 'light', ruled =
       {ruled && <span class="sh__rule" />}
     </div>
   )}
-  {script && <span class="sh__script">{script}</span>}
-  {title && <Heading class="sh__title" data-lines={Heading === 'h1' ? '' : undefined}>{emphasis(title).map((p) => (p.accent ? <em class="accent">{p.text}</em> : p.text))}</Heading>}
+  {script && <span class="sh__script" data-fit>{script}</span>}
+  {title && <Heading class="sh__title" data-lines={Heading === 'h1' ? '' : undefined}>{emphasis(title).map((p) => (p.accent ? <em class="accent" data-fit>{p.text}</em> : p.text))}</Heading>}
   {intro && <p class="sh__intro">{intro}</p>}
 </div>
 

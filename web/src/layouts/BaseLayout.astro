@@ -7,7 +7,6 @@ import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import DirectionsDialog from '../components/DirectionsDialog.astro';
 import BackToTop from '../components/BackToTop.astro';
-import BookBar from '../components/BookBar.astro';
 // The three font files every page uses (Latin letters). Preloading them means text is drawn in its real font from
 // the first paint, instead of appearing in a fallback and shifting when the font arrives.
 import fontBody from '@fontsource-variable/montserrat/files/montserrat-latin-wght-normal.woff2?url';
@@ -105,7 +104,6 @@ const jsonLd = {
     <SiteFooter />
     <DirectionsDialog />
     <BackToTop />
-    <BookBar />
     <!-- Boulevard self-booking overlay, from the owner's Boulevard dashboard (Settings > Online booking >
          Self-booking overlay). Loads once; the guard stops it loading again when Astro swaps pages. -->
     <script is:inline>
@@ -122,6 +120,7 @@ const jsonLd = {
     </script>
     <script>
       import { initHeadlines, initPhotoFade, initReveal } from '../lib/motion';
+      import { initFit } from '../lib/fit';
       // Every booking button (BookButton, data-book) opens Boulevard's overlay on top of the site once the overlay is
       // ready (its .blvd-dialog is on the page). Until then, if the script is blocked, and on phones (where Boulevard
       // opens booking in a new tab instead of an overlay) the button stays a normal link to the Boulevard booking page.
@@ -154,6 +153,7 @@ const jsonLd = {
 
       document.addEventListener('astro:page-load', () => {
         initPhotoFade();
+        initFit();
         initHeadlines();
         initReveal();
       });
