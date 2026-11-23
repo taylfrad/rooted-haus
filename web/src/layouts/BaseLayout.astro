@@ -122,14 +122,34 @@ const jsonLd = {
     </script>
     <script>
       import { initHeadlines, initPhotoFade, initReveal } from '../lib/motion';
-      // Every booking button (BookButton, data-book) opens Boulevard's overlay on top of the site once its script has
-      // loaded. If it is blocked or still loading, the button stays a normal link to the Boulevard booking page.
+      // Every booking button (BookButton, data-book) opens Boulevard's overlay on top of the site once the overlay is
+      // ready (its .blvd-dialog is on the page). Until then, if the script is blocked, and on phones (where Boulevard
+      // opens booking in a new tab instead of an overlay) the button stays a normal link to the Boulevard booking page.
       document.addEventListener('click', (e) => {
         const btn = (e.target as Element).closest('[data-book]');
         const blvd = (window as { blvd?: { openBookingWidget?: (o?: object) => void } }).blvd;
-        if (!btn || typeof blvd?.openBookingWidget !== 'function') return;
+        if (!btn || typeof blvd?.openBookingWidget !== 'function' || !document.querySelector('.blvd-dialog')) return;
         e.preventDefault();
         blvd.openBookingWidget();
+      });
+
+      // Boulevard builds its overlay once, on the first page: a <style> in <head> and the dialog at the end of <body>.
+      // Pages then change without a reload (Astro's ClientRouter), which rebuilds <head> and <body> from the next page
+      // and would drop both, leaving the dialog unstyled at the bottom of the page and the buttons doing nothing.
+      // Marking them, with a matching empty placeholder in the incoming page, makes the router carry them over.
+      document.addEventListener('astro:before-swap', (e) => {
+        const next = (e as Event & { newDocument: Document }).newDocument;
+        const keep = (el: Element, id: string, into: Element) => {
+          el.setAttribute('data-astro-transition-persist', id);
+          const spot = next.createElement(el.tagName);
+          spot.setAttribute('data-astro-transition-persist', id);
+          into.append(spot);
+        };
+        document.querySelectorAll('head style').forEach((s, i) => {
+          if (s.textContent?.includes('.blvd-')) keep(s, `blvd-style-${i}`, next.head);
+        });
+        const dialog = document.querySelector('.blvd-dialog');
+        if (dialog) keep(dialog, 'blvd-dialog', next.body);
       });
 
       document.addEventListener('astro:page-load', () => {
